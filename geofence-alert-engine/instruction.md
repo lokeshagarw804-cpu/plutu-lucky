@@ -14,11 +14,11 @@ Fleet monitoring tool: reads GPS pings from three vehicle feeds, checks geofence
 1. **Load** — Reads JSONL fleet feeds, groups readings in time windows (inclusive boundary, `<=` configured seconds).
 2. **Geofence** — Ray-casting point-in-polygon. Points on horizontal edges count as inside.
 3. **Dwell** — State machine: OUTSIDE→ENTERING→INSIDE→EXITING. Two consecutive inside-readings confirm entry. Counter resets only on transition back to OUTSIDE.
-4. **Alerts** — Severity = weighted average across all violated zones (weights accumulate globally). Sort: `(zone_id, -severity, vehicle_id)`.
+4. **Alerts** — Severity per vehicle = weighted average of dwell scores, but only across zones that vehicle actually violated (the divisor is the sum of those zones' weights, not all configured weights). Sort: `(zone_id, -severity, vehicle_id)`.
 
 ## Symptoms
 
-Vehicles never reach INSIDE state, boundary points misclassified, severity exceeds 1.0, non-deterministic ordering.
+Vehicles never reach INSIDE state, boundary points misclassified, severity exceeds 1.0 (weight divisor seems wrong), non-deterministic ordering.
 
 ## Expected output
 
