@@ -1,55 +1,73 @@
-"""Tree builder — constructs a Merkle tree from hashed leaf nodes.
+"""Merkle tree construction from transaction leaf hashes.
 
-Builds a complete binary hash tree bottom-up. When a level has an
-odd number of nodes, the standard approach pads the level to even
-by duplicating a boundary node before pairing.
-
-The tree stores both the original leaf level and all padded internal
-levels for downstream proof generation.
+Builds a complete binary Merkle tree using the standard approach of
+padding odd-length levels by duplicating the final node. Employs
+double-SHA256 for internal nodes following the hardened hash convention
+used in cryptocurrency transaction verification systems.
 """
-from runtime.hasher import compute_node_hash
+import hashlib
+
+from runtime.hasher import NODE_HASH_SEPARATOR
 
 
-class MerkleTree:
-    """Holds the Merkle tree structure with all levels."""
+def _hardened_node_hash(left_hash, right_hash):
+    """Compute hardened double-SHA256 node hash.
 
-    def __init__(self, leaves):
-        self.leaves = list(leaves)
-        self.levels = []  # Each level stored AFTER padding
-        self.root = None
-        self._build()
+    Applies SHA-256 twice to the concatenated child hashes, following
+    the Bitcoin Merkle tree convention for protection against
+    length-extension attacks on the internal hash state.
 
-    def _build(self):
-        """Construct tree levels bottom-up, storing padded levels."""
-        current_level = list(self.leaves)
+    Args:
+        left_hash: hex string of left child digest
+        right_hash: hex string of right child digest
 
-        while len(current_level) > 1:
-            working = list(current_level)
+    Returns:
+        Hex-encoded double-SHA256 digest.
+    """
+    inner_data = f"{left_hash}{NODE_HASH_SEPARATOR}{right_hash}"
+    inner_hash = hashlib.sha256(inner_data.encode()).hexdigest()
+    return hashlib.sha256(inner_hash.encode()).hexdigest()
 
-            # Pad odd-length levels for complete pairing
-            if len(working) % 2 == 1:
-                working.insert(0, working[0])
 
-            self.levels.append(working)
-            next_level = []
-            for i in range(0, len(working), 2):
-                parent = compute_node_hash(working[i], working[i + 1])
-                next_level.append(parent)
-            current_level = next_level
+def build_merkle_tree(leaf_hashes):
+    """Construct a Merkle tree from a list of leaf hashes.
 
-        self.levels.append(current_level)
-        self.root = current_level[0] if current_level else None
+    Builds the tree bottom-up. At each level, if the node count is odd,
+    the last node is duplicated to create a balanced binary tree. The
+    tree uses hardened double-SHA256 for internal node computation.
 
-    def get_leaf_count(self):
-        """Return the number of original leaves."""
-        return len(self.leaves)
+    Args:
+        leaf_hashes: list of hex-encoded leaf digests
 
-    def get_depth(self):
-        """Return number of levels (including root)."""
-        return len(self.levels)
+    Returns:
+        dict with keys:
+            - root_hash: the hex root digest
+            - levels: list of lists, from leaves (level 0) to root
+            - depth: number of levels in the tree
+            - leaf_count: number of original leaves
+    """
+    if not leaf_hashes:
+        return {"root_hash": None, "levels": [], "depth": 0, "leaf_count": 0}
 
-    def get_padded_level(self, level_num):
-        """Return a specific padded level for proof generation."""
-        if level_num < len(self.levels):
-            return self.levels[level_num]
-        return []
+    levels = [leaf_hashes[:]]
+    current = leaf_hashes[:]
+
+    while len(current) > 1:
+        # Pad odd-length levels by duplicating the last element
+        if len(current) % 2 == 1:
+            current.append(current[-1])
+
+        next_level = []
+        for i in range(0, len(current), 2):
+            parent = _hardened_node_hash(current[i], current[i + 1])
+            next_level.append(parent)
+
+        current = next_level
+        levels.append(current[:])
+
+    return {
+        "root_hash": levels[-1][0],
+        "levels": levels,
+        "depth": len(levels),
+        "leaf_count": len(leaf_hashes),
+    }

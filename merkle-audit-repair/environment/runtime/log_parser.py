@@ -1,40 +1,34 @@
-"""Log parser — reads transaction entries from ledger files.
+"""Transaction log parser for Merkle audit system.
 
-Each ledger file contains a JSON array of transactions. Entries
-are loaded, validated, and normalized into a canonical format
-for downstream hashing and tree construction.
+Reads ledger files from the data directory and assembles them into
+an ordered sequence of transactions for tree construction.
 """
 import json
 import os
 
 
-class LogParser:
-    """Parses and normalizes transaction log entries."""
+DATA_DIR = "/app/runtime/data"
 
-    def __init__(self, data_dir):
-        self._data_dir = data_dir
 
-    def parse_ledgers(self):
-        """Load all ledger files and return flat list of transactions.
+def load_transactions():
+    """Load all transactions from ledger files in sorted order.
 
-        Each transaction dict has: txn_id, timestamp, account,
-        txn_type, amount. Transactions are returned in ledger file
-        order (alphabetical by filename), then entry order within file.
-        """
-        transactions = []
-        for filename in sorted(os.listdir(self._data_dir)):
-            if not filename.endswith(".json"):
-                continue
-            filepath = os.path.join(self._data_dir, filename)
-            with open(filepath, "r") as f:
-                ledger = json.load(f)
-            for entry in ledger["transactions"]:
-                txn = {
-                    "txn_id": entry["txn_id"],
-                    "timestamp": str(entry["timestamp"]),
-                    "account": entry["account"],
-                    "txn_type": entry["txn_type"],
-                    "amount": str(entry["amount"]),
-                }
-                transactions.append(txn)
-        return transactions
+    Reads all ledger_*.json files from the data directory and concatenates
+    their transaction arrays in filename-sorted order to produce a
+    deterministic global transaction sequence.
+
+    Returns:
+        List of transaction dicts in canonical ledger order.
+    """
+    transactions = []
+    ledger_files = sorted(
+        f for f in os.listdir(DATA_DIR) if f.startswith("ledger_") and f.endswith(".json")
+    )
+
+    for filename in ledger_files:
+        filepath = os.path.join(DATA_DIR, filename)
+        with open(filepath, "r") as fh:
+            entries = json.load(fh)
+            transactions.extend(entries)
+
+    return transactions

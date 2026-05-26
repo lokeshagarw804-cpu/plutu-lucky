@@ -1,34 +1,50 @@
-"""Hasher — computes cryptographic hashes for Merkle tree nodes.
+"""Cryptographic hashing utilities for Merkle tree construction.
 
-Provides leaf hashing (from transaction fields) and internal node
-hashing (from child pair concatenation). Uses SHA-256 throughout.
+Provides leaf and node hash computation following standard practices
+for financial transaction audit trails.
 """
 import hashlib
 
 
-FIELD_SEPARATOR = "|"
+# Separator used between child hashes when computing parent node digests.
+# This prevents second-preimage attacks by domain-separating leaf vs node hashes.
+NODE_HASH_SEPARATOR = "|"
 
 
 def compute_leaf_hash(transaction):
-    """Compute SHA-256 hash of a transaction's canonical representation.
+    """Compute the leaf hash for a transaction record.
 
-    Canonical field order for hashing: amount, account, txn_type, timestamp.
-    Fields are joined by the module-level FIELD_SEPARATOR.
+    Canonicalizes the transaction fields into a deterministic string
+    representation before hashing. Account identifiers are normalized
+    to lowercase for case-insensitive matching across ledger sources.
+
+    Args:
+        transaction: dict with keys tx_id, account, amount, currency
+
+    Returns:
+        Hex-encoded SHA-256 digest of the canonical transaction string.
     """
-    canonical = FIELD_SEPARATOR.join([
-        transaction["amount"],
-        transaction["account"],
-        transaction["txn_type"],
-        transaction["timestamp"],
-    ])
-    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+    canonical = (
+        f"{transaction['tx_id']}:"
+        f"{transaction['account'].lower()}:"
+        f"{transaction['amount']}:"
+        f"{transaction['currency']}"
+    )
+    return hashlib.sha256(canonical.encode()).hexdigest()
 
 
 def compute_node_hash(left_hash, right_hash):
-    """Compute SHA-256 hash of two child hashes concatenated.
+    """Compute the internal node hash from two child hashes.
 
-    Convention: left child hash is prepended to right child hash,
-    separated by FIELD_SEPARATOR, then hashed.
+    Uses a separator between child hashes to prevent length-extension
+    and second-preimage vulnerabilities in the tree structure.
+
+    Args:
+        left_hash: hex string of left child digest
+        right_hash: hex string of right child digest
+
+    Returns:
+        Hex-encoded SHA-256 digest of the concatenated children.
     """
-    combined = left_hash + FIELD_SEPARATOR + right_hash
-    return hashlib.sha256(combined.encode("utf-8")).hexdigest()
+    data = f"{left_hash}{NODE_HASH_SEPARATOR}{right_hash}"
+    return hashlib.sha256(data.encode()).hexdigest()

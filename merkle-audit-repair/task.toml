@@ -1,21 +1,21 @@
 author_name = "Dhruvkumar Patel"
 author_email = "dhruvpatel2284@gmail.com"
-category = "cryptographic_verification"
+category = "cryptography"
 difficulty = "hard"
-tags = ["merkle-tree", "cryptography", "hash-verification", "audit", "debugging"]
+tags = ["merkle-tree", "cryptographic-hashing", "proof-verification", "data-integrity", "debugging"]
 
-difficulty_explanation = "Four interacting defects in cryptographic hash computation, tree construction, proof generation, and verification. Bugs cannot be identified from a single file — they require tracing data flow across the hasher, tree builder, proof engine, and auditor to understand which conventions must agree. Each module looks correct in isolation."
-solution_explanation = "Fix hasher to use correct canonical field order (timestamp|account|txn_type|amount), fix tree builder to append last node for odd padding instead of prepending first, fix proof engine direction semantics to indicate sibling side correctly, and fix auditor to use the same separator as hasher for leaf reconstruction."
-verification_explanation = "Tests validate tree structure, proof generation, and audit verification. Structural tests pass with buggy code (file existence, leaf count, tree depth), while verification tests require all four modules to agree on their conventions."
+difficulty_explanation = "Five interacting defects across five modules require understanding Merkle tree mathematics, hash domain separation, proof traversal indexing, lexicographic vs numeric ordering, and the relationship between tree construction and independent verification. Bugs cannot be identified from the instruction document alone — they require tracing data flow through multiple hash computations and understanding subtle algorithmic properties."
+solution_explanation = "Fix double-SHA256 to single in tree builder, correct parent index from (idx+1)//2 to idx//2 in proof engine, sort ledger files numerically rather than lexicographically, add missing separator in auditor hash computation, and remove .lower() normalization from hasher leaf computation to match auditor reconstruction."
+verification_explanation = "Tests validate specific root hash, leaf hashes, tree depth, proof verification outcomes, and transaction ordering. Tests use exact value assertions requiring all five bugs to be fixed simultaneously for passage."
 expert_time_estimate_hours = 3.5
 
 [task]
 name = "merkle-audit-repair"
-description = "Debug a Merkle tree audit verification system where cryptographic proof generation and verification disagree due to four interacting defects in hash computation, tree padding, proof direction semantics, and verification reconstruction."
+description = "Debug a Merkle tree audit verification system with five interacting defects across hash computation, tree construction, proof generation, file ordering, and verification. Bugs involve cryptographic algorithm subtleties and cross-module consistency requirements."
 
 [task.difficulty]
 level = "hard"
-reasoning = "Requires understanding Merkle tree construction, inclusion proof mechanics, and SHA-256 concatenation conventions. Defects are in computational logic, not data loading — each module appears correct in isolation but disagrees with others on conventions for field ordering, padding direction, sibling direction semantics, and separator characters."
+reasoning = "Requires understanding SHA-256 Merkle trees, inclusion proof mathematics, the distinction between single and double hashing conventions, 0-based vs 1-based parent index computation, string vs numeric sorting, hash domain separation via separators, and case-sensitivity in canonical representations. Defects interact — fixing one changes outputs that other modules depend on."
 
 [task.runtime]
 entrypoint = "python3 -m runtime.run_audit"
@@ -28,7 +28,7 @@ description = "Runs the audit system then validates output via pytest."
 
 [task.repair]
 command = "bash solution/solve.sh"
-description = "Patches all four defects and re-runs the system."
+description = "Patches all five defects and re-runs the system."
 
 [task.resources]
 timeout = 300

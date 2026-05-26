@@ -1,0 +1,30 @@
+[
+    {
+        "tx_id": "TX-0001",
+        "account": "ACC-4412",
+        "amount": 250.00,
+        "currency": "USD",
+        "timestamp": "2024-01-15T09:30:00Z"
+    },
+    {
+        "tx_id": "TX-0002",
+        "account": "ACC-7891",
+        "amount": 1200.50,
+        "currency": "EUR",
+        "timestamp": "2024-01-15T09:31:00Z"
+    },
+    {
+        "tx_id": "TX-0003",
+        "account": "ACC-2234",
+        "amount": 89.99,
+        "currency": "USD",
+        "timestamp": "2024-01-15T09:32:00Z"
+    },
+    {
+        "tx_id": "TX-0004",
+        "account": "ACC-5567",
+        "amount": 3400.00,
+        "currency": "GBP",
+        "timestamp": "2024-01-15T09:33:00Z"
+    }
+]

@@ -1,89 +1,120 @@
-"""Auditor — verifies Merkle inclusion proofs against the tree root.
+"""Merkle proof verification and audit reporting.
 
-Reconstructs the root hash from a leaf and its proof path, then
-compares against the known root to determine validity. Also produces
-a comprehensive audit report.
+Provides independent verification of inclusion proofs against a known
+Merkle root. The verifier reconstructs the root from a leaf hash and
+proof path, then compares against the expected value.
 """
 import hashlib
 
-from runtime.hasher import FIELD_SEPARATOR
-
 
 def reconstruct_leaf_hash(transaction):
-    """Recompute leaf hash from transaction fields for verification.
+    """Reconstruct the leaf hash for a transaction during verification.
 
-    Uses canonical field ordering: timestamp, account, txn_type, amount.
-    Fields joined by the separator defined in hasher module.
+    Computes the same canonical hash that was used during tree construction,
+    allowing the verifier to independently derive the starting point for
+    proof traversal.
+
+    Args:
+        transaction: dict with keys tx_id, account, amount, currency
+
+    Returns:
+        Hex-encoded SHA-256 digest of the canonical transaction string.
     """
-    canonical = "-".join([
-        transaction["timestamp"],
-        transaction["account"],
-        transaction["txn_type"],
-        transaction["amount"],
-    ])
-    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+    canonical = (
+        f"{transaction['tx_id']}:"
+        f"{transaction['account']}:"
+        f"{transaction['amount']}:"
+        f"{transaction['currency']}"
+    )
+    return hashlib.sha256(canonical.encode()).hexdigest()
 
 
-def verify_proof(leaf_hash, proof_steps, expected_root):
-    """Walk the proof path from leaf to root and compare.
+def _compute_parent_hash(left_hash, right_hash):
+    """Compute parent hash from two children during proof verification.
 
-    For each step, concatenate current hash with sibling based on
-    direction. Direction indicates where the SIBLING is:
-    - "left": sibling is on the left → hash(sibling + current)
-    - "right": sibling is on the right → hash(current + sibling)
+    Concatenates the child hashes and applies SHA-256 to produce the
+    parent digest. This must match the node hash computation used
+    during tree construction.
+
+    Args:
+        left_hash: hex digest of the left child
+        right_hash: hex digest of the right child
+
+    Returns:
+        Hex-encoded SHA-256 of the concatenated children.
+    """
+    data = f"{left_hash}{right_hash}"
+    return hashlib.sha256(data.encode()).hexdigest()
+
+
+def verify_proof(leaf_hash, proof_path, expected_root):
+    """Verify a Merkle inclusion proof against an expected root.
+
+    Walks the proof path from leaf to root, combining the current hash
+    with each sibling according to the specified direction, then checks
+    if the final computed root matches the expected value.
+
+    Args:
+        leaf_hash: hex digest of the leaf being verified
+        proof_path: list of proof steps with hash and direction
+        expected_root: hex digest of the expected Merkle root
+
+    Returns:
+        Boolean indicating whether the proof is valid.
     """
     current = leaf_hash
 
-    for step in proof_steps:
-        sibling = step["sibling_hash"]
+    for step in proof_path:
         if step["direction"] == "left":
-            combined = sibling + FIELD_SEPARATOR + current
+            current = _compute_parent_hash(step["hash"], current)
         else:
-            combined = current + FIELD_SEPARATOR + sibling
-        current = hashlib.sha256(combined.encode("utf-8")).hexdigest()
+            current = _compute_parent_hash(current, step["hash"])
 
     return current == expected_root
 
 
-class Auditor:
-    """Performs audit verification of transactions against Merkle root."""
+def run_audit(transactions, proofs, expected_root):
+    """Run full audit verification on all transaction proofs.
 
-    def __init__(self, tree_root, transactions, proofs):
-        self._root = tree_root
-        self._transactions = transactions
-        self._proofs = proofs
+    For each transaction, independently reconstructs the leaf hash and
+    verifies the inclusion proof against the expected root.
 
-    def run_audit(self):
-        """Verify all proofs and produce audit report.
+    Args:
+        transactions: list of transaction dicts
+        proofs: dict mapping tx_id to proof data
+        expected_root: the Merkle root to verify against
 
-        Returns dict with verification results per transaction.
-        """
-        report = {
-            "root_hash": self._root,
-            "total_transactions": len(self._transactions),
-            "verified_count": 0,
-            "failed_count": 0,
-            "results": [],
-        }
+    Returns:
+        dict with verification summary:
+            - total_proofs: number of proofs checked
+            - valid_count: number that verified successfully
+            - invalid_count: number that failed verification
+            - results: dict mapping tx_id to boolean result
+    """
+    results = {}
+    valid_count = 0
+    invalid_count = 0
 
-        for idx_str, proof_steps in self._proofs.items():
-            idx = int(idx_str)
-            txn = self._transactions[idx]
-            leaf_hash = reconstruct_leaf_hash(txn)
-            verified = verify_proof(leaf_hash, proof_steps, self._root)
+    for tx in transactions:
+        tx_id = tx["tx_id"]
+        if tx_id not in proofs:
+            results[tx_id] = False
+            invalid_count += 1
+            continue
 
-            result = {
-                "txn_id": txn["txn_id"],
-                "leaf_index": idx,
-                "leaf_hash": leaf_hash,
-                "verified": verified,
-            }
-            report["results"].append(result)
+        proof_data = proofs[tx_id]
+        leaf_hash = reconstruct_leaf_hash(tx)
+        is_valid = verify_proof(leaf_hash, proof_data["proof_path"], expected_root)
 
-            if verified:
-                report["verified_count"] += 1
-            else:
-                report["failed_count"] += 1
+        results[tx_id] = is_valid
+        if is_valid:
+            valid_count += 1
+        else:
+            invalid_count += 1
 
-        report["audit_status"] = "pass" if report["failed_count"] == 0 else "fail"
-        return report
+    return {
+        "total_proofs": len(transactions),
+        "valid_count": valid_count,
+        "invalid_count": invalid_count,
+        "results": results,
+    }

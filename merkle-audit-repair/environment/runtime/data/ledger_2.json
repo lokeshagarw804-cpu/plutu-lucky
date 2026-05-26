@@ -1,0 +1,23 @@
+[
+    {
+        "tx_id": "TX-0005",
+        "account": "ACC-9901",
+        "amount": 560.25,
+        "currency": "USD",
+        "timestamp": "2024-01-15T10:00:00Z"
+    },
+    {
+        "tx_id": "TX-0006",
+        "account": "ACC-3348",
+        "amount": 2100.00,
+        "currency": "EUR",
+        "timestamp": "2024-01-15T10:01:00Z"
+    },
+    {
+        "tx_id": "TX-0007",
+        "account": "ACC-6672",
+        "amount": 175.80,
+        "currency": "GBP",
+        "timestamp": "2024-01-15T10:02:00Z"
+    }
+]

@@ -1,168 +1,163 @@
-"""Validation tests for Merkle audit verification system."""
+"""Test suite for Merkle audit verification system.
+
+Validates tree construction, proof generation, and verification
+against known-correct reference values.
+"""
 import json
 import os
-
 import pytest
 
-OUTPUT_DIR = "/app/runtime/output"
-TREE_PATH = os.path.join(OUTPUT_DIR, "tree_state.json")
-PROOFS_PATH = os.path.join(OUTPUT_DIR, "proofs.json")
-AUDIT_PATH = os.path.join(OUTPUT_DIR, "audit_report.json")
+
+AUDIT_OUTPUT = "/app/runtime/output/audit_result.json"
+
+EXPECTED_ROOT = "d8a88a3a24ce283e4e8c7ca6ba20b67a99ad8e5ed4ed2694d945341c5c843926"
+EXPECTED_LEAF_COUNT = 11
+EXPECTED_DEPTH = 5
+EXPECTED_LEVEL_SIZES = [11, 6, 3, 2, 1]
+EXPECTED_PROOF_COUNT = 11
+
+FIRST_LEAF_HASH = "b04c38e0973c5d8f4fac373c82eea9724489eaaa7bbe442f80ac271fe9cb8e27"
+LAST_LEAF_HASH = "aacaf3f9698c17c5604a6cad1f707a1317f803ceb58e502e4d09fd3fa0699c95"
 
 
-@pytest.fixture(scope="module")
-def tree_data():
-    """Load tree state output."""
-    with open(TREE_PATH, "r") as f:
+@pytest.fixture
+def audit_result():
+    """Load the audit result output."""
+    assert os.path.exists(AUDIT_OUTPUT), f"Output file not found: {AUDIT_OUTPUT}"
+    with open(AUDIT_OUTPUT, "r") as f:
         return json.load(f)
 
 
-@pytest.fixture(scope="module")
-def proofs_data():
-    """Load proofs output."""
-    with open(PROOFS_PATH, "r") as f:
-        return json.load(f)
+# === BASIC STRUCTURAL TESTS (4 tests) ===
 
 
-@pytest.fixture(scope="module")
-def audit_data():
-    """Load audit report output."""
-    with open(AUDIT_PATH, "r") as f:
-        return json.load(f)
+class TestStructure:
+    """Basic structural validation tests."""
+
+    def test_output_file_exists(self):
+        """Output file should be created."""
+        assert os.path.exists(AUDIT_OUTPUT)
+
+    def test_output_has_required_keys(self, audit_result):
+        """Output should contain tree, proofs, and verification sections."""
+        assert "tree" in audit_result
+        assert "proofs" in audit_result
+        assert "verification" in audit_result
+
+    def test_tree_has_required_fields(self, audit_result):
+        """Tree section should have root_hash, leaf_count, depth, level_sizes."""
+        tree = audit_result["tree"]
+        assert "root_hash" in tree
+        assert "leaf_count" in tree
+        assert "depth" in tree
+        assert "level_sizes" in tree
+
+    def test_verification_has_required_fields(self, audit_result):
+        """Verification section should have counts and results."""
+        v = audit_result["verification"]
+        assert "total_proofs" in v
+        assert "valid_count" in v
+        assert "invalid_count" in v
+        assert "results" in v
 
 
-class TestOutputFileStructure:
-    """Basic output file existence and structure checks."""
-
-    def test_tree_state_file_exists(self):
-        """Tree state output file must be generated."""
-        assert os.path.isfile(TREE_PATH)
-
-    def test_proofs_file_exists(self):
-        """Proofs output file must be generated."""
-        assert os.path.isfile(PROOFS_PATH)
-
-    def test_audit_report_file_exists(self):
-        """Audit report output file must be generated."""
-        assert os.path.isfile(AUDIT_PATH)
-
-    def test_tree_state_structure(self, tree_data):
-        """Tree state must contain required fields."""
-        assert "leaf_count" in tree_data
-        assert "tree_depth" in tree_data
-        assert "root_hash" in tree_data
-        assert "leaf_hashes" in tree_data
+# === MEDIUM TESTS (3 tests) ===
 
 
-class TestTreeConstruction:
-    """Validates Merkle tree structure properties."""
+class TestTreeMetrics:
+    """Tree construction metric validation."""
 
-    def test_leaf_count(self, tree_data):
-        """Must have exactly 7 leaves from the two ledger files."""
-        assert tree_data["leaf_count"] == 7
+    def test_leaf_count(self, audit_result):
+        """Tree should contain exactly 11 transaction leaves."""
+        assert audit_result["tree"]["leaf_count"] == EXPECTED_LEAF_COUNT
 
-    def test_tree_depth(self, tree_data):
-        """Tree with 7 leaves must have depth 4 (8,4,2,1 padded levels)."""
-        assert tree_data["tree_depth"] == 4, (
-            f"Expected depth 4 but got {tree_data['tree_depth']}. "
-            f"Check padding logic in /app/runtime/tree_builder.py."
-        )
+    def test_tree_depth(self, audit_result):
+        """Tree depth should be 5 levels (leaves through root)."""
+        assert audit_result["tree"]["depth"] == EXPECTED_DEPTH
 
-    def test_leaf_hashes_are_valid_sha256(self, tree_data):
-        """All leaf hashes must be 64-character hex strings (SHA-256)."""
-        for h in tree_data["leaf_hashes"]:
-            assert len(h) == 64 and all(c in "0123456789abcdef" for c in h)
-
-    def test_root_hash_is_valid_sha256(self, tree_data):
-        """Root hash must be a valid SHA-256 hex string."""
-        root = tree_data["root_hash"]
-        assert len(root) == 64 and all(c in "0123456789abcdef" for c in root)
-
-    def test_leaf_hashes_count_matches(self, tree_data):
-        """Number of leaf hashes must match leaf_count."""
-        assert len(tree_data["leaf_hashes"]) == tree_data["leaf_count"]
+    def test_proof_count(self, audit_result):
+        """Should generate one proof per transaction."""
+        assert len(audit_result["proofs"]) == EXPECTED_PROOF_COUNT
 
 
-class TestProofGeneration:
-    """Validates inclusion proof structure."""
+# === HARD TESTS: Tree correctness (4 tests) ===
 
-    def test_proof_count(self, proofs_data):
-        """Must generate a proof for each of the 7 transactions."""
-        assert proofs_data["total_proofs"] == 7
 
-    def test_proof_depth(self, proofs_data):
-        """Each proof must have exactly 3 steps (depth-1 for 4-level tree)."""
-        for idx_str, steps in proofs_data["proofs"].items():
-            assert len(steps) == 3, (
-                f"Proof for leaf {idx_str} has {len(steps)} steps, "
-                f"expected 3 for a tree of depth 4."
+class TestTreeCorrectness:
+    """Validates the computed tree matches reference values."""
+
+    def test_root_hash(self, audit_result):
+        """Root hash must match the expected reference value."""
+        assert audit_result["tree"]["root_hash"] == EXPECTED_ROOT
+
+    def test_level_sizes(self, audit_result):
+        """Level sizes should reflect correct tree shape with padding."""
+        assert audit_result["tree"]["level_sizes"] == EXPECTED_LEVEL_SIZES
+
+    def test_first_leaf_hash(self, audit_result):
+        """First leaf hash must match TX-0001 reference value."""
+        proofs = audit_result["proofs"]
+        assert proofs["TX-0001"]["leaf_hash"] == FIRST_LEAF_HASH
+
+    def test_last_leaf_hash(self, audit_result):
+        """Last leaf hash must match TX-0011 reference value."""
+        proofs = audit_result["proofs"]
+        assert proofs["TX-0011"]["leaf_hash"] == LAST_LEAF_HASH
+
+
+# === HARD TESTS: Proof structure (3 tests) ===
+
+
+class TestProofStructure:
+    """Validates proof generation correctness."""
+
+    def test_proof_path_length(self, audit_result):
+        """All proofs should have path length equal to depth - 1."""
+        expected_length = EXPECTED_DEPTH - 1
+        for tx_id, proof_data in audit_result["proofs"].items():
+            assert len(proof_data["proof_path"]) == expected_length, (
+                f"Proof for {tx_id} has length {len(proof_data['proof_path'])}, "
+                f"expected {expected_length}"
             )
 
-    def test_proof_directions_valid(self, proofs_data):
-        """All proof step directions must be 'left' or 'right'."""
-        for idx_str, steps in proofs_data["proofs"].items():
-            for step in steps:
-                assert step["direction"] in ("left", "right"), (
-                    f"Invalid direction '{step['direction']}' in proof "
-                    f"for leaf {idx_str}."
-                )
+    def test_leaf_ordering_tx0001_first(self, audit_result):
+        """TX-0001 should be at leaf index 0 (from ledger_1, first file numerically)."""
+        assert audit_result["proofs"]["TX-0001"]["leaf_index"] == 0
 
-    def test_proof_sibling_hashes_are_sha256(self, proofs_data):
-        """All sibling hashes in proofs must be valid SHA-256."""
-        for idx_str, steps in proofs_data["proofs"].items():
-            for step in steps:
-                h = step["sibling_hash"]
-                assert len(h) == 64 and all(c in "0123456789abcdef" for c in h)
+    def test_leaf_ordering_tx0008_at_seven(self, audit_result):
+        """TX-0008 should be at leaf index 7 (from ledger_10, third file numerically)."""
+        assert audit_result["proofs"]["TX-0008"]["leaf_index"] == 7
 
 
-class TestAuditVerification:
-    """Validates audit verification results — requires all bugs fixed."""
+# === HARD TESTS: Verification (5 tests) ===
 
-    def test_audit_status_pass(self, audit_data):
-        """Audit must report status 'pass' when all proofs verify."""
-        assert audit_data["audit_status"] == "pass", (
-            f"Audit status is '{audit_data['audit_status']}', expected 'pass'. "
-            f"Verification failed — check that hasher and auditor use the same "
-            f"field order and separator for leaf hash computation, that "
-            f"tree_builder pads odd levels correctly, and that proof_engine "
-            f"direction flags are consistent with auditor's reconstruction."
-        )
 
-    def test_verified_count(self, audit_data):
-        """All 7 transactions must verify successfully."""
-        assert audit_data["verified_count"] == 7, (
-            f"Only {audit_data['verified_count']}/7 verified. "
-            f"The tree construction, proof generation, and verification "
-            f"modules must agree on their conventions."
-        )
+class TestVerification:
+    """Validates proof verification correctness."""
 
-    def test_no_failures(self, audit_data):
-        """No transactions should fail verification."""
-        assert audit_data["failed_count"] == 0, (
-            f"{audit_data['failed_count']} transactions failed verification."
-        )
+    def test_all_proofs_valid(self, audit_result):
+        """All 11 proofs should verify successfully."""
+        v = audit_result["verification"]
+        assert v["valid_count"] == EXPECTED_LEAF_COUNT
+        assert v["invalid_count"] == 0
 
-    def test_all_results_verified(self, audit_data):
-        """Each individual result must show verified=true."""
-        for result in audit_data["results"]:
-            assert result["verified"] is True, (
-                f"Transaction {result['txn_id']} at index {result['leaf_index']} "
-                f"failed verification. Its leaf_hash was {result['leaf_hash'][:16]}..."
-            )
+    def test_no_invalid_results(self, audit_result):
+        """Every individual result should be True."""
+        results = audit_result["verification"]["results"]
+        for tx_id, is_valid in results.items():
+            assert is_valid is True, f"Verification failed for {tx_id}"
 
-    def test_result_count_matches(self, audit_data):
-        """Must have a result entry for each transaction."""
-        assert len(audit_data["results"]) == 7
+    def test_verification_tx0002_valid(self, audit_result):
+        """TX-0002 (odd index 1) proof must verify — exercises parent indexing."""
+        results = audit_result["verification"]["results"]
+        assert results["TX-0002"] is True
 
-    def test_leaf_hash_consistency(self, tree_data, audit_data):
-        """Auditor's recomputed leaf hashes must match tree leaf hashes."""
-        tree_leaves = tree_data["leaf_hashes"]
-        for result in audit_data["results"]:
-            idx = result["leaf_index"]
-            assert result["leaf_hash"] == tree_leaves[idx], (
-                f"Leaf hash mismatch at index {idx}: "
-                f"tree={tree_leaves[idx][:16]}... vs "
-                f"audit={result['leaf_hash'][:16]}... "
-                f"Check that /app/runtime/auditor.py reconstructs leaf hashes "
-                f"using the same field order and separator as /app/runtime/hasher.py."
-            )
+    def test_verification_tx0005_valid(self, audit_result):
+        """TX-0005 (first in ledger_2, index 4) proof must verify."""
+        results = audit_result["verification"]["results"]
+        assert results["TX-0005"] is True
+
+    def test_verification_tx0011_valid(self, audit_result):
+        """TX-0011 (last leaf, padded sibling) proof must verify."""
+        results = audit_result["verification"]["results"]
+        assert results["TX-0011"] is True

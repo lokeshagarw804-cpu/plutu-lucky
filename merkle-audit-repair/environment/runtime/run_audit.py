@@ -1,62 +1,74 @@
-"""Merkle audit system — main entry point.
+"""Main entry point for the Merkle audit verification system.
 
-Orchestrates the full audit verification process: parses transaction
-logs, computes leaf hashes, builds the Merkle tree, generates inclusion
-proofs for selected transactions, and runs audit verification.
+Orchestrates the full audit workflow:
+1. Parse transaction logs from ledger files
+2. Compute leaf hashes for each transaction
+3. Build the Merkle tree
+4. Generate inclusion proofs for all leaves
+5. Verify each proof against the computed root
+6. Write audit results to output directory
 """
 import json
 import os
+import sys
 
-from runtime.log_parser import LogParser
+sys.path.insert(0, "/app")
+
+from runtime.log_parser import load_transactions
 from runtime.hasher import compute_leaf_hash
-from runtime.tree_builder import MerkleTree
-from runtime.proof_engine import ProofEngine
-from runtime.auditor import Auditor
+from runtime.tree_builder import build_merkle_tree
+from runtime.proof_engine import generate_all_proofs
+from runtime.auditor import run_audit
+
+
+OUTPUT_DIR = "/app/runtime/output"
 
 
 def main():
-    data_dir = "/app/runtime/data"
-    output_dir = "/app/runtime/output"
-    os.makedirs(output_dir, exist_ok=True)
+    """Execute the complete Merkle audit verification."""
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
 
-    # Parse transaction logs
-    parser = LogParser(data_dir)
-    transactions = parser.parse_ledgers()
+    # Stage 1: Load transactions from ledger files
+    transactions = load_transactions()
+    print(f"Loaded {len(transactions)} transactions from ledger files")
 
-    # Compute leaf hashes
-    leaf_hashes = [compute_leaf_hash(txn) for txn in transactions]
+    # Stage 2: Compute leaf hashes
+    leaf_hashes = [compute_leaf_hash(tx) for tx in transactions]
+    print(f"Computed {len(leaf_hashes)} leaf hashes")
 
-    # Build Merkle tree
-    tree = MerkleTree(leaf_hashes)
+    # Stage 3: Build Merkle tree
+    tree = build_merkle_tree(leaf_hashes)
+    print(f"Built tree with root: {tree['root_hash']}")
+    print(f"Tree depth: {tree['depth']}, leaf count: {tree['leaf_count']}")
 
-    # Generate proofs for all transactions
-    all_indices = list(range(len(transactions)))
-    engine = ProofEngine(tree)
-    proofs = engine.generate_proofs(all_indices)
+    # Stage 4: Generate inclusion proofs
+    proofs = generate_all_proofs(transactions, leaf_hashes, tree["levels"])
+    print(f"Generated {len(proofs)} inclusion proofs")
 
-    # Run audit verification
-    auditor = Auditor(tree.root, transactions, proofs)
-    audit_report = auditor.run_audit()
+    # Stage 5: Verify all proofs
+    verification = run_audit(transactions, proofs, tree["root_hash"])
+    print(
+        f"Verification complete: {verification['valid_count']}/{verification['total_proofs']} valid"
+    )
 
-    # Write outputs
-    tree_output = {
-        "leaf_count": tree.get_leaf_count(),
-        "tree_depth": tree.get_depth(),
-        "root_hash": tree.root,
-        "leaf_hashes": leaf_hashes,
+    # Stage 6: Write output
+    output = {
+        "tree": {
+            "root_hash": tree["root_hash"],
+            "leaf_count": tree["leaf_count"],
+            "depth": tree["depth"],
+            "level_sizes": [len(level) for level in tree["levels"]],
+        },
+        "proofs": proofs,
+        "verification": verification,
     }
-    with open(os.path.join(output_dir, "tree_state.json"), "w") as f:
-        json.dump(tree_output, f, indent=2)
 
-    proof_output = {
-        "total_proofs": len(proofs),
-        "proofs": {str(k): v for k, v in proofs.items()},
-    }
-    with open(os.path.join(output_dir, "proofs.json"), "w") as f:
-        json.dump(proof_output, f, indent=2)
+    output_path = os.path.join(OUTPUT_DIR, "audit_result.json")
+    with open(output_path, "w") as f:
+        json.dump(output, f, indent=2)
 
-    with open(os.path.join(output_dir, "audit_report.json"), "w") as f:
-        json.dump(audit_report, f, indent=2)
+    print(f"Audit results written to {output_path}")
+    return output
 
 
 if __name__ == "__main__":
