@@ -1,0 +1,14 @@
+{
+  "layer_id": "hydrology",
+  "layer_type": "hydrology",
+  "points": [
+    {"point_id": "h001", "x": 248.5, "y": 752.0, "weight": 3.5, "timestamp": 1700000120, "seq": 1},
+    {"point_id": "h002", "x": 253.2, "y": 747.8, "weight": 2.8, "timestamp": 1700000240, "seq": 2},
+    {"point_id": "h003", "x": 258.0, "y": 743.5, "weight": 2.0, "timestamp": 1700000360, "seq": 3},
+    {"point_id": "h004", "x": 500.0, "y": 500.0, "weight": 1.5, "timestamp": 1700000480, "seq": 4},
+    {"point_id": "h005", "x": 125.0, "y": 345.0, "weight": 2.2, "timestamp": 1700000500, "seq": 5},
+    {"point_id": "h006", "x": 750.0, "y": 750.0, "weight": 1.0, "timestamp": 1700000720, "seq": 6},
+    {"point_id": "h007", "x": 755.5, "y": 745.2, "weight": 1.3, "timestamp": 1700000840, "seq": 7},
+    {"point_id": "h008", "x": 262.0, "y": 740.0, "weight": 2.5, "timestamp": 1700000960, "seq": 8}
+  ]
+}

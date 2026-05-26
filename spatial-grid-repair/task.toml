@@ -1,0 +1,37 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+category = "spatial_indexing"
+difficulty = "hard"
+tags = ["spatial-indexing", "geospatial", "grid-computing", "density-estimation", "debugging"]
+
+difficulty_explanation = "Four interacting defects across five modules require understanding spatial coordinate geometry, grid cell assignment arithmetic, kernel density estimation mathematics, distance-based clustering with centroid drift, and deterministic ordering across independent spatial layers. Fixing any single bug changes the computed values that other modules depend on — the grid resolution change alters all cell assignments which changes density neighborhoods, and loading the missing layer adds points that shift cluster centroids."
+solution_explanation = "Fix whitespace handling in comma-split layer type list, read grid resolution and cell size from the correct config section (grid.analysis), divide accumulated density by number of passes to get the average, and add layer_id as sort tiebreaker for deterministic point processing order."
+verification_explanation = "Tests validate layer count and point totals, grid resolution and cell size values, number of occupied cells (which depends on resolution), density score ranges (which depend on both resolution and averaging), cluster count and sizes (which depend on all points being loaded and processed in correct order). Tests require all bugs to be fixed simultaneously for passage."
+expert_time_estimate_hours = 3.5
+
+[task]
+name = "spatial-grid-repair"
+description = "Debug a spatial grid indexer with four interacting defects across layer loading, grid resolution configuration, kernel density estimation, and point processing order. Bugs involve string parsing, config section resolution, mathematical averaging, and deterministic sort semantics that collectively produce incorrect spatial analysis results."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding spatial coordinate geometry, grid cell assignment mathematics, kernel density averaging vs accumulation, and how point processing order affects incremental centroid computation in distance-based clustering. Defects interact deeply — the resolution change alters the entire grid structure, and the missing layer adds 10 points that shift all cluster boundaries."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.run_spatial"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the spatial indexer then validates output via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all defects and re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
