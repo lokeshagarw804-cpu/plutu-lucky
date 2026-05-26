@@ -2,20 +2,20 @@ author_name = "Dhruvkumar Patel"
 author_email = "dhruvpatel2284@gmail.com"
 category = "spatial_indexing"
 difficulty = "hard"
-tags = ["spatial-indexing", "geospatial", "grid-computing", "density-estimation", "debugging"]
+tags = ["spatial-indexing", "geospatial", "kernel-density", "grid-computing", "debugging"]
 
-difficulty_explanation = "Four interacting defects across five modules require understanding spatial coordinate geometry, grid cell assignment arithmetic, kernel density estimation mathematics, distance-based clustering with centroid drift, and deterministic ordering across independent spatial layers. Fixing any single bug changes the computed values that other modules depend on — the grid resolution change alters all cell assignments which changes density neighborhoods, and loading the missing layer adds points that shift cluster centroids."
-solution_explanation = "Fix whitespace handling in comma-split layer type list, read grid resolution and cell size from the correct config section (grid.analysis), divide accumulated density by number of passes to get the average, and add layer_id as sort tiebreaker for deterministic point processing order."
-verification_explanation = "Tests validate layer count and point totals, grid resolution and cell size values, number of occupied cells (which depends on resolution), density score ranges (which depend on both resolution and averaging), cluster count and sizes (which depend on all points being loaded and processed in correct order). Tests require all bugs to be fixed simultaneously for passage."
-expert_time_estimate_hours = 3.5
+difficulty_explanation = "Four interacting defects require understanding spatial coordinate geometry, grid cell boundary semantics, kernel density function mathematics (linear vs quadratic distance weighting), and how point processing order creates cascade effects in incremental centroid-based clustering. The resolution bug requires TWO code changes (section AND derivation formula), and the density bug requires understanding kernel function theory to identify that quadratic weights are being used where linear weights are specified."
+solution_explanation = "Fix whitespace in comma-split layer list, change grid resolution source to grid.analysis section AND replace derived cell_size with config-read value, add boundary detection for exact cell multiples in _get_cell, replace quadratic kernel (1-dist^2/r^2) with linear kernel (1-dist/r) in density calculator, and add layer_id as sort tiebreaker for deterministic processing order."
+verification_explanation = "Tests validate total points (all layers loaded), grid resolution and cell size (correct config section), occupied cell count (depends on resolution AND boundary handling), specific boundary point assignment (t011 must be in cell 9,9), density value ranges (distinguishes linear from quadratic kernel), cluster count (depends on vegetation loading AND sort order), and specific cluster membership (proves vegetation points are critical for cluster viability)."
+expert_time_estimate_hours = 4.0
 
 [task]
 name = "spatial-grid-repair"
-description = "Debug a spatial grid indexer with four interacting defects across layer loading, grid resolution configuration, kernel density estimation, and point processing order. Bugs involve string parsing, config section resolution, mathematical averaging, and deterministic sort semantics that collectively produce incorrect spatial analysis results."
+description = "Debug a spatial grid indexer with four deeply interacting defects: a config parsing issue that drops a critical data layer, a dual-source grid configuration error, a quadratic-vs-linear kernel density function bug, and a sort ordering issue that cascades through incremental cluster centroid computation."
 
 [task.difficulty]
 level = "hard"
-reasoning = "Requires understanding spatial coordinate geometry, grid cell assignment mathematics, kernel density averaging vs accumulation, and how point processing order affects incremental centroid computation in distance-based clustering. Defects interact deeply — the resolution change alters the entire grid structure, and the missing layer adds 10 points that shift all cluster boundaries."
+reasoning = "Requires understanding kernel density estimation theory (linear vs quadratic distance weighting produces different decay curves), grid cell boundary arithmetic (points at exact multiples need special handling), and how incremental centroid drift in clustering means point order affects final cluster membership non-locally. The grid bug is a trap: fixing just the config section leaves cell_size still wrong because it is derived rather than read."
 
 [task.runtime]
 entrypoint = "python3 -m runtime.run_spatial"

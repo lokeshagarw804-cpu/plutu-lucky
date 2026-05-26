@@ -70,8 +70,8 @@ class TestLayerLoading:
         assert "vegetation" in grid_data["layers_loaded"]
 
 
-class TestGridResolution:
-    """Validates grid uses correct resolution from config."""
+class TestGridConfiguration:
+    """Validates grid uses correct resolution and cell size from config."""
 
     def test_resolution_value(self, grid_data):
         """Grid resolution must be 25 from grid.analysis section."""
@@ -86,80 +86,117 @@ class TestGridResolution:
         )
 
     def test_occupied_cells(self, grid_data):
-        """With resolution=25 (cell_size=40), must have 7 occupied cells."""
-        assert grid_data["occupied_cells"] == 7, (
-            f"Expected 7 occupied cells with 40x40 grid, got "
-            f"{grid_data['occupied_cells']}."
+        """With cell_size=40 and boundary handling, must have 10 occupied cells."""
+        assert grid_data["occupied_cells"] == 10, (
+            f"Expected 10 occupied cells, got {grid_data['occupied_cells']}."
+        )
+
+    def test_boundary_point_assignment(self, grid_data):
+        """Point t011 at (400.0, 400.0) must be in cell 9,9 not 10,10.
+
+        Points exactly on cell boundaries (coordinate is exact multiple
+        of cell_size) must be assigned to the lower cell. This is the
+        inclusive upper bound rule. Check boundary logic in
+        /app/runtime/grid_indexer.py _get_cell method.
+        """
+        assignments = grid_data["cell_assignments"]
+        # t011 should be in cell 9,9
+        cell_9_9 = assignments.get("9,9", [])
+        assert "t011" in cell_9_9, (
+            f"Point t011 at (400.0, 400.0) should be in cell 9,9 "
+            f"(boundary points go to lower cell). Found in: "
+            f"{[k for k, v in assignments.items() if 't011' in v]}"
         )
 
 
 class TestDensityComputation:
-    """Validates density calculations with correct averaging."""
+    """Validates kernel density estimation with correct kernel function."""
 
-    def test_density_not_tripled(self, grid_data):
-        """Density scores must reflect single-pass average, not 3x accumulated.
+    def test_density_values_reasonable(self, grid_data):
+        """All density scores must be below 0.02 (linear kernel with area normalization).
 
-        With 3 passes of identical computation, the average should equal
-        a single pass value. If accumulated (not averaged), values will be
-        3x too high.
+        If densities are above 0.02, the kernel function is likely
+        using quadratic weights (dist^2/radius^2) instead of linear
+        (dist/radius). The correct kernel for weighted_linear mode is:
+        contribution = weight * (1 - dist/radius).
+        Check /app/runtime/density_calculator.py kernel weight formula.
         """
         densities = grid_data["density_scores"]
-        # All density scores should be reasonable (< 5.0 for these data points)
         for cell, score in densities.items():
-            assert score < 5.0, (
-                f"Cell {cell} has density {score} which exceeds 5.0 — "
-                f"likely accumulated across passes instead of averaged."
+            assert score < 0.02, (
+                f"Cell {cell} has density {score} which is too high. "
+                f"With linear kernel and area normalization, values "
+                f"should be below 0.02. Check kernel weight formula "
+                f"in /app/runtime/density_calculator.py — should use "
+                f"(1 - dist/radius) not (1 - dist^2/radius^2)."
             )
 
-    def test_high_density_cell(self, grid_data):
-        """Cell containing the point cluster near (125,348) must have highest density."""
+    def test_highest_density_cell(self, grid_data):
+        """The cell with most nearby high-weight points must have highest density."""
         densities = grid_data["density_scores"]
-        # Cell (3,8) with 40x40 grid: centroid at (140, 340)
-        # Many points cluster near (125, 348) within 80.0 kernel radius
-        cell_3_8 = densities.get("3,8", 0)
-        assert 1.8 < cell_3_8 < 2.5, (
-            f"Cell 3,8 density should be ~2.1, got {cell_3_8}."
+        max_cell = max(densities, key=densities.get)
+        max_val = densities[max_cell]
+        assert 0.010 < max_val < 0.015, (
+            f"Highest density should be ~0.012, got {max_val}."
         )
 
     def test_density_cell_count(self, grid_data):
-        """Must have exactly 7 density scores (one per occupied cell)."""
-        assert len(grid_data["density_scores"]) == 7
+        """Must have exactly 10 density scores (one per occupied cell)."""
+        assert len(grid_data["density_scores"]) == 10
 
 
 class TestClusterFormation:
-    """Validates spatial clustering results."""
+    """Validates spatial clustering with correct point ordering."""
 
     def test_cluster_count(self, cluster_data):
-        """Must produce exactly 5 clusters with all 4 layers loaded."""
-        assert cluster_data["cluster_count"] == 5, (
-            f"Expected 5 clusters, got {cluster_data['cluster_count']}."
+        """Must produce exactly 6 clusters with all layers and correct ordering.
+
+        Without vegetation layer, only 4 clusters form. With vegetation
+        loaded AND correct timestamp-based ordering (using layer_id as
+        tiebreaker), 6 clusters emerge because vegetation points fill
+        gaps that enable additional clusters to meet min_points=3.
+        """
+        assert cluster_data["cluster_count"] == 6, (
+            f"Expected 6 clusters, got {cluster_data['cluster_count']}. "
+            f"Cluster formation depends on all layers being loaded AND "
+            f"correct point processing order."
         )
 
     def test_total_clustered(self, cluster_data):
-        """All 40 points must be assigned to clusters."""
+        """All 40 points must be assigned to valid clusters."""
         assert cluster_data["total_clustered_points"] == 40, (
             f"Expected 40 clustered points, got "
             f"{cluster_data['total_clustered_points']}."
         )
 
     def test_largest_cluster_size(self, cluster_data):
-        """Largest cluster must have 13 members (central point group)."""
+        """Largest cluster must have 11 members."""
         sizes = [c["member_count"] for c in cluster_data["clusters"]]
-        assert max(sizes) == 13, (
-            f"Expected largest cluster=13, got {max(sizes)}."
+        assert max(sizes) == 11, (
+            f"Expected largest cluster=11, got {max(sizes)}."
         )
 
     def test_smallest_cluster_size(self, cluster_data):
-        """Smallest cluster must have 3 members (minimum threshold)."""
+        """Smallest cluster must have exactly 3 members (minimum threshold)."""
         sizes = [c["member_count"] for c in cluster_data["clusters"]]
         assert min(sizes) == 3
 
-    def test_cluster_centroid_range(self, cluster_data):
-        """First cluster centroid must be near (128, 348)."""
-        c0 = cluster_data["clusters"][0]
-        assert 120 < c0["centroid_x"] < 135, (
-            f"First cluster centroid_x should be ~128, got {c0['centroid_x']}."
+    def test_central_cluster_has_vegetation(self, cluster_data):
+        """The cluster near (400, 400) must include vegetation points v008 and v009.
+
+        This cluster only reaches min_points=3 when vegetation is loaded.
+        Without vegetation, it has too few members and gets filtered out.
+        """
+        # Find cluster near (400, 400)
+        target_cluster = None
+        for c in cluster_data["clusters"]:
+            if 380 < c["centroid_x"] < 420 and 380 < c["centroid_y"] < 420:
+                target_cluster = c
+                break
+        assert target_cluster is not None, (
+            "No cluster found near (400, 400). This cluster depends on "
+            "vegetation points being loaded."
         )
-        assert 340 < c0["centroid_y"] < 355, (
-            f"First cluster centroid_y should be ~348, got {c0['centroid_y']}."
+        assert "v008" in target_cluster["members"], (
+            f"Vegetation point v008 must be in the (400,400) cluster."
         )

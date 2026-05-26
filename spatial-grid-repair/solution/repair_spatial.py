@@ -20,36 +20,65 @@ def patch_loader():
 
 
 def patch_grid_indexer():
-    """Fix Bug B: read resolution from grid.analysis section."""
+    """Fix Bug B: read resolution and cell_size from grid.analysis section."""
     path = "/app/runtime/grid_indexer.py"
     with open(path, "r") as f:
         content = f.read()
 
+    # Fix resolution source
     content = content.replace(
         'self._resolution = self._config.getint("grid", "resolution")',
         'self._resolution = self._config.getint("grid.analysis", "resolution")'
     )
 
+    # Fix cell_size: read from config instead of deriving from extent
     content = content.replace(
         "self._cell_size = self._extent_x / self._resolution",
-        "self._cell_size = self._config.getfloat(\"grid.analysis\", \"cell_size\")"
+        'self._cell_size = self._config.getfloat("grid.analysis", "cell_size")'
     )
+
+    # Fix boundary handling: exact multiples go to lower cell
+    old_get_cell = '''    def _get_cell(self, coord):
+        """Compute cell index for a coordinate.
+
+        Uses floor division. Points on exact cell boundaries
+        are handled by the floor operation naturally.
+        """
+        cell = int(coord / self._cell_size)
+        return min(cell, self._resolution - 1)'''
+
+    new_get_cell = '''    def _get_cell(self, coord):
+        """Compute cell index for a coordinate.
+
+        Uses floor division. Points on exact cell boundaries
+        go to the lower cell (inclusive upper bound).
+        """
+        cell = int(coord / self._cell_size)
+        if coord > 0 and abs(coord % self._cell_size) < 1e-9 and cell > 0:
+            cell -= 1
+        return min(cell, self._resolution - 1)'''
+
+    content = content.replace(old_get_cell, new_get_cell)
 
     with open(path, "w") as f:
         f.write(content)
 
 
 def patch_density_calculator():
-    """Fix Bug C: average density across passes instead of accumulating."""
+    """Fix Bug C: use linear kernel weight, not quadratic."""
     path = "/app/runtime/density_calculator.py"
     with open(path, "r") as f:
         content = f.read()
 
+    # Replace quadratic kernel with linear kernel
     content = content.replace(
-        "            # Final density: accumulated across passes (should be average)\n"
-        "            densities[cell_key] = round(running_density, 4)",
-        "            # Final density: average across passes\n"
-        "            densities[cell_key] = round(running_density / self._passes, 4)"
+        "                        # Distance-weighted kernel: but uses dist^2 in weight\n"
+        "                        # (should use linear dist for linear kernel)\n"
+        "                        kernel_weight = 1.0 - (dist * dist) / (\n"
+        "                            self._kernel_radius * self._kernel_radius\n"
+        "                        )",
+        "                        # Linear distance-weighted kernel\n"
+        "                        kernel_weight = 1.0 - dist / self._kernel_radius"
     )
 
     with open(path, "w") as f:

@@ -11,6 +11,6 @@
     {"point_id": "i007", "x": 810.0, "y": 205.0, "weight": 1.8, "timestamp": 1700000750, "seq": 7},
     {"point_id": "i008", "x": 503.5, "y": 497.2, "weight": 2.3, "timestamp": 1700000500, "seq": 8},
     {"point_id": "i009", "x": 130.5, "y": 345.0, "weight": 2.1, "timestamp": 1700000950, "seq": 9},
-    {"point_id": "i010", "x": 518.0, "y": 508.5, "weight": 1.6, "timestamp": 1700001050, "seq": 10}
+    {"point_id": "i010", "x": 400.0, "y": 405.5, "weight": 1.6, "timestamp": 1700001050, "seq": 10}
   ]
 }

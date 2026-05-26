@@ -2,9 +2,9 @@
 
 Uses distance-based clustering with a configured threshold. Points
 within distance_threshold of a cluster centroid are assigned to that
-cluster. When multiple points are equidistant from a centroid, they
-must be ordered by layer_id alphabetically then seq within that layer
-for deterministic cluster assignment.
+cluster. When multiple points have the same timestamp, they must be
+ordered by layer_id alphabetically then seq within that layer for
+deterministic cluster assignment.
 
 Note: seq is local to each layer — it does not provide global ordering.
 """
@@ -74,7 +74,7 @@ class ClusterBuilder:
             c for c in clusters if len(c["members"]) >= self._min_points
         ]
 
-        # Renumber
+        # Renumber and finalize
         for idx, c in enumerate(valid_clusters):
             c["cluster_id"] = idx
             c["member_count"] = len(c["members"])

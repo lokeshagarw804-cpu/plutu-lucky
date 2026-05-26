@@ -9,8 +9,8 @@
     {"point_id": "v005", "x": 252.8, "y": 749.0, "weight": 3.0, "timestamp": 1700000650, "seq": 5},
     {"point_id": "v006", "x": 803.5, "y": 198.2, "weight": 1.4, "timestamp": 1700000780, "seq": 6},
     {"point_id": "v007", "x": 257.5, "y": 744.8, "weight": 2.6, "timestamp": 1700000910, "seq": 7},
-    {"point_id": "v008", "x": 131.2, "y": 349.5, "weight": 2.1, "timestamp": 1700001040, "seq": 8},
-    {"point_id": "v009", "x": 513.8, "y": 501.2, "weight": 1.9, "timestamp": 1700001170, "seq": 9},
+    {"point_id": "v008", "x": 395.0, "y": 398.5, "weight": 2.1, "timestamp": 1700001040, "seq": 8},
+    {"point_id": "v009", "x": 405.2, "y": 410.3, "weight": 1.9, "timestamp": 1700001170, "seq": 9},
     {"point_id": "v010", "x": 750.0, "y": 750.0, "weight": 1.2, "timestamp": 1700001300, "seq": 10}
   ]
 }
