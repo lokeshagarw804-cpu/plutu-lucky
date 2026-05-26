@@ -1,44 +1,71 @@
-"""Spatial index builder — main entry point.
+"""Signal correlation engine — main entry point.
 
-Orchestrates the full processing flow: load feeds, normalize records,
-build spatial index, execute queries, and compute statistics.
+Orchestrates the full correlation analysis: load station data, normalize
+signals, align pairs, compute windowed correlations, build correlation
+matrix, and detect significant events.
 """
 import json
 import os
+from itertools import combinations
 
-from runtime.feed_loader import FeedLoader
-from runtime.normalizer import RecordNormalizer
-from runtime.indexer import RTreeIndexer
-from runtime.query_engine import QueryEngine
-from runtime.stats import StatisticsAggregator
+from runtime.loader import SignalLoader
+from runtime.normalizer import SignalNormalizer
+from runtime.aligner import SignalAligner
+from runtime.correlator import WindowedCorrelator
+from runtime.matrix_builder import MatrixBuilder
+from runtime.event_detector import EventDetector
 
 
 def main():
     config_path = "/app/runtime/config.ini"
 
-    loader = FeedLoader(config_path)
-    raw_records = loader.load_all_feeds()
+    # Load and normalize
+    loader = SignalLoader(config_path)
+    raw_stations = loader.load_stations()
 
-    normalizer = RecordNormalizer(config_path)
-    records = normalizer.normalize(raw_records)
+    normalizer = SignalNormalizer()
+    stations = normalizer.normalize(raw_stations)
 
-    indexer = RTreeIndexer(config_path)
-    indexer.build_index(records)
+    # Align and correlate all pairs
+    aligner = SignalAligner()
+    correlator = WindowedCorrelator(config_path)
 
-    engine = QueryEngine(config_path, indexer)
-    query_results = engine.execute_region_query()
+    station_ids = sorted(stations.keys())
+    pair_correlations = {}
 
-    aggregator = StatisticsAggregator(config_path, indexer)
-    stats = aggregator.compute_statistics()
+    for id_a, id_b in combinations(station_ids, 2):
+        aligned_a, aligned_b, overlap = aligner.align_pair(
+            stations[id_a], stations[id_b]
+        )
+        if overlap > 0:
+            windows = correlator.correlate(aligned_a, aligned_b)
+            pair_correlations[(id_a, id_b)] = windows
+        else:
+            pair_correlations[(id_a, id_b)] = []
 
+    # Build matrix
+    builder = MatrixBuilder()
+    matrix_result = builder.build_matrix(stations, pair_correlations)
+
+    # Detect events
+    detector = EventDetector(config_path)
+    events = detector.detect_events(pair_correlations)
+
+    # Write outputs
     output_dir = "/app/runtime/output"
     os.makedirs(output_dir, exist_ok=True)
 
-    with open(os.path.join(output_dir, "query_results.json"), "w") as f:
-        json.dump(query_results, f, indent=2)
+    with open(os.path.join(output_dir, "correlation_matrix.json"), "w") as f:
+        json.dump(matrix_result, f, indent=2)
 
-    with open(os.path.join(output_dir, "index_stats.json"), "w") as f:
-        json.dump(stats, f, indent=2)
+    event_output = {
+        "threshold": 0.75,
+        "min_duration_windows": 2,
+        "total_events": len(events),
+        "events": events,
+    }
+    with open(os.path.join(output_dir, "detected_events.json"), "w") as f:
+        json.dump(event_output, f, indent=2)
 
 
 if __name__ == "__main__":

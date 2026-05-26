@@ -1,3 +1,3 @@
-# Spatial index runtime package.
-# Architecture: feeds -> normalize -> index -> query -> stats
-# Partition statistics use snapshot semantics (final window state only).
+# Signal correlation engine runtime package.
+# Architecture: load -> normalize -> align -> correlate -> build matrix -> detect events
+# Station ordering in outputs uses numeric station identifiers for consistency.

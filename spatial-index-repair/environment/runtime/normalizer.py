@@ -1,43 +1,32 @@
-"""Record normalizer — validates and filters POI records.
+"""Signal normalizer — standardizes raw signals for correlation analysis.
 
-Applies category filtering based on the allowed_categories config,
-validates coordinate ranges, and normalizes field formats before
-records are passed to the indexing stage.
+Applies z-score normalization to each station's signal using the full-signal
+mean and standard deviation. Pre-normalized signals should not be re-scaled
+by downstream processing stages.
 """
-import configparser
+import math
 
 
-class RecordNormalizer:
-    """Filters and validates POI records before indexing."""
+class SignalNormalizer:
+    """Z-score normalizes signals for correlation computation."""
 
-    def __init__(self, config_path):
-        self._config = configparser.ConfigParser()
-        self._config.read(config_path)
-        raw_categories = self._config.get("feeds", "allowed_categories")
-        self._allowed = set(raw_categories.split(","))
+    def normalize(self, stations):
+        """Normalize each station's signal to zero mean and unit variance."""
+        normalized = {}
+        for station_id, data in stations.items():
+            values = data["values"]
+            n = len(values)
+            mean = sum(values) / n
+            variance = sum((v - mean) ** 2 for v in values) / n
+            std = math.sqrt(variance) if variance > 0 else 1.0
 
-    def normalize(self, records):
-        """Filter records by allowed categories and validate fields."""
-        normalized = []
-        for record in records:
-            category = record.get("category", "")
-            if category not in self._allowed:
-                continue
-            if not self._valid_coordinates(record):
-                continue
-            normalized.append({
-                "seq": record["seq"],
-                "feed_id": record["feed_id"],
-                "name": record["name"],
-                "category": category,
-                "lat": float(record["lat"]),
-                "lon": float(record["lon"]),
-                "timestamp": record["timestamp"],
-            })
+            norm_values = [(v - mean) / std for v in values]
+            normalized[station_id] = {
+                "station_id": station_id,
+                "sample_rate": data["sample_rate"],
+                "start_time": data["start_time"],
+                "values": norm_values,
+                "original_mean": mean,
+                "original_std": std,
+            }
         return normalized
-
-    def _valid_coordinates(self, record):
-        """Check that coordinates are within valid WGS84 range."""
-        lat = record.get("lat", 0)
-        lon = record.get("lon", 0)
-        return -90 <= lat <= 90 and -180 <= lon <= 180
