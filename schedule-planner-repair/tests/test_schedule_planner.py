@@ -107,9 +107,9 @@ class TestExecutionResults:
         assert plan_data["deadlines_met"] == 43, (
             f"Expected 43 deadlines met but got "
             f"{plan_data['deadlines_met']}. "
-            f"Check that priority sorting uses deterministic ordering — "
-            f"jobs at same priority and deadline from different queues "
-            f"need stable sort by queue_id then job_seq."
+            f"Check that priority sorting in /app/runtime/priority_sorter.py "
+            f"produces fully deterministic ordering when multiple jobs "
+            f"share the same priority and deadline values."
         )
 
     def test_execution_results_count(self, plan_data):
@@ -167,9 +167,10 @@ class TestValidation:
         """Validation must report valid status with no mismatches."""
         assert validation_data["status"] == "valid", (
             f"Validation status is '{validation_data['status']}', "
-            f"expected 'valid'. Check validation tolerance in "
-            f"/app/runtime/plan_validator.py — the [scheduler.validation] "
-            f"section in config.ini specifies the correct tolerance to use."
+            f"expected 'valid'. Check how /app/runtime/plan_validator.py "
+            f"reads its tolerance configuration and ensure the snapshot "
+            f"tracking in /app/runtime/deadline_checker.py is consistent "
+            f"with execution."
         )
 
     def test_no_mismatches(self, validation_data):
@@ -178,8 +179,8 @@ class TestValidation:
         assert len(mismatches) == 0, (
             f"Found {len(mismatches)} mismatches: "
             f"{[m['job_id'] for m in mismatches[:5]]}. "
-            f"Verify that deadline_checker captures point-in-time progress "
-            f"and plan_validator uses [scheduler.validation] tolerance."
+            f"Verify that progress snapshots accurately track execution "
+            f"state and that the validator uses appropriate tolerance."
         )
 
     def test_all_jobs_validated(self, validation_data):

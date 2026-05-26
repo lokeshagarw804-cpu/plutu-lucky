@@ -41,8 +41,8 @@ def patch_deadline_checker():
         content = f.read()
 
     old_code = """                for jid, ms in progress.items():
-                    cumulative[jid] += ms
-                    snapshot["execution_progress"][jid] = cumulative[jid]"""
+                    checkpoint_state[jid] += ms
+                    snapshot["execution_progress"][jid] = checkpoint_state[jid]"""
 
     new_code = """                for jid, ms in progress.items():
                     snapshot["execution_progress"][jid] = ms"""

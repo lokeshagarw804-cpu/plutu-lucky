@@ -1,8 +1,8 @@
 """Deadline checker — builds periodic execution progress snapshots.
 
 During scheduling simulation, progress snapshots capture job state
-at regular intervals (every N rounds). Snapshots record accumulated
-execution time for each job at that checkpoint moment.
+at regular intervals (every N rounds). Snapshots record execution
+time tracking for each job at checkpoint boundaries.
 """
 import configparser
 from collections import defaultdict
@@ -27,7 +27,7 @@ class DeadlineChecker:
         """
         snapshots = []
         progress = {}
-        cumulative = defaultdict(float)
+        checkpoint_state = defaultdict(float)
 
         for job in sorted_jobs:
             progress[job["job_id"]] = 0
@@ -56,8 +56,8 @@ class DeadlineChecker:
                     "execution_progress": {},
                 }
                 for jid, ms in progress.items():
-                    cumulative[jid] += ms
-                    snapshot["execution_progress"][jid] = cumulative[jid]
+                    checkpoint_state[jid] += ms
+                    snapshot["execution_progress"][jid] = checkpoint_state[jid]
                 snapshots.append(snapshot)
 
             if not round_had_work:

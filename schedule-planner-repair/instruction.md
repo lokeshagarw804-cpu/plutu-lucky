@@ -2,7 +2,7 @@
 
 ## Overview
 
-A preemptive priority scheduling engine manages job execution across multiple submission queues (batch, interactive, realtime, maintenance). It loads job definitions, establishes a deterministic priority ordering, simulates round-robin execution with configurable time quanta, captures periodic progress snapshots, and validates execution consistency for correctness auditing.
+A preemptive priority scheduling engine manages job execution across multiple submission queues (batch, interactive, realtime, maintenance). It loads job definitions, establishes a priority ordering, simulates round-robin execution with configurable time quanta, captures periodic progress snapshots, and validates execution consistency for correctness auditing.
 
 ## System Environment
 
@@ -15,20 +15,20 @@ A preemptive priority scheduling engine manages job execution across multiple su
 
 1. *Queue Loading* (`/app/runtime/queue_loader.py`) — Reads JSON job files from `/app/runtime/data/` for each configured queue. Only queues listed in the `active_queues` configuration value are loaded into the scheduler.
 
-2. *Priority Sorting* (`/app/runtime/priority_sorter.py`) — Merges jobs from all loaded queues into a single deterministic execution order. The correct ordering is by priority descending, then deadline ascending, then queue_id alphabetically, then job_seq ascending within a queue. This ensures reproducible scheduling across runs.
+2. *Priority Sorting* (`/app/runtime/priority_sorter.py`) — Merges jobs from all loaded queues into a single execution order based on scheduling priority and urgency constraints. The ordering must be fully deterministic to guarantee reproducible schedules across runs.
 
-3. *Execution* (`/app/runtime/executor.py`) — Simulates round-robin scheduling with a fixed time quantum per round. Each pending job receives one quantum per round until completed or max_rounds is reached.
+3. *Execution* (`/app/runtime/executor.py`) — Simulates round-robin scheduling with a fixed time quantum per round. Each pending job receives one quantum per round until completed or max_rounds is reached. Tracks completion rounds and deadline compliance.
 
-4. *Progress Snapshots* (`/app/runtime/deadline_checker.py`) — Captures point-in-time execution progress at regular intervals (every 2 rounds). Each snapshot records the current accumulated execution time for each job at that moment.
+4. *Progress Snapshots* (`/app/runtime/deadline_checker.py`) — Captures execution progress at regular intervals (every 2 rounds). Each snapshot records per-job execution state at that checkpoint moment for auditing purposes.
 
-5. *Validation* (`/app/runtime/plan_validator.py`) — Compares the executor's final state against the last progress snapshot. Uses the tolerance configured under `[scheduler.validation]` for determining acceptable differences between execution and snapshot tracking.
+5. *Validation* (`/app/runtime/plan_validator.py`) — Compares the executor's final state against the last progress snapshot to confirm internal consistency. A properly functioning system should report all jobs as validated.
 
 ## Problem
 
 The system produces output but exhibits several anomalies:
 - The total number of scheduled jobs appears lower than expected given the configured queues
 - Validation reports mismatches between execution results and progress snapshots
-- Progress snapshot values grow unreasonably large across successive checkpoints
+- Progress snapshot values grow unexpectedly across successive checkpoints
 - Some job orderings in execution plans appear non-deterministic when jobs share priority and deadline values
 
 ## Expected Correct Output
@@ -36,7 +36,7 @@ The system produces output but exhibits several anomalies:
 When all defects are resolved:
 - All 4 queues should be loaded (batch, interactive, realtime, maintenance) producing 50 total jobs
 - The priority sorter should produce a stable deterministic ordering across runs
-- Progress snapshots should reflect the exact accumulated execution time at each checkpoint
+- Progress snapshots should reflect actual execution state at each checkpoint
 - Validation should report status "valid" with zero mismatches
 
 ## Output Schema
@@ -89,7 +89,7 @@ When all defects are resolved:
 
 | File | Purpose |
 |------|---------|
-| /app/runtime/config.ini | Queue selection, scheduling parameters, validation tolerance |
+| /app/runtime/config.ini | Queue selection, scheduling parameters, validation settings |
 | /app/runtime/queue_loader.py | Loads jobs from configured submission queues |
 | /app/runtime/priority_sorter.py | Establishes deterministic job execution ordering |
 | /app/runtime/executor.py | Simulates round-robin execution with time quantum |
