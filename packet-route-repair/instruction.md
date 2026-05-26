@@ -2,7 +2,7 @@
 
 ## What this is
 
-Network flow analyzer. Reads packet logs from three router nodes, computes shortest-path costs using Dijkstra, detects routing anomalies (loops and suboptimal paths), and produces flow quality reports.
+Network flow analyzer. Reads packet logs from three router nodes, computes shortest-path costs via Dijkstra, detects routing anomalies (loops and suboptimal paths), and produces flow quality reports.
 
 ## Environment
 
@@ -11,10 +11,10 @@ Network flow analyzer. Reads packet logs from three router nodes, computes short
 
 ## Processing stages
 
-1. **Ingest** — Load packet logs from each router node's JSONL feed.
-2. **Route** — Compute optimal path costs between all node pairs using Dijkstra's shortest-path algorithm.
-3. **Track** — Detect routing loops by tracking visited nodes across the full packet path. A loop exists when any node in the hop sequence has already been visited earlier in that same packet's traversal.
-4. **Report** — Score anomalies per source-destination pair. Flow cost normalization divides by total accumulated path costs for that source (not just the last destination's cost). Sort flows globally by descending score with source and destination as tiebreakers.
+1. **Ingest** — Load JSONL packet logs from each router node.
+2. **Route** — Compute optimal path costs between all node pairs using Dijkstra.
+3. **Track** — Detect routing loops by tracking visited nodes across the full packet path. A loop exists when any node has already been visited earlier in that packet's traversal.
+4. **Report** — Score anomalies per source-destination pair. Flow cost normalization divides by total accumulated path costs for that source (not just the last destination's cost). Sort globally by descending score with source and destination as tiebreakers.
 
 ## Symptoms
 
@@ -22,18 +22,18 @@ Some routing loops go undetected even though packets clearly revisit nodes throu
 
 ## Expected output
 
-- `/app/runtime/output/flows.json`: list with `source_node`(str), `dest_node`(str), `anomaly_score`(float), `path_cost`(int), `optimal_cost`(int), `has_loop`(bool)
+- `/app/runtime/output/flows.json`: list with `source_node`, `dest_node`, `anomaly_score`, `path_cost`, `optimal_cost`, `has_loop`
 - `/app/runtime/output/summary.json`: `total_flows`, `loops_detected`, `suboptimal_count`, `max_anomaly_score`, `avg_anomaly_score`
 
 ## Key files
 
 | File | Purpose |
 |------|---------|
-| `/app/runtime/router.py` | Dijkstra shortest-path computation |
-| `/app/runtime/tracker.py` | Loop detection via path tracking |
-| `/app/runtime/reporter.py` | Anomaly scoring and flow reports |
-| `/app/runtime/config.ini` | Network and scoring parameters |
+| `router.py` | Dijkstra shortest-path |
+| `tracker.py` | Loop detection |
+| `reporter.py` | Anomaly scoring and reports |
+| `config.ini` | Network parameters |
 
 ## Task
 
-Find and fix the bugs. Multiple interacting defects across files.
+Find and fix the bugs. Multiple interacting defects.
