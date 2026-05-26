@@ -1,0 +1,142 @@
+[
+  {
+    "request_id": "REQ-001",
+    "team": "team_1",
+    "tier": "gold",
+    "requested_units": 2500,
+    "payload": "{\"priority_group\": \"platform-core\", \"request_id\": \"REQ-001\", \"requested_units\": 2500, \"submitted_at\": 1700000000, \"team\": \"team_1\", \"tier\": \"gold\"}",
+    "signature": "5027e4dfef1ebd74571d444a0fee6f8e98e818a48ed7886266c859e2b2ddb849",
+    "submitted_at": 1700000000,
+    "priority_group": "platform-core"
+  },
+  {
+    "request_id": "REQ-002",
+    "team": "team_1",
+    "tier": "silver",
+    "requested_units": 3000,
+    "payload": "{\"priority_group\": \"platform-services\", \"request_id\": \"REQ-002\", \"requested_units\": 3000, \"submitted_at\": 1700003600, \"team\": \"team_1\", \"tier\": \"silver\"}",
+    "signature": "0e4db733becc2e8a79cd8c3cb81f71c0d36434334cc061f215623e2887414896",
+    "submitted_at": 1700003600,
+    "priority_group": "platform-services"
+  },
+  {
+    "request_id": "REQ-003",
+    "team": "team_1",
+    "tier": "bronze",
+    "requested_units": 3500,
+    "payload": "{\"priority_group\": \"platform-external\", \"request_id\": \"REQ-003\", \"requested_units\": 3500, \"submitted_at\": 1700007200, \"team\": \"team_1\", \"tier\": \"bronze\"}",
+    "signature": "0fd4e9f3f57a7ffe62aadc777bde6288e318ba03d5981704fa25dc878e518398",
+    "submitted_at": 1700007200,
+    "priority_group": "platform-external"
+  },
+  {
+    "request_id": "REQ-004",
+    "team": "team_1",
+    "tier": "gold",
+    "requested_units": 800,
+    "payload": "{\"priority_group\": \"platform-core\", \"request_id\": \"REQ-004\", \"requested_units\": 800, \"submitted_at\": 1700010800, \"team\": \"team_1\", \"tier\": \"gold\"}",
+    "signature": "58efd9a7ab6af0ec1155100972b7b6b9ee57608d76e2d9b26a39891121421b32",
+    "submitted_at": 1700010800,
+    "priority_group": "platform-core"
+  },
+  {
+    "request_id": "REQ-005",
+    "team": "team_1",
+    "tier": "silver",
+    "requested_units": 900,
+    "payload": "{\"priority_group\": \"platform-services\", \"request_id\": \"REQ-005\", \"requested_units\": 900, \"submitted_at\": 1700014400, \"team\": \"team_1\", \"tier\": \"silver\"}",
+    "signature": "7e8b8549ffef19f2bb9d3eb3d4cc63f5ab2b8337c1fe2a1792839eca418317b0",
+    "submitted_at": 1700014400,
+    "priority_group": "platform-services"
+  },
+  {
+    "request_id": "REQ-006",
+    "team": "team_1",
+    "tier": "bronze",
+    "requested_units": 1000,
+    "payload": "{\"priority_group\": \"platform-external\", \"request_id\": \"REQ-006\", \"requested_units\": 1000, \"submitted_at\": 1700018000, \"team\": \"team_1\", \"tier\": \"bronze\"}",
+    "signature": "16b023d34ebe53a91f7f310c9f77d44220083ce70a19b1ccdf2c403185bfc0be",
+    "submitted_at": 1700018000,
+    "priority_group": "platform-external"
+  },
+  {
+    "request_id": "REQ-007",
+    "team": "team_1",
+    "tier": "gold",
+    "requested_units": 1100,
+    "payload": "{\"priority_group\": \"platform-core\", \"request_id\": \"REQ-007\", \"requested_units\": 1100, \"submitted_at\": 1700021600, \"team\": \"team_1\", \"tier\": \"gold\"}",
+    "signature": "232bd5eed9650ae938f43f921391a483bf6991c37668bdcd90635776414b85bf",
+    "submitted_at": 1700021600,
+    "priority_group": "platform-core"
+  },
+  {
+    "request_id": "REQ-008",
+    "team": "team_1",
+    "tier": "silver",
+    "requested_units": 1200,
+    "payload": "{\"priority_group\": \"platform-services\", \"request_id\": \"REQ-008\", \"requested_units\": 1200, \"submitted_at\": 1700025200, \"team\": \"team_1\", \"tier\": \"silver\"}",
+    "signature": "9039cd9f53592e4e71329e7bfdb7625cbf8fcda92454f4bfada66dc304dbcb47",
+    "submitted_at": 1700025200,
+    "priority_group": "platform-services"
+  },
+  {
+    "request_id": "REQ-009",
+    "team": "team_1",
+    "tier": "bronze",
+    "requested_units": 1300,
+    "payload": "{\"priority_group\": \"platform-external\", \"request_id\": \"REQ-009\", \"requested_units\": 1300, \"submitted_at\": 1700028800, \"team\": \"team_1\", \"tier\": \"bronze\"}",
+    "signature": "29a506f8fe0a62883b214575d91a8212503dc462338e792b59f5a4ca8e3edcd0",
+    "submitted_at": 1700028800,
+    "priority_group": "platform-external"
+  },
+  {
+    "request_id": "REQ-010",
+    "team": "team_1",
+    "tier": "gold",
+    "requested_units": 1400,
+    "payload": "{\"priority_group\": \"platform-core\", \"request_id\": \"REQ-010\", \"requested_units\": 1400, \"submitted_at\": 1700032400, \"team\": \"team_1\", \"tier\": \"gold\"}",
+    "signature": "a69706381bfe36af2c3ea9ac252ac4fddd776ed1afdac68efbf1ea9ba10e857a",
+    "submitted_at": 1700032400,
+    "priority_group": "platform-core"
+  },
+  {
+    "request_id": "REQ-011",
+    "team": "team_1",
+    "tier": "silver",
+    "requested_units": 1500,
+    "payload": "{\"priority_group\": \"platform-services\", \"request_id\": \"REQ-011\", \"requested_units\": 1500, \"submitted_at\": 1700036000, \"team\": \"team_1\", \"tier\": \"silver\"}",
+    "signature": "bde2db976d649da7ce6d20e457988b5753d8a85ef581b1b5fafdf5ca836579aa",
+    "submitted_at": 1700036000,
+    "priority_group": "platform-services"
+  },
+  {
+    "request_id": "REQ-012",
+    "team": "team_1",
+    "tier": "bronze",
+    "requested_units": 1600,
+    "payload": "{\"priority_group\": \"platform-external\", \"request_id\": \"REQ-012\", \"requested_units\": 1600, \"submitted_at\": 1700039600, \"team\": \"team_1\", \"tier\": \"bronze\"}",
+    "signature": "6e67a875e2c880bffea9041ea199e72f8e56f3841a59ce7416c7f4b4e7c59be2",
+    "submitted_at": 1700039600,
+    "priority_group": "platform-external"
+  },
+  {
+    "request_id": "REQ-013",
+    "team": "team_1",
+    "tier": "gold",
+    "requested_units": 1700,
+    "payload": "{\"priority_group\": \"platform-core\", \"request_id\": \"REQ-013\", \"requested_units\": 1700, \"submitted_at\": 1700043200, \"team\": \"team_1\", \"tier\": \"gold\"}",
+    "signature": "d191af5bdf7b11cae498ae1b58fe9fab097bd6e5f6236301345b5349e3a6c55a",
+    "submitted_at": 1700043200,
+    "priority_group": "platform-core"
+  },
+  {
+    "request_id": "REQ-014",
+    "team": "team_1",
+    "tier": "silver",
+    "requested_units": 1800,
+    "payload": "{\"priority_group\": \"platform-services\", \"request_id\": \"REQ-014\", \"requested_units\": 1800, \"submitted_at\": 1700046800, \"team\": \"team_1\", \"tier\": \"silver\"}",
+    "signature": "4eb6d0db98b0277b453fda2f8d3539a003cfcfa009227364e5700f414e2592fb",
+    "submitted_at": 1700046800,
+    "priority_group": "platform-services"
+  }
+]

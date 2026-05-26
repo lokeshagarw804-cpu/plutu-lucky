@@ -1,0 +1,132 @@
+[
+  {
+    "request_id": "REQ-026",
+    "team": "team_10",
+    "tier": "gold",
+    "requested_units": 4000,
+    "payload": "{\"priority_group\": \"platform-core\", \"request_id\": \"REQ-026\", \"requested_units\": 4000, \"submitted_at\": 1700000900, \"team\": \"team_10\", \"tier\": \"gold\"}",
+    "signature": "432436fdece816d020276779437e2fb7af3da56d806e907f1ec5f235c6eb82f0",
+    "submitted_at": 1700000900,
+    "priority_group": "platform-core"
+  },
+  {
+    "request_id": "REQ-027",
+    "team": "team_10",
+    "tier": "silver",
+    "requested_units": 4500,
+    "payload": "{\"priority_group\": \"platform-services\", \"request_id\": \"REQ-027\", \"requested_units\": 4500, \"submitted_at\": 1700004500, \"team\": \"team_10\", \"tier\": \"silver\"}",
+    "signature": "192d7978147be1d66c50994f949bfdd0b79c6554fbb7249422b3de0cf35dc14a",
+    "submitted_at": 1700004500,
+    "priority_group": "platform-services"
+  },
+  {
+    "request_id": "REQ-028",
+    "team": "team_10",
+    "tier": "bronze",
+    "requested_units": 540,
+    "payload": "{\"priority_group\": \"platform-external\", \"request_id\": \"REQ-028\", \"requested_units\": 540, \"submitted_at\": 1700008100, \"team\": \"team_10\", \"tier\": \"bronze\"}",
+    "signature": "190c9d3d48aaad048270d1d0331922426900a0b900ad1c24347ef1a5de77fdc3",
+    "submitted_at": 1700008100,
+    "priority_group": "platform-external"
+  },
+  {
+    "request_id": "REQ-029",
+    "team": "team_10",
+    "tier": "gold",
+    "requested_units": 660,
+    "payload": "{\"priority_group\": \"platform-core\", \"request_id\": \"REQ-029\", \"requested_units\": 660, \"submitted_at\": 1700011700, \"team\": \"team_10\", \"tier\": \"gold\"}",
+    "signature": "c1bd31c8d60d4755b4b835f8646326e4c0162f4718f78380a573e2c6c05daa29",
+    "submitted_at": 1700011700,
+    "priority_group": "platform-core"
+  },
+  {
+    "request_id": "REQ-030",
+    "team": "team_10",
+    "tier": "silver",
+    "requested_units": 780,
+    "payload": "{\"priority_group\": \"platform-services\", \"request_id\": \"REQ-030\", \"requested_units\": 780, \"submitted_at\": 1700015300, \"team\": \"team_10\", \"tier\": \"silver\"}",
+    "signature": "2dcd6a0d00515d0339321e7266bd9c8281fb9171ecc3eb705eec5957120be411",
+    "submitted_at": 1700015300,
+    "priority_group": "platform-services"
+  },
+  {
+    "request_id": "REQ-031",
+    "team": "team_10",
+    "tier": "bronze",
+    "requested_units": 900,
+    "payload": "{\"priority_group\": \"platform-external\", \"request_id\": \"REQ-031\", \"requested_units\": 900, \"submitted_at\": 1700018900, \"team\": \"team_10\", \"tier\": \"bronze\"}",
+    "signature": "46da4a4255a25ac1a368ace309763ed03e2f54d51cc67588f2c174bc494e385e",
+    "submitted_at": 1700018900,
+    "priority_group": "platform-external"
+  },
+  {
+    "request_id": "REQ-032",
+    "team": "team_10",
+    "tier": "gold",
+    "requested_units": 1020,
+    "payload": "{\"priority_group\": \"platform-core\", \"request_id\": \"REQ-032\", \"requested_units\": 1020, \"submitted_at\": 1700022500, \"team\": \"team_10\", \"tier\": \"gold\"}",
+    "signature": "22502d7313b8ba093dd4a189799984d2f02d3c2ec88c419c8364a5f497ab6826",
+    "submitted_at": 1700022500,
+    "priority_group": "platform-core"
+  },
+  {
+    "request_id": "REQ-033",
+    "team": "team_10",
+    "tier": "silver",
+    "requested_units": 1140,
+    "payload": "{\"priority_group\": \"platform-services\", \"request_id\": \"REQ-033\", \"requested_units\": 1140, \"submitted_at\": 1700026100, \"team\": \"team_10\", \"tier\": \"silver\"}",
+    "signature": "efda7af7a70cf97efe355f9af80274ff9d2d5b0128f4f9427827ab12f20f37bb",
+    "submitted_at": 1700026100,
+    "priority_group": "platform-services"
+  },
+  {
+    "request_id": "REQ-034",
+    "team": "team_10",
+    "tier": "bronze",
+    "requested_units": 1260,
+    "payload": "{\"priority_group\": \"platform-external\", \"request_id\": \"REQ-034\", \"requested_units\": 1260, \"submitted_at\": 1700029700, \"team\": \"team_10\", \"tier\": \"bronze\"}",
+    "signature": "20cf3f249d380218a2b64896418e7ae368b464117a577d83395a487dabbcb9c8",
+    "submitted_at": 1700029700,
+    "priority_group": "platform-external"
+  },
+  {
+    "request_id": "REQ-035",
+    "team": "team_10",
+    "tier": "gold",
+    "requested_units": 1380,
+    "payload": "{\"priority_group\": \"platform-core\", \"request_id\": \"REQ-035\", \"requested_units\": 1380, \"submitted_at\": 1700033300, \"team\": \"team_10\", \"tier\": \"gold\"}",
+    "signature": "7abfe5b8a8c74d2bbaa2bfaa0e59940bf0f2bec81a0a1ee28499ad6667740f37",
+    "submitted_at": 1700033300,
+    "priority_group": "platform-core"
+  },
+  {
+    "request_id": "REQ-036",
+    "team": "team_10",
+    "tier": "silver",
+    "requested_units": 1500,
+    "payload": "{\"priority_group\": \"platform-services\", \"request_id\": \"REQ-036\", \"requested_units\": 1500, \"submitted_at\": 1700036900, \"team\": \"team_10\", \"tier\": \"silver\"}",
+    "signature": "0a0fb604ecd73b5277ab90ec64ef01450dd51c994ff1454f577731d0f3c299f4",
+    "submitted_at": 1700036900,
+    "priority_group": "platform-services"
+  },
+  {
+    "request_id": "REQ-037",
+    "team": "team_10",
+    "tier": "bronze",
+    "requested_units": 1620,
+    "payload": "{\"priority_group\": \"platform-external\", \"request_id\": \"REQ-037\", \"requested_units\": 1620, \"submitted_at\": 1700040500, \"team\": \"team_10\", \"tier\": \"bronze\"}",
+    "signature": "20e42568e8b3022b1421d44a5e19f195c758ddb746d3554fadd3e4548b45286e",
+    "submitted_at": 1700040500,
+    "priority_group": "platform-external"
+  },
+  {
+    "request_id": "REQ-038",
+    "team": "team_10",
+    "tier": "gold",
+    "requested_units": 1740,
+    "payload": "{\"priority_group\": \"platform-core\", \"request_id\": \"REQ-038\", \"requested_units\": 1740, \"submitted_at\": 1700044100, \"team\": \"team_10\", \"tier\": \"gold\"}",
+    "signature": "d71ede30590647b811df3b61436ea5fc214e23322abdaa6f3687bf94433dca37",
+    "submitted_at": 1700044100,
+    "priority_group": "platform-core"
+  }
+]
