@@ -1,0 +1,16 @@
+[task]
+slug = "sensor-fusion-calibration"
+title = "Sensor Fusion Calibration Pipeline Repair"
+description = "Fix bugs in a multi-cluster sensor fusion calibration pipeline that processes 42 sensors across 5 geographic clusters"
+category = "debugging"
+difficulty = "hard"
+
+[environment]
+dockerfile = "environment/Dockerfile"
+runtime_dir = "environment/runtime"
+
+[solution]
+solve_script = "solution/solve.sh"
+
+[tests]
+test_script = "tests/test.sh"
