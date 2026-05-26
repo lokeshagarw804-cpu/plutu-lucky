@@ -1,0 +1,20 @@
+{"seq": 1, "feed_id": "beta", "name": "Ocean View Diner", "category": "restaurant", "lat": 40.5731, "lon": -73.9712, "timestamp": "2024-01-15T10:00:30Z"}
+{"seq": 2, "feed_id": "beta", "name": "Brooklyn Botanical", "category": "park", "lat": 40.6694, "lon": -73.9625, "timestamp": "2024-01-15T10:01:30Z"}
+{"seq": 3, "feed_id": "beta", "name": "Veterans Hospital", "category": "hospital", "lat": 40.6310, "lon": -74.0280, "timestamp": "2024-01-15T10:02:30Z"}
+{"seq": 4, "feed_id": "beta", "name": "Spice Route", "category": "restaurant", "lat": 40.7488, "lon": -73.9855, "timestamp": "2024-01-15T10:03:30Z"}
+{"seq": 5, "feed_id": "beta", "name": "Maritime Museum", "category": "museum", "lat": 40.6892, "lon": -74.0445, "timestamp": "2024-01-15T10:04:30Z"}
+{"seq": 6, "feed_id": "beta", "name": "Prospect Park", "category": "park", "lat": 40.6602, "lon": -73.9690, "timestamp": "2024-01-15T10:05:30Z"}
+{"seq": 7, "feed_id": "beta", "name": "Golden Dragon", "category": "restaurant", "lat": 40.7158, "lon": -73.9970, "timestamp": "2024-01-15T10:14:00Z"}
+{"seq": 8, "feed_id": "beta", "name": "St. Mary Hospital", "category": "hospital", "lat": 40.6850, "lon": -73.9755, "timestamp": "2024-01-15T10:07:30Z"}
+{"seq": 9, "feed_id": "beta", "name": "Aviation Museum", "category": "museum", "lat": 40.6413, "lon": -73.7781, "timestamp": "2024-01-15T10:08:30Z"}
+{"seq": 10, "feed_id": "beta", "name": "Greenwood Park", "category": "park", "lat": 40.6528, "lon": -73.9942, "timestamp": "2024-01-15T10:09:30Z"}
+{"seq": 11, "feed_id": "beta", "name": "Tandoori Nights", "category": "restaurant", "lat": 40.7445, "lon": -73.9821, "timestamp": "2024-01-15T10:10:30Z"}
+{"seq": 12, "feed_id": "beta", "name": "Queens Medical", "category": "hospital", "lat": 40.7282, "lon": -73.7949, "timestamp": "2024-01-15T10:11:30Z"}
+{"seq": 13, "feed_id": "beta", "name": "Tech Museum", "category": "museum", "lat": 40.7425, "lon": -74.0048, "timestamp": "2024-01-15T10:12:30Z"}
+{"seq": 14, "feed_id": "beta", "name": "Battery Park", "category": "park", "lat": 40.7033, "lon": -74.0170, "timestamp": "2024-01-15T10:13:30Z"}
+{"seq": 15, "feed_id": "beta", "name": "Sushi Express", "category": "restaurant", "lat": 40.7580, "lon": -73.9855, "timestamp": "2024-01-15T10:14:30Z"}
+{"seq": 16, "feed_id": "beta", "name": "Harbor Grill", "category": "restaurant", "lat": 40.6890, "lon": -74.0165, "timestamp": "2024-01-15T11:00:00Z"}
+{"seq": 17, "feed_id": "beta", "name": "Riverside Walk", "category": "park", "lat": 40.7920, "lon": -73.9730, "timestamp": "2024-01-15T11:01:30Z"}
+{"seq": 18, "feed_id": "beta", "name": "Bay Ridge Clinic", "category": "hospital", "lat": 40.6340, "lon": -74.0290, "timestamp": "2024-01-15T11:02:30Z"}
+{"seq": 19, "feed_id": "beta", "name": "Natural History Museum", "category": "museum", "lat": 40.7813, "lon": -73.9740, "timestamp": "2024-01-15T11:03:30Z"}
+{"seq": 20, "feed_id": "beta", "name": "Madison Square Park", "category": "park", "lat": 40.7420, "lon": -73.9876, "timestamp": "2024-01-15T11:04:30Z"}

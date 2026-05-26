@@ -1,0 +1,18 @@
+{"seq": 1, "feed_id": "gamma", "name": "Uptown Sushi", "category": "restaurant", "lat": 40.7965, "lon": -73.9490, "timestamp": "2024-01-15T10:00:15Z"}
+{"seq": 2, "feed_id": "gamma", "name": "Fort Tryon Park", "category": "park", "lat": 40.8624, "lon": -73.9318, "timestamp": "2024-01-15T10:01:15Z"}
+{"seq": 3, "feed_id": "gamma", "name": "Columbia Medical", "category": "hospital", "lat": 40.8405, "lon": -73.9422, "timestamp": "2024-01-15T10:02:15Z"}
+{"seq": 4, "feed_id": "gamma", "name": "Harlem Soul Food", "category": "restaurant", "lat": 40.8116, "lon": -73.9465, "timestamp": "2024-01-15T10:03:15Z"}
+{"seq": 5, "feed_id": "gamma", "name": "Cloisters Museum", "category": "museum", "lat": 40.8649, "lon": -73.9317, "timestamp": "2024-01-15T10:04:15Z"}
+{"seq": 6, "feed_id": "gamma", "name": "Inwood Hill Park", "category": "park", "lat": 40.8721, "lon": -73.9256, "timestamp": "2024-01-15T10:05:15Z"}
+{"seq": 7, "feed_id": "gamma", "name": "Morningside Cafe", "category": "restaurant", "lat": 40.8075, "lon": -73.9626, "timestamp": "2024-01-15T10:06:15Z"}
+{"seq": 8, "feed_id": "gamma", "name": "Harlem Hospital", "category": "hospital", "lat": 40.8142, "lon": -73.9418, "timestamp": "2024-01-15T10:07:15Z"}
+{"seq": 9, "feed_id": "gamma", "name": "Studio Museum", "category": "museum", "lat": 40.8101, "lon": -73.9502, "timestamp": "2024-01-15T10:08:15Z"}
+{"seq": 10, "feed_id": "gamma", "name": "St. Nicholas Park", "category": "park", "lat": 40.8185, "lon": -73.9530, "timestamp": "2024-01-15T10:09:15Z"}
+{"seq": 11, "feed_id": "gamma", "name": "Sylvia's Kitchen", "category": "restaurant", "lat": 40.8087, "lon": -73.9455, "timestamp": "2024-01-15T10:10:15Z"}
+{"seq": 12, "feed_id": "gamma", "name": "Washington Heights Med", "category": "hospital", "lat": 40.8432, "lon": -73.9380, "timestamp": "2024-01-15T10:11:15Z"}
+{"seq": 13, "feed_id": "gamma", "name": "Hispanic Society Museum", "category": "museum", "lat": 40.8348, "lon": -73.9425, "timestamp": "2024-01-15T10:12:15Z"}
+{"seq": 14, "feed_id": "gamma", "name": "Highbridge Park", "category": "park", "lat": 40.8411, "lon": -73.9343, "timestamp": "2024-01-15T10:13:15Z"}
+{"seq": 15, "feed_id": "gamma", "name": "Dominican Flavors", "category": "restaurant", "lat": 40.8505, "lon": -73.9345, "timestamp": "2024-01-15T10:14:15Z"}
+{"seq": 16, "feed_id": "gamma", "name": "Heights Deli", "category": "restaurant", "lat": 40.8480, "lon": -73.9360, "timestamp": "2024-01-15T11:00:00Z"}
+{"seq": 17, "feed_id": "gamma", "name": "Audubon Park", "category": "park", "lat": 40.8350, "lon": -73.9380, "timestamp": "2024-01-15T11:01:15Z"}
+{"seq": 18, "feed_id": "gamma", "name": "Presbyterian Annex", "category": "hospital", "lat": 40.8410, "lon": -73.9405, "timestamp": "2024-01-15T11:02:15Z"}
