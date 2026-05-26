@@ -1,0 +1,21 @@
+[
+  {"package": "test-runner", "version": "5.0.0", "scope": "dev", "depends_on": [{"name": "assertion-lib", "constraint": ">=2.0.0"}, {"name": "mock-factory", "constraint": ">=1.5.0"}]},
+  {"package": "test-runner", "version": "5.2.0", "scope": "dev", "depends_on": [{"name": "assertion-lib", "constraint": ">=2.1.0"}, {"name": "mock-factory", "constraint": ">=1.6.0"}, {"name": "coverage-tool", "constraint": ">=3.0.0"}]},
+  {"package": "assertion-lib", "version": "2.0.1", "scope": "dev", "depends_on": []},
+  {"package": "assertion-lib", "version": "2.1.0", "scope": "dev", "depends_on": []},
+  {"package": "mock-factory", "version": "1.5.0", "scope": "dev", "depends_on": []},
+  {"package": "mock-factory", "version": "1.6.2", "scope": "dev", "depends_on": []},
+  {"package": "coverage-tool", "version": "3.0.1", "scope": "dev", "depends_on": []},
+  {"package": "lint-checker", "version": "7.0.0", "scope": "peer", "depends_on": [{"name": "ast-walker", "constraint": ">=4.0.0"}, {"name": "rule-engine", "constraint": ">=2.0.0"}]},
+  {"package": "lint-checker", "version": "7.2.0", "scope": "peer", "depends_on": [{"name": "ast-walker", "constraint": ">=4.1.0"}, {"name": "rule-engine", "constraint": ">=2.2.0"}, {"name": "format-fixer", "constraint": ">=1.0.0"}]},
+  {"package": "ast-walker", "version": "4.0.0", "scope": "peer", "depends_on": []},
+  {"package": "ast-walker", "version": "4.1.1", "scope": "peer", "depends_on": [{"name": "node-visitor", "constraint": ">=1.0.0"}]},
+  {"package": "rule-engine", "version": "2.0.0", "scope": "peer", "depends_on": []},
+  {"package": "rule-engine", "version": "2.2.0", "scope": "peer", "depends_on": [{"name": "pattern-match", "constraint": ">=1.5.0"}]},
+  {"package": "format-fixer", "version": "1.0.0", "scope": "peer", "depends_on": []},
+  {"package": "format-fixer", "version": "1.1.0", "scope": "peer", "depends_on": []},
+  {"package": "node-visitor", "version": "1.0.0", "scope": "peer", "depends_on": []},
+  {"package": "node-visitor", "version": "1.1.0", "scope": "peer", "depends_on": []},
+  {"package": "pattern-match", "version": "1.5.0", "scope": "peer", "depends_on": []},
+  {"package": "pattern-match", "version": "1.6.0", "scope": "peer", "depends_on": []}
+]

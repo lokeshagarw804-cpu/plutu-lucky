@@ -1,0 +1,37 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+category = "dependency_resolution"
+difficulty = "hard"
+tags = ["dependency-graph", "version-resolution", "topological-sort", "constraint-solving", "package-management"]
+
+difficulty_explanation = "Five interacting bugs form a dependency chain: a scope filter whitespace issue changes which packages enter resolution, an inverted version comparator causes wrong version selections, a depth limit from the wrong config section allows over-deep traversal, a reversed installation order violates the leaves-first invariant, and a checksum computation includes an extraneous field making the hash non-reproducible. The checksum test acts as an integration gate — it only passes when ALL other bugs are fixed simultaneously because any single remaining bug changes the input to the hash."
+solution_explanation = "Strip whitespace in scope filter, fix the >= comparator direction, read max_depth from resolution.strict, reverse the sort key for leaves-first ordering, and remove install_position from the checksum computation."
+verification_explanation = "Tests check total package count, scope exclusion, version selection correctness, depth limits, leaves-first ordering invariant, and an exact SHA256 checksum that serves as an integration test requiring all fixes."
+expert_time_estimate_hours = 4.0
+
+[task]
+name = "depgraph-resolve-repair"
+description = "Debug a dependency graph resolution system with five interacting defects in scope filtering, version constraint matching, depth limiting, installation ordering, and integrity checksumming. A SHA256 checksum gate requires all bugs to be fixed simultaneously."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Five bugs interact through data flow — each bug changes the input to subsequent stages. The checksum test is an integration gate that only passes when all bugs are fixed together, preventing incremental single-bug fixes from passing."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.run_resolve"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the resolution system then validates package counts, version selections, ordering invariants, and integrity checksum."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all five defects and re-runs the resolution system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"

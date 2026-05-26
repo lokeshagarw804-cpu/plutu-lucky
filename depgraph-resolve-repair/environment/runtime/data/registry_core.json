@@ -1,0 +1,19 @@
+[
+  {"package": "framework", "version": "3.2.1", "scope": "runtime", "depends_on": [{"name": "logger", "constraint": ">=2.0.0"}, {"name": "config-loader", "constraint": ">=1.5.0"}]},
+  {"package": "logger", "version": "2.1.0", "scope": "runtime", "depends_on": [{"name": "fmt-util", "constraint": ">=1.0.0"}]},
+  {"package": "logger", "version": "2.4.0", "scope": "runtime", "depends_on": [{"name": "fmt-util", "constraint": ">=1.2.0"}, {"name": "rotate-mgr", "constraint": ">=0.8.0"}]},
+  {"package": "config-loader", "version": "1.5.2", "scope": "runtime", "depends_on": [{"name": "yaml-parse", "constraint": ">=3.0.0"}]},
+  {"package": "config-loader", "version": "1.7.0", "scope": "runtime", "depends_on": [{"name": "yaml-parse", "constraint": ">=3.1.0"}, {"name": "env-reader", "constraint": ">=0.5.0"}]},
+  {"package": "fmt-util", "version": "1.0.3", "scope": "runtime", "depends_on": []},
+  {"package": "fmt-util", "version": "1.2.1", "scope": "runtime", "depends_on": []},
+  {"package": "fmt-util", "version": "1.4.0", "scope": "runtime", "depends_on": [{"name": "unicode-norm", "constraint": ">=2.0.0"}]},
+  {"package": "rotate-mgr", "version": "0.8.1", "scope": "runtime", "depends_on": []},
+  {"package": "rotate-mgr", "version": "0.9.0", "scope": "runtime", "depends_on": [{"name": "fs-watch", "constraint": ">=1.0.0"}]},
+  {"package": "yaml-parse", "version": "3.0.2", "scope": "runtime", "depends_on": []},
+  {"package": "yaml-parse", "version": "3.1.1", "scope": "runtime", "depends_on": [{"name": "unicode-norm", "constraint": ">=2.0.0"}]},
+  {"package": "env-reader", "version": "0.5.1", "scope": "runtime", "depends_on": []},
+  {"package": "env-reader", "version": "0.6.0", "scope": "runtime", "depends_on": []},
+  {"package": "unicode-norm", "version": "2.0.0", "scope": "runtime", "depends_on": []},
+  {"package": "unicode-norm", "version": "2.1.0", "scope": "runtime", "depends_on": []},
+  {"package": "fs-watch", "version": "1.0.2", "scope": "runtime", "depends_on": []}
+]
