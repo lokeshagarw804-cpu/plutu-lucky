@@ -13,6 +13,6 @@
 {"seq": 13, "feed_id": "gamma", "name": "Hispanic Society Museum", "category": "museum", "lat": 40.8348, "lon": -73.9425, "timestamp": "2024-01-15T10:12:15Z"}
 {"seq": 14, "feed_id": "gamma", "name": "Highbridge Park", "category": "park", "lat": 40.8411, "lon": -73.9343, "timestamp": "2024-01-15T10:13:15Z"}
 {"seq": 15, "feed_id": "gamma", "name": "Dominican Flavors", "category": "restaurant", "lat": 40.8505, "lon": -73.9345, "timestamp": "2024-01-15T10:14:15Z"}
-{"seq": 16, "feed_id": "gamma", "name": "Heights Deli", "category": "restaurant", "lat": 40.8480, "lon": -73.9360, "timestamp": "2024-01-15T11:00:00Z"}
+{"seq": 16, "feed_id": "gamma", "name": "Heights Deli", "category": "restaurant", "lat": 40.8480, "lon": -73.9360, "timestamp": "2024-01-15T11:00:15Z"}
 {"seq": 17, "feed_id": "gamma", "name": "Audubon Park", "category": "park", "lat": 40.8350, "lon": -73.9380, "timestamp": "2024-01-15T11:01:15Z"}
 {"seq": 18, "feed_id": "gamma", "name": "Presbyterian Annex", "category": "hospital", "lat": 40.8410, "lon": -73.9405, "timestamp": "2024-01-15T11:02:15Z"}

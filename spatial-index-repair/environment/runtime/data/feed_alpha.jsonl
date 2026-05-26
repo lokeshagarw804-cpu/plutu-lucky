@@ -9,10 +9,10 @@
 {"seq": 9, "feed_id": "alpha", "name": "Art History Museum", "category": "museum", "lat": 40.7794, "lon": -73.9632, "timestamp": "2024-01-15T10:08:00Z"}
 {"seq": 10, "feed_id": "alpha", "name": "Lakeside Park", "category": "park", "lat": 40.7680, "lon": -73.9710, "timestamp": "2024-01-15T10:09:00Z"}
 {"seq": 11, "feed_id": "alpha", "name": "Bella Italia", "category": "restaurant", "lat": 40.7505, "lon": -73.9934, "timestamp": "2024-01-15T10:10:00Z"}
-{"seq": 12, "feed_id": "alpha", "name": "Northside Clinic", "category": "hospital", "lat": 40.7901, "lon": -73.9480, "timestamp": "2024-01-15T10:11:00Z"}
+{"seq": 12, "feed_id": "alpha", "name": "Northside Clinic", "category": "hospital", "lat": 40.7901, "lon": -73.5000, "timestamp": "2024-01-15T10:11:00Z"}
 {"seq": 13, "feed_id": "alpha", "name": "Science Museum", "category": "museum", "lat": 40.7612, "lon": -73.9776, "timestamp": "2024-01-15T10:12:00Z"}
 {"seq": 14, "feed_id": "alpha", "name": "Sunset Park", "category": "park", "lat": 40.6443, "lon": -74.0029, "timestamp": "2024-01-15T10:13:00Z"}
 {"seq": 15, "feed_id": "alpha", "name": "Jade Palace", "category": "restaurant", "lat": 40.7158, "lon": -73.9970, "timestamp": "2024-01-15T10:14:00Z"}
 {"seq": 16, "feed_id": "alpha", "name": "Hilltop Bistro", "category": "restaurant", "lat": 40.7410, "lon": -73.9896, "timestamp": "2024-01-15T11:00:00Z"}
 {"seq": 17, "feed_id": "alpha", "name": "Memorial Garden", "category": "park", "lat": 40.7530, "lon": -73.9772, "timestamp": "2024-01-15T11:01:00Z"}
-{"seq": 18, "feed_id": "alpha", "name": "East Wing Hospital", "category": "hospital", "lat": 40.7650, "lon": -73.9550, "timestamp": "2024-01-15T11:02:00Z"}
+{"seq": 18, "feed_id": "alpha", "name": "East Wing Hospital", "category": "hospital", "lat": 40.7650, "lon": -73.5000, "timestamp": "2024-01-15T11:02:00Z"}

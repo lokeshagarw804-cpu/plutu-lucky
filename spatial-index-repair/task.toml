@@ -4,18 +4,18 @@ category = "spatial_indexing"
 difficulty = "hard"
 tags = ["spatial-indexing", "r-tree", "config-parsing", "data-processing", "debugging"]
 
-difficulty_explanation = "Requires identifying four interacting defects across multiple modules: a whitespace-sensitive config parser bug, a wrong config section reference duplicated in two files, a partition accumulation logic error, and a non-obvious sort key omission affecting determinism at timestamp ties."
-solution_explanation = "Fix category filter to strip whitespace after comma-split, change config section reads from [indexer] to [indexer.rtree] in both indexer.py and stats.py, replace partition count accumulation with last-write-wins assignment, and add feed_id to the sort key between timestamp and seq for deterministic cross-stream ordering."
-verification_explanation = "Tests validate output file existence and structure (easy), category inclusion and index node count (medium), and partition snapshot semantics with deterministic sort ordering at timestamp boundaries (hard). The graduated difficulty ensures partial fixes produce partial test passage."
+difficulty_explanation = "Requires identifying five interacting defects spread across six source files: a whitespace-sensitive filter in the normalizer (not the loader), wrong config section references in two modules with multiple decoy sections, a cross-module accumulation bug in the partition merger, a sort key omission in a separate ordering utility, and a subtle boundary comparison operator error in the query logic."
+solution_explanation = "Fix normalizer to strip category tokens, change indexer and stats config reads from [spatial.engine] to [spatial.engine.leafnode], replace partition merger accumulation with last-write-wins, add feed_id to sort key in record_ordering.py, and change strict < to <= for lon_max boundary in indexer query_region."
+verification_explanation = "Tests validate exact numeric output values without diagnostic hints. Graduated difficulty ensures structural tests pass with buggy code while value-dependent tests require multiple interacting fixes."
 expert_time_estimate_hours = 3.0
 
 [task]
 name = "spatial-index-repair"
-description = "Debug a spatial R-tree index builder that ingests POI records from multiple feeds, filtering by category, building leaf nodes with configurable parameters, and computing partition-based statistics. Four interacting defects produce incorrect category filtering, wrong index structure, inflated statistics, and non-deterministic ordering."
+description = "Debug a spatial R-tree index builder with five interacting defects spread across six modules. Bugs involve config section misdirection with decoy values, whitespace-sensitive filtering in a non-obvious module, cross-file accumulation semantics, sort key completeness in a utility module, and a boundary comparison operator error."
 
 [task.difficulty]
 level = "hard"
-reasoning = "The task requires understanding config section hierarchy, whitespace-sensitive string parsing, snapshot vs accumulation semantics, and sort key completeness across multiple interacting modules. Bugs are spread across 3 source files and interact in ways that make isolated fixes insufficient."
+reasoning = "Five bugs spread across six files with decoy config sections, cross-module interactions, and misdirecting source comments. Individual bugs are not independently identifiable without understanding the full data flow and comparing expected vs actual output values."
 
 [task.runtime]
 entrypoint = "python3 -m runtime.run_spatial"
@@ -24,11 +24,11 @@ dependencies = "stdlib-only"
 
 [task.validator]
 command = "bash tests/test.sh"
-description = "Runs the spatial index system then executes pytest to validate output correctness including category filtering, index structure, statistics computation, and sort determinism."
+description = "Runs the spatial index system then executes pytest to validate output correctness."
 
 [task.repair]
 command = "bash solution/solve.sh"
-description = "Patches feed_loader.py (whitespace strip), indexer.py (config section and sort key), and stats.py (config section and accumulation logic), then re-runs the system."
+description = "Patches all five defects across the runtime modules and re-runs the system."
 
 [task.resources]
 timeout = 300

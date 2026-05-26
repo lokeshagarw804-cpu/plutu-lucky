@@ -1,10 +1,11 @@
 """R-tree spatial indexer — builds a spatial index from POI records.
 
-Processes records in batches, assigns them to leaf nodes using a
-quadratic-split algorithm simulation, and maintains the index structure.
+Processes normalized records in batches, assigns them to leaf nodes,
+and maintains the R-tree index structure for efficient region queries.
 """
 import configparser
-import math
+
+from runtime.record_ordering import sort_for_insertion
 
 
 class RTreeNode:
@@ -36,22 +37,19 @@ class RTreeIndexer:
     def __init__(self, config_path):
         self._config = configparser.ConfigParser()
         self._config.read(config_path)
-        self._batch_size = self._config.getint("indexer", "batch_size")
-        self._max_entries = self._config.getint("indexer", "max_entries_per_node")
+        self._batch_size = self._config.getint("spatial.engine", "batch_size")
+        self._max_entries = self._config.getint(
+            "spatial.engine", "max_entries_per_node"
+        )
         self._nodes = []
         self._all_entries = []
         self._node_counter = 0
 
     def build_index(self, records):
         """Build the R-tree index from sorted records."""
-        # Sort records for deterministic insertion order
-        # Note: seq is local to each feed stream
-        sorted_records = sorted(
-            records, key=lambda r: (r["timestamp"], r["seq"])
-        )
+        sorted_records = sort_for_insertion(records)
         self._all_entries = sorted_records
 
-        # Process in batches
         for batch_start in range(0, len(sorted_records), self._batch_size):
             batch = sorted_records[batch_start:batch_start + self._batch_size]
             self._insert_batch(batch)
@@ -92,7 +90,7 @@ class RTreeIndexer:
             if self._intersects(node.bounds, lat_min, lat_max, lon_min, lon_max):
                 for entry in node.entries:
                     if (lat_min <= entry["lat"] <= lat_max and
-                            lon_min <= entry["lon"] <= lon_max):
+                            lon_min <= entry["lon"] < lon_max):
                         results.append(entry)
         return results
 

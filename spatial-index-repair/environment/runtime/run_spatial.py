@@ -1,14 +1,13 @@
 """Spatial index builder — main entry point.
 
-Reads POI records from feed files, filters by allowed categories,
-builds an R-tree spatial index, executes bounding-box queries, and
-writes results and statistics to output directory.
+Orchestrates the full processing flow: load feeds, normalize records,
+build spatial index, execute queries, and compute statistics.
 """
 import json
 import os
-import sys
 
 from runtime.feed_loader import FeedLoader
+from runtime.normalizer import RecordNormalizer
 from runtime.indexer import RTreeIndexer
 from runtime.query_engine import QueryEngine
 from runtime.stats import StatisticsAggregator
@@ -16,8 +15,12 @@ from runtime.stats import StatisticsAggregator
 
 def main():
     config_path = "/app/runtime/config.ini"
+
     loader = FeedLoader(config_path)
-    records = loader.load_all_feeds()
+    raw_records = loader.load_all_feeds()
+
+    normalizer = RecordNormalizer(config_path)
+    records = normalizer.normalize(raw_records)
 
     indexer = RTreeIndexer(config_path)
     indexer.build_index(records)

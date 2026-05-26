@@ -1,7 +1,7 @@
 """Query engine — executes spatial queries against the R-tree index.
 
-Performs bounding-box queries and formats results with ranking
-based on insertion order within the index.
+Performs bounding-box queries using the configured region parameters
+and formats results with ranking based on insertion order.
 """
 import configparser
 
@@ -23,7 +23,6 @@ class QueryEngine:
 
         raw_results = self._indexer.query_region(lat_min, lat_max, lon_min, lon_max)
 
-        # Format results with rank
         formatted = []
         for rank, entry in enumerate(raw_results, start=1):
             formatted.append({
