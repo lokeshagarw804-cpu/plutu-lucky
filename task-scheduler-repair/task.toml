@@ -1,0 +1,37 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+category = "task_scheduling"
+difficulty = "hard"
+tags = ["scheduling", "priority-queue", "aging-factor", "dependency-graph", "time-slots"]
+
+difficulty_explanation = "Four interacting bugs require cross-file reasoning: a whitespace parsing issue excludes a queue tier, a wrong config section applies aggressive aging, a stateful priority accumulator inflates values across scheduling rounds (the code looks like a monitoring/fairness tracker but actually corrupts the computation), and a missing sort field causes non-deterministic ordering at tied priorities. The accumulator bug requires mental simulation of multiple scheduling rounds to identify."
+solution_explanation = "Strip whitespace from priority_queues config, read aging parameters from scheduling.weighted section, remove the priority_history accumulation that corrupts effective priority computation, and add queue_id to the slot allocation sort key."
+verification_explanation = "Tests validate task counts across all queues, priority bounds below 200, correct ordering of critical-first deferred-last, specific task position ordering at tied priorities, and multi-round scheduling evidence."
+expert_time_estimate_hours = 3.0
+
+[task]
+name = "task-scheduler-repair"
+description = "Debug a multi-queue task scheduling engine with priority computation across scheduling rounds. Four bugs cause queue exclusion, priority inflation from stateful accumulation, wrong aging parameters, and non-deterministic ordering."
+
+[task.difficulty]
+level = "hard"
+reasoning = "The stateful accumulator bug (priority_history) looks like a legitimate monitoring feature but corrupts computation. Requires understanding that the same task is evaluated across multiple rounds and the history dict inflates values cumulatively."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.run_scheduler"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the scheduler then validates queue inclusion, priority bounds, ordering correctness, and deterministic tied-priority resolution."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches queue filter, config section, priority accumulation, and sort key, then re-runs."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"

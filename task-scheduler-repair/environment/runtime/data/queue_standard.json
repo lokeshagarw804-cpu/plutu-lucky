@@ -1,0 +1,8 @@
+[
+  {"task_id": "T007", "queue_id": "standard", "submitted_at": "2024-06-01T08:00:00Z", "base_priority": 60, "resource_units": 2, "deadline_hours": 12, "dependencies": []},
+  {"task_id": "T008", "queue_id": "standard", "submitted_at": "2024-06-01T08:20:00Z", "base_priority": 55, "resource_units": 3, "deadline_hours": 24, "dependencies": ["T007"]},
+  {"task_id": "T009", "queue_id": "standard", "submitted_at": "2024-06-01T08:45:00Z", "base_priority": 62, "resource_units": 1, "deadline_hours": 8, "dependencies": []},
+  {"task_id": "T010", "queue_id": "standard", "submitted_at": "2024-06-01T09:10:00Z", "base_priority": 58, "resource_units": 4, "deadline_hours": 16, "dependencies": ["T009"]},
+  {"task_id": "T011", "queue_id": "standard", "submitted_at": "2024-06-01T09:40:00Z", "base_priority": 65, "resource_units": 2, "deadline_hours": 10, "dependencies": []},
+  {"task_id": "T012", "queue_id": "standard", "submitted_at": "2024-06-01T10:00:00Z", "base_priority": 57, "resource_units": 3, "deadline_hours": 20, "dependencies": ["T007", "T011"]}
+]

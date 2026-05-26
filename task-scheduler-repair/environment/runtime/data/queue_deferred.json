@@ -1,0 +1,8 @@
+[
+  {"task_id": "T013", "queue_id": "deferred", "submitted_at": "2024-06-01T08:00:00Z", "base_priority": 30, "resource_units": 1, "deadline_hours": 48, "dependencies": []},
+  {"task_id": "T014", "queue_id": "deferred", "submitted_at": "2024-06-01T08:30:00Z", "base_priority": 25, "resource_units": 2, "deadline_hours": 72, "dependencies": ["T013"]},
+  {"task_id": "T015", "queue_id": "deferred", "submitted_at": "2024-06-01T09:00:00Z", "base_priority": 35, "resource_units": 1, "deadline_hours": 36, "dependencies": []},
+  {"task_id": "T016", "queue_id": "deferred", "submitted_at": "2024-06-01T09:30:00Z", "base_priority": 28, "resource_units": 3, "deadline_hours": 60, "dependencies": ["T015"]},
+  {"task_id": "T017", "queue_id": "deferred", "submitted_at": "2024-06-01T10:00:00Z", "base_priority": 32, "resource_units": 1, "deadline_hours": 48, "dependencies": []},
+  {"task_id": "T018", "queue_id": "deferred", "submitted_at": "2024-06-01T10:30:00Z", "base_priority": 27, "resource_units": 2, "deadline_hours": 96, "dependencies": ["T013", "T017"]}
+]

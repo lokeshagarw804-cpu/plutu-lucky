@@ -1,0 +1,8 @@
+[
+  {"task_id": "T019", "queue_id": "batch", "submitted_at": "2024-06-01T08:00:00Z", "base_priority": 40, "resource_units": 6, "deadline_hours": 24, "dependencies": []},
+  {"task_id": "T020", "queue_id": "batch", "submitted_at": "2024-06-01T08:30:00Z", "base_priority": 42, "resource_units": 4, "deadline_hours": 18, "dependencies": ["T019"]},
+  {"task_id": "T021", "queue_id": "batch", "submitted_at": "2024-06-01T09:00:00Z", "base_priority": 38, "resource_units": 8, "deadline_hours": 36, "dependencies": []},
+  {"task_id": "T022", "queue_id": "batch", "submitted_at": "2024-06-01T09:30:00Z", "base_priority": 45, "resource_units": 3, "deadline_hours": 12, "dependencies": ["T021"]},
+  {"task_id": "T023", "queue_id": "batch", "submitted_at": "2024-06-01T10:00:00Z", "base_priority": 62, "resource_units": 5, "deadline_hours": 8, "dependencies": []},
+  {"task_id": "T024", "queue_id": "batch", "submitted_at": "2024-06-01T10:30:00Z", "base_priority": 43, "resource_units": 4, "deadline_hours": 20, "dependencies": ["T019", "T023"]}
+]
