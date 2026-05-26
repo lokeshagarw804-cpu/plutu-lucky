@@ -1,0 +1,15 @@
+[
+  {"cert_id": "C019", "subject": "payment-gw.finance", "issuer_id": "beta_ca", "serial": 2001, "issued_date": "2024-01-20", "expiry_date": "2025-01-20", "key_bits": 4096, "signature_algo": "sha256", "chain_parent": null},
+  {"cert_id": "C020", "subject": "ledger-primary.finance", "issuer_id": "beta_ca", "serial": 2002, "issued_date": "2024-02-15", "expiry_date": "2025-02-15", "key_bits": 4096, "signature_algo": "sha384", "chain_parent": "C019"},
+  {"cert_id": "C021", "subject": "audit-trail.finance", "issuer_id": "beta_ca", "serial": 2003, "issued_date": "2024-03-10", "expiry_date": "2025-03-10", "key_bits": 4096, "signature_algo": "sha256", "chain_parent": "C020"},
+  {"cert_id": "C022", "subject": "risk-engine.finance", "issuer_id": "beta_ca", "serial": 2004, "issued_date": "2024-04-05", "expiry_date": "2025-04-05", "key_bits": 4096, "signature_algo": "sha256", "chain_parent": null},
+  {"cert_id": "C023", "subject": "compliance-svc.finance", "issuer_id": "beta_ca", "serial": 2005, "issued_date": "2024-05-01", "expiry_date": "2025-06-01", "key_bits": 4096, "signature_algo": "sha512", "chain_parent": "C022"},
+  {"cert_id": "C024", "subject": "fraud-detect.finance", "issuer_id": "beta_ca", "serial": 2006, "issued_date": "2024-05-15", "expiry_date": "2025-05-15", "key_bits": 4096, "signature_algo": "sha256", "chain_parent": "C021"},
+  {"cert_id": "C025", "subject": "settlement-node.finance", "issuer_id": "beta_ca", "serial": 2007, "issued_date": "2024-06-01", "expiry_date": "2025-06-01", "key_bits": 4096, "signature_algo": "sha256", "chain_parent": "C019"},
+  {"cert_id": "C026", "subject": "kyc-verifier.finance", "issuer_id": "beta_ca", "serial": 2008, "issued_date": "2024-06-15", "expiry_date": "2025-06-15", "key_bits": 4096, "signature_algo": "sha256", "chain_parent": null},
+  {"cert_id": "C027", "subject": "reporting-hub.finance", "issuer_id": "beta_ca", "serial": 2009, "issued_date": "2024-07-01", "expiry_date": "2025-07-01", "key_bits": 4096, "signature_algo": "sha384", "chain_parent": "C026"},
+  {"cert_id": "C028", "subject": "tax-calc.finance", "issuer_id": "beta_ca", "serial": 2010, "issued_date": "2024-07-15", "expiry_date": "2025-07-15", "key_bits": 4096, "signature_algo": "sha256", "chain_parent": "C020"},
+  {"cert_id": "C029", "subject": "escrow-mgr.finance", "issuer_id": "beta_ca", "serial": 2011, "issued_date": "2024-08-01", "expiry_date": "2025-08-01", "key_bits": 4096, "signature_algo": "sha256", "chain_parent": null},
+  {"cert_id": "C030", "subject": "wire-transfer.finance", "issuer_id": "beta_ca", "serial": 2012, "issued_date": "2024-08-15", "expiry_date": "2025-08-15", "key_bits": 4096, "signature_algo": "sha256", "chain_parent": "C029"},
+  {"cert_id": "C031", "subject": "portfolio-tracker.finance", "issuer_id": "beta_ca", "serial": 2013, "issued_date": "2024-09-01", "expiry_date": "2025-09-01", "key_bits": 4096, "signature_algo": "sha256", "chain_parent": "C022"}
+]
