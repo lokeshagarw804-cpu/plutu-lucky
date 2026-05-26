@@ -1,0 +1,37 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+category = "event_sourcing"
+difficulty = "hard"
+tags = ["event-sourcing", "cqrs", "projections", "batch-processing", "stream-replay"]
+
+difficulty_explanation = "The task requires identifying four interacting defects across multiple files: a whitespace issue in config-based event type filtering that silently drops events, an incorrect config section reference that inflates batch window size, a missing state reset between batch windows that causes accumulated totals, and a sort key omission that produces non-deterministic event ordering. These bugs do not produce crashes and require cross-file reasoning to diagnose."
+solution_explanation = "Fix the event_types parsing to strip whitespace from each entry, read batch_window_hours from the replay.streaming section instead of replay, reset batch_totals at the start of each batch window, and add stream_id to the sort key for deterministic ordering of same-timestamp events."
+verification_explanation = "Tests validate event counts including stock_adjusted types, batch window count with the 24-hour streaming window, batch totals reflecting only the final window, and deterministic event ordering at timestamp collision points."
+expert_time_estimate_hours = 3.0
+
+[task]
+name = "event-replay-repair"
+description = "Debug an event sourcing replay system that processes event streams, builds materialized projections in batch windows, and generates aggregate reports. Four interacting defects cause incorrect filtering, oversized windows, accumulated totals, and non-deterministic ordering."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires cross-file reasoning across config parsing, event filtering, batch windowing, projection state management, and sort logic. Bugs interact subtly and produce no visible errors."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.run_replay"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the replay system then executes pytest to check event counts, batch windowing, totals accuracy, and deterministic ordering."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Applies patches to fix config parsing, section reference, state reset, and sort ordering, then re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
