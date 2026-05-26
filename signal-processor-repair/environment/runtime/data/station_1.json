@@ -1,0 +1,16 @@
+[
+  {"reading_id": "R001", "station_id": "alpha", "timestamp": "2024-03-01T08:00:00Z", "channel": "pressure", "raw_value": 101.3, "quality": 0.98},
+  {"reading_id": "R002", "station_id": "alpha", "timestamp": "2024-03-01T08:05:00Z", "channel": "pressure", "raw_value": 101.5, "quality": 0.97},
+  {"reading_id": "R003", "station_id": "alpha", "timestamp": "2024-03-01T08:10:00Z", "channel": "pressure", "raw_value": 101.8, "quality": 0.99},
+  {"reading_id": "R004", "station_id": "alpha", "timestamp": "2024-03-01T08:15:00Z", "channel": "temperature", "raw_value": 22.1, "quality": 0.96},
+  {"reading_id": "R005", "station_id": "alpha", "timestamp": "2024-03-01T08:20:00Z", "channel": "temperature", "raw_value": 22.4, "quality": 0.98},
+  {"reading_id": "R006", "station_id": "alpha", "timestamp": "2024-03-01T08:25:00Z", "channel": "pressure", "raw_value": 102.1, "quality": 0.95},
+  {"reading_id": "R007", "station_id": "alpha", "timestamp": "2024-03-01T08:30:00Z", "channel": "pressure", "raw_value": 102.4, "quality": 0.99},
+  {"reading_id": "R008", "station_id": "alpha", "timestamp": "2024-03-01T08:35:00Z", "channel": "temperature", "raw_value": 22.8, "quality": 0.97},
+  {"reading_id": "R009", "station_id": "alpha", "timestamp": "2024-03-01T08:40:00Z", "channel": "pressure", "raw_value": 102.9, "quality": 0.96},
+  {"reading_id": "R010", "station_id": "alpha", "timestamp": "2024-03-01T08:45:00Z", "channel": "pressure", "raw_value": 103.2, "quality": 0.98},
+  {"reading_id": "R011", "station_id": "alpha", "timestamp": "2024-03-01T08:50:00Z", "channel": "temperature", "raw_value": 23.1, "quality": 0.99},
+  {"reading_id": "R012", "station_id": "alpha", "timestamp": "2024-03-01T08:55:00Z", "channel": "pressure", "raw_value": 103.5, "quality": 0.97},
+  {"reading_id": "R013", "station_id": "alpha", "timestamp": "2024-03-01T09:00:00Z", "channel": "pressure", "raw_value": 103.1, "quality": 0.98},
+  {"reading_id": "R014", "station_id": "alpha", "timestamp": "2024-03-01T09:05:00Z", "channel": "temperature", "raw_value": 23.5, "quality": 0.96}
+]

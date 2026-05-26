@@ -1,0 +1,16 @@
+[
+  {"reading_id": "R015", "station_id": "beta", "timestamp": "2024-03-01T08:00:00Z", "channel": "pressure", "raw_value": 100.8, "quality": 0.97},
+  {"reading_id": "R016", "station_id": "beta", "timestamp": "2024-03-01T08:05:00Z", "channel": "pressure", "raw_value": 100.9, "quality": 0.98},
+  {"reading_id": "R017", "station_id": "beta", "timestamp": "2024-03-01T08:10:00Z", "channel": "temperature", "raw_value": 21.5, "quality": 0.96},
+  {"reading_id": "R018", "station_id": "beta", "timestamp": "2024-03-01T08:15:00Z", "channel": "pressure", "raw_value": 101.2, "quality": 0.99},
+  {"reading_id": "R019", "station_id": "beta", "timestamp": "2024-03-01T08:20:00Z", "channel": "pressure", "raw_value": 101.5, "quality": 0.97},
+  {"reading_id": "R020", "station_id": "beta", "timestamp": "2024-03-01T08:25:00Z", "channel": "temperature", "raw_value": 21.8, "quality": 0.98},
+  {"reading_id": "R021", "station_id": "beta", "timestamp": "2024-03-01T08:30:00Z", "channel": "pressure", "raw_value": 101.8, "quality": 0.96},
+  {"reading_id": "R022", "station_id": "beta", "timestamp": "2024-03-01T08:35:00Z", "channel": "pressure", "raw_value": 102.1, "quality": 0.99},
+  {"reading_id": "R023", "station_id": "beta", "timestamp": "2024-03-01T08:40:00Z", "channel": "temperature", "raw_value": 22.2, "quality": 0.97},
+  {"reading_id": "R024", "station_id": "beta", "timestamp": "2024-03-01T08:45:00Z", "channel": "pressure", "raw_value": 102.5, "quality": 0.98},
+  {"reading_id": "R025", "station_id": "beta", "timestamp": "2024-03-01T08:50:00Z", "channel": "pressure", "raw_value": 102.8, "quality": 0.96},
+  {"reading_id": "R026", "station_id": "beta", "timestamp": "2024-03-01T08:55:00Z", "channel": "temperature", "raw_value": 22.6, "quality": 0.99},
+  {"reading_id": "R027", "station_id": "beta", "timestamp": "2024-03-01T09:00:00Z", "channel": "pressure", "raw_value": 102.4, "quality": 0.97},
+  {"reading_id": "R028", "station_id": "beta", "timestamp": "2024-03-01T09:05:00Z", "channel": "pressure", "raw_value": 102.1, "quality": 0.98}
+]

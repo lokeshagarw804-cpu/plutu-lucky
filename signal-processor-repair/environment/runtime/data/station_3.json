@@ -1,0 +1,16 @@
+[
+  {"reading_id": "R029", "station_id": "gamma", "timestamp": "2024-03-01T08:00:00Z", "channel": "pressure", "raw_value": 99.7, "quality": 0.96},
+  {"reading_id": "R030", "station_id": "gamma", "timestamp": "2024-03-01T08:05:00Z", "channel": "temperature", "raw_value": 20.8, "quality": 0.97},
+  {"reading_id": "R031", "station_id": "gamma", "timestamp": "2024-03-01T08:10:00Z", "channel": "pressure", "raw_value": 99.9, "quality": 0.98},
+  {"reading_id": "R032", "station_id": "gamma", "timestamp": "2024-03-01T08:15:00Z", "channel": "pressure", "raw_value": 100.2, "quality": 0.96},
+  {"reading_id": "R033", "station_id": "gamma", "timestamp": "2024-03-01T08:20:00Z", "channel": "temperature", "raw_value": 21.1, "quality": 0.99},
+  {"reading_id": "R034", "station_id": "gamma", "timestamp": "2024-03-01T08:25:00Z", "channel": "pressure", "raw_value": 100.5, "quality": 0.97},
+  {"reading_id": "R035", "station_id": "gamma", "timestamp": "2024-03-01T08:30:00Z", "channel": "pressure", "raw_value": 100.8, "quality": 0.98},
+  {"reading_id": "R036", "station_id": "gamma", "timestamp": "2024-03-01T08:35:00Z", "channel": "temperature", "raw_value": 21.4, "quality": 0.96},
+  {"reading_id": "R037", "station_id": "gamma", "timestamp": "2024-03-01T08:40:00Z", "channel": "pressure", "raw_value": 101.1, "quality": 0.99},
+  {"reading_id": "R038", "station_id": "gamma", "timestamp": "2024-03-01T08:45:00Z", "channel": "pressure", "raw_value": 101.4, "quality": 0.97},
+  {"reading_id": "R039", "station_id": "gamma", "timestamp": "2024-03-01T08:50:00Z", "channel": "pressure", "raw_value": 101.7, "quality": 0.98},
+  {"reading_id": "R040", "station_id": "gamma", "timestamp": "2024-03-01T08:55:00Z", "channel": "temperature", "raw_value": 21.9, "quality": 0.96},
+  {"reading_id": "R041", "station_id": "gamma", "timestamp": "2024-03-01T09:00:00Z", "channel": "pressure", "raw_value": 101.3, "quality": 0.99},
+  {"reading_id": "R042", "station_id": "gamma", "timestamp": "2024-03-01T09:05:00Z", "channel": "pressure", "raw_value": 101.0, "quality": 0.97}
+]

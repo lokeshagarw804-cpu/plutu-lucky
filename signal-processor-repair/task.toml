@@ -1,0 +1,37 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+category = "signal_processing"
+difficulty = "hard"
+tags = ["signal-processing", "calibration", "correlation", "anomaly-detection", "sensor-data"]
+
+difficulty_explanation = "Requires identifying five interacting defects across multiple files: a whitespace parsing issue that excludes a station from the calibration lookup chain, an arithmetic operator error (multiply vs add) that produces physically impossible values, a wrong config section for detection sensitivity, a correlation averaging bug that violates mathematical bounds, and a sort tiebreaker omission. Bug interactions mean some tests only pass when multiple fixes are applied simultaneously."
+solution_explanation = "Strip whitespace from calibrated_ids, change multiplication to addition for offset calibration, read noise_threshold from detection.refined section, divide correlation sum by window count for averaging, and add station_id to the anomaly sort key."
+verification_explanation = "Tests check station inclusion, calibrated value physical ranges, correlation coefficient bounds [-1,1], anomaly count with correct threshold, and deterministic ordering at tied severity scores."
+expert_time_estimate_hours = 3.5
+
+[task]
+name = "signal-processor-repair"
+description = "Debug a signal processing system that calibrates multi-station sensor readings, computes cross-station correlations, and detects anomalies. Five interacting defects cause station exclusion, incorrect calibration magnitudes, out-of-bounds correlations, wrong detection sensitivity, and non-deterministic ordering."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Five bugs with cross-file interactions requiring understanding of calibration arithmetic, correlation mathematics, config section semantics, and sort stability. Bug E only manifests after Bug A is fixed, creating a dependency chain."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.run_spatial"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the processing system then executes pytest to validate calibration, correlations, anomaly detection, and output ordering."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Applies patches to fix station filtering, calibration arithmetic, config section, correlation averaging, and sort ordering, then re-runs."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"

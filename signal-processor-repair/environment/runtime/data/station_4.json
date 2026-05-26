@@ -1,0 +1,16 @@
+[
+  {"reading_id": "R043", "station_id": "delta", "timestamp": "2024-03-01T08:00:00Z", "channel": "pressure", "raw_value": 98.5, "quality": 0.98},
+  {"reading_id": "R044", "station_id": "delta", "timestamp": "2024-03-01T08:05:00Z", "channel": "pressure", "raw_value": 98.8, "quality": 0.97},
+  {"reading_id": "R045", "station_id": "delta", "timestamp": "2024-03-01T08:10:00Z", "channel": "temperature", "raw_value": 19.9, "quality": 0.96},
+  {"reading_id": "R046", "station_id": "delta", "timestamp": "2024-03-01T08:15:00Z", "channel": "pressure", "raw_value": 99.1, "quality": 0.99},
+  {"reading_id": "R047", "station_id": "delta", "timestamp": "2024-03-01T08:20:00Z", "channel": "pressure", "raw_value": 99.4, "quality": 0.98},
+  {"reading_id": "R048", "station_id": "delta", "timestamp": "2024-03-01T08:25:00Z", "channel": "temperature", "raw_value": 20.2, "quality": 0.97},
+  {"reading_id": "R049", "station_id": "delta", "timestamp": "2024-03-01T08:30:00Z", "channel": "pressure", "raw_value": 99.7, "quality": 0.96},
+  {"reading_id": "R050", "station_id": "delta", "timestamp": "2024-03-01T08:35:00Z", "channel": "pressure", "raw_value": 100.0, "quality": 0.99},
+  {"reading_id": "R051", "station_id": "delta", "timestamp": "2024-03-01T08:40:00Z", "channel": "temperature", "raw_value": 20.5, "quality": 0.98},
+  {"reading_id": "R052", "station_id": "delta", "timestamp": "2024-03-01T08:45:00Z", "channel": "pressure", "raw_value": 100.3, "quality": 0.97},
+  {"reading_id": "R053", "station_id": "delta", "timestamp": "2024-03-01T08:50:00Z", "channel": "pressure", "raw_value": 100.6, "quality": 0.96},
+  {"reading_id": "R054", "station_id": "delta", "timestamp": "2024-03-01T08:55:00Z", "channel": "pressure", "raw_value": 100.9, "quality": 0.98},
+  {"reading_id": "R055", "station_id": "delta", "timestamp": "2024-03-01T09:00:00Z", "channel": "temperature", "raw_value": 20.9, "quality": 0.99},
+  {"reading_id": "R056", "station_id": "delta", "timestamp": "2024-03-01T09:05:00Z", "channel": "pressure", "raw_value": 100.5, "quality": 0.97}
+]
