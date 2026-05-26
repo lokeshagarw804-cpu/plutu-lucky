@@ -100,13 +100,15 @@ def main():
     patch_tracker()
     patch_alerts()
 
-    # Re-run with patched code
-    sys.path.insert(0, "/app")
-    for key in list(sys.modules.keys()):
-        if key.startswith("runtime"):
-            del sys.modules[key]
-    from runtime.main import main as run_main
-    run_main()
+    # Re-run the system with patched code using subprocess
+    # to avoid module caching issues
+    import subprocess
+    result = subprocess.run(
+        ["python3", "-m", "runtime.main"],
+        cwd="/app",
+        capture_output=True
+    )
+    sys.exit(result.returncode)
 
 
 if __name__ == "__main__":
