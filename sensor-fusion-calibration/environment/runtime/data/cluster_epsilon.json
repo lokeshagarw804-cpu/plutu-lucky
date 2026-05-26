@@ -1,0 +1,11 @@
+{
+  "cluster_id": "epsilon",
+  "region": "central",
+  "sensors": [
+    {"sensor_id": "S040", "type": "thermal", "readings": [26.8, 27.0, 26.9, 27.1, 26.8, 27.0, 26.9, 27.1, 26.8, 27.0], "baseline": 26.5, "drift_rate": 0.017, "cross_refs": ["S001", "S010", "S020", "S030"]},
+    {"sensor_id": "S041", "type": "pressure", "readings": [100.1, 100.3, 100.2, 100.4, 100.1, 100.3, 100.2, 100.4, 100.1, 100.3], "baseline": 100.0, "drift_rate": 0.009, "cross_refs": ["S002", "S011", "S021"]},
+    {"sensor_id": "S042", "type": "humidity", "readings": [52.4, 52.7, 52.5, 52.8, 52.6, 52.4, 52.7, 52.5, 52.8, 52.6], "baseline": 52.0, "drift_rate": 0.026, "cross_refs": ["S003", "S012", "S022", "S032"]},
+    {"sensor_id": "S043", "type": "vibration", "readings": [0.25, 0.27, 0.26, 0.28, 0.25, 0.27, 0.26, 0.28, 0.25, 0.27], "baseline": 0.23, "drift_rate": 0.006, "cross_refs": ["S005", "S014", "S024", "S034"]},
+    {"sensor_id": "S044", "type": "thermal", "readings": [25.5, 25.7, 25.6, 25.8, 25.5, 25.7, 25.6, 25.8, 25.5, 25.7], "baseline": 25.0, "drift_rate": 0.015, "cross_refs": ["S007", "S016", "S026", "S036"]}
+  ]
+}
