@@ -65,7 +65,7 @@ class FleetLoader:
 
         for reading in sorted_readings[1:]:
             # Check if reading falls within the time window
-            if reading["epoch"] - group_start < self._window:
+            if reading["epoch"] - group_start <= self._window:
                 current_group.append(reading)
             else:
                 groups.append(current_group)

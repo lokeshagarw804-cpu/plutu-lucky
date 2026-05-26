@@ -11,7 +11,7 @@ Fleet monitoring tool: reads GPS pings from three vehicle feeds, checks geofence
 
 ## How it works
 
-1. **Load** — Reads JSONL fleet feeds, groups readings in time windows (inclusive boundary, `<=` configured seconds).
+1. **Load** — Reads JSONL fleet feeds, groups readings into time windows for processing.
 2. **Geofence** — Ray-casting point-in-polygon. Points on horizontal edges count as inside.
 3. **Dwell** — State machine: OUTSIDE→ENTERING→INSIDE→EXITING. Two consecutive inside-readings confirm entry. Counter resets only on transition back to OUTSIDE.
 4. **Alerts** — Severity per vehicle = weighted average of dwell scores, but only across zones that vehicle actually violated (the divisor is the sum of those zones' weights, not all configured weights). Sort: `(zone_id, -severity, vehicle_id)`.
