@@ -1,0 +1,37 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+category = "event-sourcing"
+difficulty = "hard"
+tags = ["event-sourcing", "cqrs", "projection", "materialization", "debugging"]
+
+difficulty_explanation = "Task requires identifying four interacting defects across loader, projector, and correlator modules. Bugs involve config parsing subtleties, wrong section references, accumulation semantics, and sort tiebreakers that only manifest with specific cross-stream data patterns."
+solution_explanation = "Fix config split to strip whitespace (loader), read correct config section for batch size (projector), change accumulation to last-write-wins (projector), and add stream_id to sort key (correlator). All four fixes needed for correct aggregate output."
+verification_explanation = "Tests validate output file structure, stream inclusion, financial calculations, and deterministic event ordering. Graduated difficulty ensures partial fixes are distinguishable from complete repair."
+expert_time_estimate_hours = 3.0
+
+[task]
+name = "event-replay-repair"
+description = "Debug a broken event replay materialization system that reads order, payment, and refund event streams, correlates them into a unified timeline, projects aggregate state, and writes summary reports. Four subtle defects produce incorrect output."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires cross-file reasoning between config, loader, projector, and correlator. Bugs interact: fixing one reveals symptoms of others. Config section misdirection and whitespace parsing require careful reading of multiple files simultaneously."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.run_replay"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the materialization system then executes pytest to verify output correctness."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches four defects in loader, projector, and correlator modules, then re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"

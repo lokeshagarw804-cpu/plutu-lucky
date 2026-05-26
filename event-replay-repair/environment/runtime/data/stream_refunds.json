@@ -1,0 +1,5 @@
+[
+  {"event_id": "evt_201", "stream_id": "refunds", "seq": 1, "timestamp": "2024-03-01T11:00:00Z", "type": "RefundIssued", "payload": {"order_id": "ORD-1001", "amount": 12.50, "reason": "damaged_item", "sku": "WIDGET-A", "qty": 1}},
+  {"event_id": "evt_202", "stream_id": "refunds", "seq": 2, "timestamp": "2024-03-01T13:00:00Z", "type": "RefundIssued", "payload": {"order_id": "ORD-1003", "amount": 25.00, "reason": "wrong_item", "sku": "WIDGET-A", "qty": 2}},
+  {"event_id": "evt_203", "stream_id": "refunds", "seq": 3, "timestamp": "2024-03-01T15:30:00Z", "type": "RefundIssued", "payload": {"order_id": "ORD-1006", "amount": 8.75, "reason": "defective", "sku": "GIZMO-C", "qty": 1}}
+]

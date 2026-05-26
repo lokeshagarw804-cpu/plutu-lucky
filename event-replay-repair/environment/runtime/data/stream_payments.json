@@ -1,0 +1,9 @@
+[
+  {"event_id": "evt_101", "stream_id": "payments", "seq": 1, "timestamp": "2024-03-01T09:02:00Z", "type": "PaymentReceived", "payload": {"order_id": "ORD-1001", "amount": 37.50, "method": "card"}},
+  {"event_id": "evt_102", "stream_id": "payments", "seq": 2, "timestamp": "2024-03-01T09:17:00Z", "type": "PaymentReceived", "payload": {"order_id": "ORD-1002", "amount": 70.00, "method": "card"}},
+  {"event_id": "evt_103", "stream_id": "payments", "seq": 3, "timestamp": "2024-03-01T10:02:00Z", "type": "PaymentReceived", "payload": {"order_id": "ORD-1003", "amount": 62.50, "method": "bank"}},
+  {"event_id": "evt_104", "stream_id": "payments", "seq": 4, "timestamp": "2024-03-01T11:02:00Z", "type": "PaymentReceived", "payload": {"order_id": "ORD-1004", "amount": 90.00, "method": "card"}},
+  {"event_id": "evt_105", "stream_id": "payments", "seq": 5, "timestamp": "2024-03-01T12:32:00Z", "type": "PaymentReceived", "payload": {"order_id": "ORD-1005", "amount": 57.50, "method": "bank"}},
+  {"event_id": "evt_106", "stream_id": "payments", "seq": 6, "timestamp": "2024-03-01T14:02:00Z", "type": "PaymentReceived", "payload": {"order_id": "ORD-1006", "amount": 35.00, "method": "card"}},
+  {"event_id": "evt_107", "stream_id": "payments", "seq": 7, "timestamp": "2024-03-01T15:01:00Z", "type": "PaymentReceived", "payload": {"order_id": "ORD-1007", "amount": 33.75, "method": "card"}}
+]
