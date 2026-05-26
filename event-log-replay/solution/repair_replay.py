@@ -21,13 +21,12 @@ def patch_file(filepath, replacements):
 def main():
     runtime_dir = "/app/runtime"
 
-    # Fix 1: causality.py — remove skip_node check in clock comparison
+    # Fix 1: causality.py — remove skip_node filter from clock comparison
     patch_file(
         os.path.join(runtime_dir, "causality.py"),
         [
             (
                 "        for node in all_nodes:\n"
-                "            # BUG: skip_node causes incomplete comparison\n"
                 "            if node == self._skip_node:\n"
                 "                continue\n"
                 "            val_a = clock_a.get(node, 0)",
@@ -37,24 +36,22 @@ def main():
         ]
     )
 
-    # Fix 2: causality.py — drift check should be inclusive (< to <=)
+    # Fix 2: causality.py — drift threshold must be inclusive
     patch_file(
         os.path.join(runtime_dir, "causality.py"),
         [
             (
-                "                        # BUG: should be <= (inclusive of boundary)\n"
                 "                        if time_diff < self._max_drift:",
                 "                        if time_diff <= self._max_drift:"
             ),
         ]
     )
 
-    # Fix 3: loader.py — window boundary inclusive (<= instead of <) and remove dead elif
+    # Fix 3: loader.py — window boundary inclusive and remove dead elif
     patch_file(
         os.path.join(runtime_dir, "loader.py"),
         [
             (
-                "            # BUG: should be <= for inclusive boundary\n"
                 "            if delta < self._window_ms:\n"
                 "                current_group.append(event)\n"
                 "            elif delta == self._window_ms and event[\"node_id\"] < current_group[0][\"node_id\"]:\n"
@@ -68,13 +65,14 @@ def main():
         ]
     )
 
-    # Fix 4: reporter.py — accumulate weight instead of overwriting
+    # Fix 4: reporter.py — accumulate weight
     patch_file(
         os.path.join(runtime_dir, "reporter.py"),
         [
             (
-                "                # BUG: should be total_weight += weight\n"
+                "                weighted_sum += weight * combined\n"
                 "                total_weight = weight",
+                "                weighted_sum += weight * combined\n"
                 "                total_weight += weight"
             ),
         ]

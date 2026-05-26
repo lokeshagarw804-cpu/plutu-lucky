@@ -50,7 +50,6 @@ class AnomalyReporter:
                 combined = (count_score + drift_score) / 2.0
 
                 weighted_sum += weight * combined
-                # BUG: should be total_weight += weight
                 total_weight = weight
 
             # Apply confidence factor based on window spread

@@ -28,7 +28,6 @@ class CausalityChecker:
                     rel = self._compare_clocks(ev_a["vclock"], ev_b["vclock"])
                     if rel == "b_before_a":
                         time_diff = ev_b["ts_ms"] - ev_a["ts_ms"]
-                        # BUG: should be <= (inclusive of boundary)
                         if time_diff < self._max_drift:
                             violations.append({
                                 "event_a": ev_a["event_id"],
@@ -50,7 +49,6 @@ class CausalityChecker:
         b_has_greater = False
 
         for node in all_nodes:
-            # BUG: skip_node causes incomplete comparison
             if node == self._skip_node:
                 continue
             val_a = clock_a.get(node, 0)

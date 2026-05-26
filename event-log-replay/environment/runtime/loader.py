@@ -42,7 +42,6 @@ class LogLoader:
 
         for event in sorted_events[1:]:
             delta = event["ts_ms"] - group_start
-            # BUG: should be <= for inclusive boundary
             if delta < self._window_ms:
                 current_group.append(event)
             elif delta == self._window_ms and event["node_id"] < current_group[0]["node_id"]:
