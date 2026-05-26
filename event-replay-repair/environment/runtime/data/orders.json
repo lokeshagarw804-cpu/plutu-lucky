@@ -1,0 +1,21 @@
+{
+  "stream_id": "orders",
+  "description": "Order fulfillment events",
+  "events": [
+    {"sequence_num": 1, "timestamp": 1000, "account_id": "acct_100", "event_type": "credit", "amount": 250.50},
+    {"sequence_num": 2, "timestamp": 1005, "account_id": "acct_101", "event_type": "credit", "amount": 89.99},
+    {"sequence_num": 3, "timestamp": 1012, "account_id": "acct_100", "event_type": "credit", "amount": 175.00},
+    {"sequence_num": 4, "timestamp": 1020, "account_id": "acct_102", "event_type": "credit", "amount": 432.10},
+    {"sequence_num": 5, "timestamp": 1028, "account_id": "acct_101", "event_type": "credit", "amount": 64.25},
+    {"sequence_num": 6, "timestamp": 1035, "account_id": "acct_100", "event_type": "credit", "amount": 312.75},
+    {"sequence_num": 7, "timestamp": 1042, "account_id": "acct_102", "event_type": "credit", "amount": 198.60},
+    {"sequence_num": 8, "timestamp": 1050, "account_id": "acct_101", "event_type": "credit", "amount": 445.00},
+    {"sequence_num": 9, "timestamp": 1055, "account_id": "acct_100", "event_type": "credit", "amount": 128.30},
+    {"sequence_num": 10, "timestamp": 1062, "account_id": "acct_102", "event_type": "credit", "amount": 87.45},
+    {"sequence_num": 11, "timestamp": 1070, "account_id": "acct_100", "event_type": "credit", "amount": 215.90},
+    {"sequence_num": 12, "timestamp": 1078, "account_id": "acct_101", "event_type": "credit", "amount": 163.40},
+    {"sequence_num": 13, "timestamp": 1085, "account_id": "acct_102", "event_type": "credit", "amount": 294.55},
+    {"sequence_num": 14, "timestamp": 1092, "account_id": "acct_100", "event_type": "credit", "amount": 77.80},
+    {"sequence_num": 15, "timestamp": 1100, "account_id": "acct_101", "event_type": "credit", "amount": 521.15}
+  ]
+}
