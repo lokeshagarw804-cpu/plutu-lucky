@@ -1,0 +1,12 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+category = "authentication_security"
+difficulty = "hard"
+tags = ["hmac", "token-validation", "cryptography", "policy-engine", "debugging"]
+difficulty_explanation = "Requires understanding base64 encoding semantics, config section resolution, numeric vs lexicographic sorting, and exponential decay formulas. Multiple interacting bugs where fixing one alone does not resolve test failures."
+solution_explanation = "Four bugs must be fixed: (A) policy_checker.py must read from policy.strict section for 60s drift instead of policy section with 300s, (B) signature_verifier.py must base64-decode the signing key instead of using the encoded string as bytes, (C) token_loader.py must sort files numerically not lexicographically, (D) trust_scorer.py must use distance not distance+1 in the decay exponent."
+verification_explanation = "12 graduated pytest tests verify structural correctness, token counts, signature validity, policy enforcement with strict drift, trust score accuracy, and batch processing order."
+expert_time_estimate_hours = 3.0
+
+[task]
+name = "token-validation-repair"
