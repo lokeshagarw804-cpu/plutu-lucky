@@ -45,13 +45,42 @@ There are 3 batch files containing 40 tokens total.
 ## Expected Behavior
 
 When functioning correctly, the validator should:
-1. Load all batch files in a deterministic order based on their filenames
-2. Verify each token's cryptographic signature against the configured key
-3. Apply the appropriate security policy to check expiry and permissions
-4. Compute trust scores reflecting the issuer's position in the trust chain
-5. Produce a report at `/app/runtime/output/validation_report.json`
+1. Load all batch files in numeric filename order (batch_1, batch_2, batch_10 — not lexicographic)
+2. Verify each token's HMAC-SHA256 signature using the base64-decoded signing key — all 40 signatures should be valid
+3. Apply the strict security policy (60 second clock drift) to check expiry — exactly 10 tokens should be marked expired
+4. Compute trust scores: tokens from root issuer `auth-primary` (distance 0) get score 100.0, `auth-backup` (distance 1) gets 85.0, `auth-legacy` (distance 2) gets 72.25
+5. Produce a report at `/app/runtime/output/validation_report.json` with exactly 30 fully valid tokens (signature valid + not expired + policy pass)
 
-The report contains a summary with counts of total, valid, expired, and invalid-signature tokens, plus a detailed list of per-token results sorted according to configuration.
+## Output Schema
+
+### /app/runtime/output/validation_report.json
+
+The report has the following top-level structure:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| summary | object | Aggregate counts for the validation run |
+| summary.total_tokens | integer | Total tokens processed (should be 40) |
+| summary.valid_tokens | integer | Tokens passing all checks (should be 30) |
+| summary.expired_tokens | integer | Tokens past strict 60s drift (should be 10) |
+| summary.invalid_signatures | integer | Tokens with bad HMAC (should be 0) |
+| tokens | array | Per-token detailed results |
+| tokens[].token_id | string | Token identifier (TOK-001 through TOK-040) |
+| tokens[].batch_source | string | Source batch filename |
+| tokens[].signature_valid | boolean | Whether HMAC signature verified |
+| tokens[].expired | boolean | Whether token is past expiry + drift |
+| tokens[].policy_pass | boolean | Whether token passes all policy checks |
+| tokens[].trust_score | float | Computed trust score based on issuer distance |
+| batch_count | integer | Number of batch files processed (should be 3) |
+| batch_order | array[string] | Filenames in processing order |
+
+## Expected Counts
+
+- Total tokens: 40 (15 from batch_1 + 12 from batch_2 + 13 from batch_10)
+- Valid signatures: 40 (all tokens have valid HMAC when key is correctly decoded)
+- Expired tokens: 10 (tokens whose expiry is more than 60 seconds before reference time)
+- Valid tokens: 30 (signature valid AND not expired AND policy pass)
+- Root issuer tokens (auth-primary, score 100.0): 13 tokens
 
 ## Current State
 
