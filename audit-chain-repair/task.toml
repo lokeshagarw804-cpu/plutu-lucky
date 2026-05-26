@@ -1,0 +1,37 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+category = "cryptographic_verification"
+difficulty = "hard"
+tags = ["cryptography", "audit-logs", "hash-chains", "integrity-verification", "debugging"]
+
+difficulty_explanation = "Five interacting defects across six modules require understanding cryptographic hash chain verification, HMAC configuration semantics, per-stream vs aggregate scoring arithmetic, deterministic ordering across independent sequences, and window boundary calculations. Bugs cannot be identified from outputs alone — they require tracing how HMAC keys propagate through hashing, how scores are computed per-stream vs globally, and how windowing affects entry grouping."
+solution_explanation = "Fix whitespace handling in comma-split stream type list, read HMAC key_length from the correct config section (verification.hmac), replace aggregate-based per-stream scores with independent per-stream ratio computation, add stream_id as sort tiebreaker for deterministic tampered entry ordering, and correct window step size from window_size+1 to window_size."
+verification_explanation = "Tests validate stream count and entry totals (all streams loaded), HMAC key length (correct config section), per-stream score independence, window count (correct boundaries), tampered entry count, and ordering determinism at shared timestamps. Tests use exact count assertions and range checks making it impossible to pass without fixing all bugs."
+expert_time_estimate_hours = 3.5
+
+[task]
+name = "audit-chain-repair"
+description = "Debug a cryptographic audit log chain verifier with five interacting defects across stream loading, HMAC configuration, integrity scoring, tamper detection ordering, and verification window boundaries. Bugs involve string parsing, config section resolution, aggregation semantics, and boundary arithmetic."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding cryptographic hash chain mechanics, HMAC configuration hierarchies, independent vs aggregate statistical computation, deterministic sort tiebreakers across independent log streams, and off-by-one window boundary patterns. Defects interact — fixing one reveals new streams whose data changes downstream scoring and detection counts."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.run_audit"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the audit verifier then validates output via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all five defects and re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"

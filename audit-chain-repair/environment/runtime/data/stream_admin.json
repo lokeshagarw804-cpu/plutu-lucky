@@ -1,0 +1,15 @@
+{
+  "stream_id": "admin",
+  "stream_type": "admin",
+  "hmac_key": "1234567890abcdef1234567890abcdef",
+  "entries": [
+    {"entry_id": "ad001", "timestamp": 1700000130, "prev_hash": "0000000000000000", "payload": "config:db_pool_size=20", "seq": 1},
+    {"entry_id": "ad002", "timestamp": 1700000260, "prev_hash": "x1y2z3a4b5c6d7e8", "payload": "deploy:v2.1.0 env:staging", "seq": 2},
+    {"entry_id": "ad003", "timestamp": 1700000390, "prev_hash": "y2z3a4b5c6d7e8f9", "payload": "config:cache_ttl=3600", "seq": 3},
+    {"entry_id": "ad004", "timestamp": 1700000500, "prev_hash": "z3a4b5c6d7e8f9a0", "payload": "deploy:v2.2.0 env:production", "seq": 4},
+    {"entry_id": "ad005", "timestamp": 1700000630, "prev_hash": "a4b5c6d7e8f9a0b1", "payload": "config:max_connections=500", "seq": 5},
+    {"entry_id": "ad006", "timestamp": 1700000760, "prev_hash": "b5c6d7e8f9a0b1c2", "payload": "deploy:v2.3.0 env:production", "seq": 6},
+    {"entry_id": "ad007", "timestamp": 1700000890, "prev_hash": "c6d7e8f9a0b1c2d3", "payload": "config:log_level=warn", "seq": 7},
+    {"entry_id": "ad008", "timestamp": 1700001020, "prev_hash": "d7e8f9a0b1c2d3e4", "payload": "deploy:v2.4.0 env:staging", "seq": 8}
+  ]
+}

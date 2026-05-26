@@ -1,0 +1,15 @@
+{
+  "stream_id": "security",
+  "stream_type": "security",
+  "hmac_key": "9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d",
+  "entries": [
+    {"entry_id": "sc001", "timestamp": 1700000110, "prev_hash": "0000000000000000", "payload": "firewall rule:allow 10.0.0.0/8", "seq": 1},
+    {"entry_id": "sc002", "timestamp": 1700000220, "prev_hash": "aa1b2c3d4e5f6a7b", "payload": "cert:renewed domain:api.example.com", "seq": 2},
+    {"entry_id": "sc003", "timestamp": 1700000330, "prev_hash": "bb2c3d4e5f6a7b8c", "payload": "intrusion:detected src:192.168.1.99", "seq": 3},
+    {"entry_id": "sc004", "timestamp": 1700000440, "prev_hash": "cc3d4e5f6a7b8c9d", "payload": "firewall rule:block 192.168.1.99", "seq": 4},
+    {"entry_id": "sc005", "timestamp": 1700000500, "prev_hash": "dd4e5f6a7b8c9d0e", "payload": "audit:config-change key_rotation=true", "seq": 5},
+    {"entry_id": "sc006", "timestamp": 1700000610, "prev_hash": "ee5f6a7b8c9d0e1f", "payload": "cert:expired domain:old.example.com", "seq": 6},
+    {"entry_id": "sc007", "timestamp": 1700000720, "prev_hash": "ff6a7b8c9d0e1f2a", "payload": "intrusion:blocked src:10.99.1.1", "seq": 7},
+    {"entry_id": "sc008", "timestamp": 1700000830, "prev_hash": "a07b8c9d0e1f2a3b", "payload": "firewall rule:allow 172.16.0.0/12", "seq": 8}
+  ]
+}

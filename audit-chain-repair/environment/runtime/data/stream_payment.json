@@ -1,0 +1,19 @@
+{
+  "stream_id": "payment",
+  "stream_type": "payment",
+  "hmac_key": "f1e2d3c4b5a6f7e8d9c0b1a2f3e4d5c6",
+  "entries": [
+    {"entry_id": "py001", "timestamp": 1700000120, "prev_hash": "0000000000000000", "payload": "txn:1001 amount:150.00 user:alice", "seq": 1},
+    {"entry_id": "py002", "timestamp": 1700000180, "prev_hash": "1a2b3c4d5e6f7a8b", "payload": "txn:1002 amount:299.99 user:bob", "seq": 2},
+    {"entry_id": "py003", "timestamp": 1700000240, "prev_hash": "2b3c4d5e6f7a8b9c", "payload": "txn:1003 amount:75.50 user:carol", "seq": 3},
+    {"entry_id": "py004", "timestamp": 1700000300, "prev_hash": "3c4d5e6f7a8b9c0d", "payload": "txn:1004 amount:1200.00 user:dave", "seq": 4},
+    {"entry_id": "py005", "timestamp": 1700000360, "prev_hash": "4d5e6f7a8b9c0d1e", "payload": "txn:1005 amount:89.95 user:alice", "seq": 5},
+    {"entry_id": "py006", "timestamp": 1700000420, "prev_hash": "5e6f7a8b9c0d1e2f", "payload": "txn:1006 amount:450.00 user:eve", "seq": 6},
+    {"entry_id": "py007", "timestamp": 1700000480, "prev_hash": "6f7a8b9c0d1e2f3a", "payload": "txn:1007 amount:33.25 user:bob", "seq": 7},
+    {"entry_id": "py008", "timestamp": 1700000540, "prev_hash": "7a8b9c0d1e2f3a4b", "payload": "txn:1008 amount:675.00 user:carol", "seq": 8},
+    {"entry_id": "py009", "timestamp": 1700000600, "prev_hash": "8b9c0d1e2f3a4b5c", "payload": "txn:1009 amount:125.75 user:frank", "seq": 9},
+    {"entry_id": "py010", "timestamp": 1700000660, "prev_hash": "9c0d1e2f3a4b5c6d", "payload": "txn:1010 amount:999.99 user:dave", "seq": 10},
+    {"entry_id": "py011", "timestamp": 1700000720, "prev_hash": "0d1e2f3a4b5c6d7e", "payload": "txn:1011 amount:55.00 user:eve", "seq": 11},
+    {"entry_id": "py012", "timestamp": 1700000780, "prev_hash": "1e2f3a4b5c6d7e8f", "payload": "txn:1012 amount:2100.00 user:alice", "seq": 12}
+  ]
+}
