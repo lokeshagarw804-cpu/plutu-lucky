@@ -1,0 +1,11 @@
+{
+  "doc_id": "config-manifest",
+  "version": "branch_a",
+  "sections": [
+    {"id": "S01", "title": "dependencies", "lines": ["flask==2.1.0", "requests==2.27.1", "sqlalchemy==1.4.23", "redis==4.0.0", "celery==5.2.0", "prometheus-client==0.12.0"]},
+    {"id": "S02", "title": "settings", "lines": ["DEBUG=false", "LOG_LEVEL=warning", "MAX_CONN=200", "TIMEOUT=30", "RETRY=5", "POOL_SIZE=20"]},
+    {"id": "S03", "title": "endpoints", "lines": ["/api/v1/users", "/api/v1/auth", "/api/v2/products", "/api/v1/orders", "/api/v1/payments", "/api/v1/analytics"]},
+    {"id": "S04", "title": "middleware", "lines": ["cors_handler", "auth_check", "rate_limiter", "logger", "compressor", "metrics_collector"]},
+    {"id": "S05", "title": "cron_jobs", "lines": ["cleanup_sessions:0 */4 * * *", "sync_inventory:0 0 * * *", "send_reports:0 8 * * 1", "backup_db:0 1 * * *", "purge_logs:0 3 * * 0", "health_check:*/5 * * * *"]}
+  ]
+}

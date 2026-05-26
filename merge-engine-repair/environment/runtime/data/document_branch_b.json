@@ -1,0 +1,11 @@
+{
+  "doc_id": "config-manifest",
+  "version": "branch_b",
+  "sections": [
+    {"id": "S01", "title": "dependencies", "lines": ["flask==2.0.1", "requests==2.28.0", "sqlalchemy==1.4.25", "redis==3.5.3", "celery==5.1.2", "pydantic==1.9.0"]},
+    {"id": "S02", "title": "settings", "lines": ["DEBUG=false", "LOG_LEVEL=info", "MAX_CONN=150", "TIMEOUT=45", "RETRY=3", "CACHE_TTL=300"]},
+    {"id": "S03", "title": "endpoints", "lines": ["/api/v1/users", "/api/v1/auth", "/api/v1/products", "/api/v2/orders", "/api/v1/payments", "/api/v1/webhooks"]},
+    {"id": "S04", "title": "middleware", "lines": ["cors_handler", "auth_check", "rate_limiter", "request_validator", "logger", "compressor"]},
+    {"id": "S05", "title": "cron_jobs", "lines": ["cleanup_sessions:0 */6 * * *", "sync_inventory:30 0 * * *", "send_reports:0 9 * * 1", "backup_db:0 2 * * *", "purge_logs:0 3 * * 0", "webhook_retry:*/10 * * * *"]}
+  ]
+}

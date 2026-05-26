@@ -1,0 +1,37 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+category = "version_control"
+difficulty = "hard"
+tags = ["three-way-merge", "conflict-resolution", "diff-algorithm", "version-control", "document-assembly"]
+
+difficulty_explanation = "Four bugs interact through data flow in a recursive merge engine: an off-by-one error in diff boundary computation creates phantom overlapping regions, an inverted boolean condition in conflict detection misclassifies overlaps vs non-overlaps, a shared mutable context dict in the resolver corrupts depth state across iterations, and an exclusive slice operation on inclusive ranges silently drops the last line of each assembled change. Each bug changes the input to subsequent stages making isolated diagnosis extremely difficult."
+solution_explanation = "Fix the region end calculation to use i-1 for inclusive boundaries, correct the conflict detection boolean to 'has_overlap and not either_is_addition', pass a copy of the context dict to prevent cross-iteration state corruption, and change slice operations to end+1 for inclusive range semantics."
+verification_explanation = "Tests validate conflict count (should be 2, not 17), auto-resolved count (18), per-section line counts, presence of additions from both branches, and correct conflict winner selection."
+expert_time_estimate_hours = 4.0
+
+[task]
+name = "merge-engine-repair"
+description = "Debug a three-way merge engine that computes line-level diffs, detects conflicts between branches, resolves them using depth-weighted precedence, and assembles merged documents. Four interacting bugs in boundary arithmetic, boolean logic, mutable state, and slice semantics produce incorrect merge results."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Bugs require understanding inclusive vs exclusive ranges across multiple modules, tracing boolean logic through negation, identifying shared mutable state corruption in iterative processing, and understanding Python slice semantics with inclusive boundaries. No single bug is identifiable from docstrings alone."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.run_merge"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the merge engine then validates conflict counts, auto-resolution, line counts, and content correctness."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches diff boundaries, conflict logic, context copying, and slice ranges, then re-runs."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
