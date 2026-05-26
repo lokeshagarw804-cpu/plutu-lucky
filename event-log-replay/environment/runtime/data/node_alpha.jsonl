@@ -1,0 +1,8 @@
+{"event_id": "a1", "ts_ms": 1000, "seq": 1, "vclock": {"alpha": 1, "beta": 0, "gamma": 0}, "action": "write", "key": "users"}
+{"event_id": "a2", "ts_ms": 1100, "seq": 2, "vclock": {"alpha": 2, "beta": 2, "gamma": 1}, "action": "read", "key": "orders"}
+{"event_id": "a3", "ts_ms": 2000, "seq": 3, "vclock": {"alpha": 3, "beta": 2, "gamma": 1}, "action": "write", "key": "inventory"}
+{"event_id": "a4", "ts_ms": 2100, "seq": 4, "vclock": {"alpha": 4, "beta": 4, "gamma": 3}, "action": "read", "key": "users"}
+{"event_id": "a5", "ts_ms": 2500, "seq": 5, "vclock": {"alpha": 5, "beta": 4, "gamma": 3}, "action": "write", "key": "orders"}
+{"event_id": "a6", "ts_ms": 3100, "seq": 6, "vclock": {"alpha": 6, "beta": 6, "gamma": 5}, "action": "delete", "key": "cache"}
+{"event_id": "a7", "ts_ms": 4000, "seq": 7, "vclock": {"alpha": 7, "beta": 6, "gamma": 5}, "action": "write", "key": "sessions"}
+{"event_id": "a8", "ts_ms": 4100, "seq": 8, "vclock": {"alpha": 8, "beta": 8, "gamma": 7}, "action": "read", "key": "inventory"}

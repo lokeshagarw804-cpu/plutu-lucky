@@ -1,0 +1,8 @@
+{"event_id": "g1", "ts_ms": 1080, "seq": 1, "vclock": {"alpha": 0, "beta": 0, "gamma": 1}, "action": "write", "key": "cache"}
+{"event_id": "g2", "ts_ms": 1200, "seq": 2, "vclock": {"alpha": 0, "beta": 0, "gamma": 2}, "action": "read", "key": "users"}
+{"event_id": "g3", "ts_ms": 2080, "seq": 3, "vclock": {"alpha": 2, "beta": 2, "gamma": 3}, "action": "write", "key": "orders"}
+{"event_id": "g4", "ts_ms": 2200, "seq": 4, "vclock": {"alpha": 2, "beta": 2, "gamma": 4}, "action": "read", "key": "cache"}
+{"event_id": "g5", "ts_ms": 2500, "seq": 5, "vclock": {"alpha": 4, "beta": 4, "gamma": 5}, "action": "write", "key": "inventory"}
+{"event_id": "g6", "ts_ms": 3200, "seq": 6, "vclock": {"alpha": 4, "beta": 4, "gamma": 6}, "action": "read", "key": "sessions"}
+{"event_id": "g7", "ts_ms": 4080, "seq": 7, "vclock": {"alpha": 6, "beta": 6, "gamma": 7}, "action": "write", "key": "users"}
+{"event_id": "g8", "ts_ms": 4200, "seq": 8, "vclock": {"alpha": 6, "beta": 6, "gamma": 8}, "action": "delete", "key": "orders"}
