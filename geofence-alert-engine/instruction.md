@@ -1,31 +1,40 @@
-A fleet telemetry system processes GPS readings from three vehicle sources, evaluates geofence boundary violations using ray-casting point-in-polygon tests, tracks dwell durations via a state machine, and generates severity-ranked alert reports.
+# Geofence Alert Engine — Debugging Task
+
+## Overview
+
+Fleet monitoring tool: reads GPS pings from three vehicle feeds, checks geofence zone violations via ray-casting, tracks dwell time with a state machine, and outputs severity-ranked alerts.
 
 ## Environment
 
-- Language: Python 3.11
-- Working directory: `/app`
-- Runtime source: `/app/runtime/`
-- Data files: `/app/runtime/data/` (three JSONL fleet feeds)
-- Config: `/app/runtime/config.ini`
-- Output: `/app/runtime/output/`
+- Python 3.11, working dir `/app`, source at `/app/runtime/`, output at `/app/runtime/output/`
+- pytest available globally
 
-## Processing
+## How it works
 
-1. Load GPS readings from fleet feeds, merge by timestamp within a configurable time window (inclusive of boundary).
-2. For each reading, test containment against polygon geofences using ray-casting. The algorithm must handle points lying exactly on horizontal polygon edges as "inside."
-3. Track per-vehicle geofence state transitions (OUTSIDE/ENTERING/INSIDE/EXITING). Transition to INSIDE requires two consecutive interior readings; the confirmation counter resets only on state change back to OUTSIDE.
-4. Compute alert severity as a weighted sum across all geofence zones. Zone weights accumulate globally across zones for the final divisor.
-5. Output alerts sorted by `(zone_id, -severity, vehicle_id)` for deterministic ordering.
+1. **Load** — Reads JSONL fleet feeds, groups readings in time windows (inclusive boundary, `<=` configured seconds).
+2. **Geofence** — Ray-casting point-in-polygon. Points on horizontal edges count as inside.
+3. **Dwell** — State machine: OUTSIDE→ENTERING→INSIDE→EXITING. Two consecutive inside-readings confirm entry. Counter resets only on transition back to OUTSIDE.
+4. **Alerts** — Severity = weighted average across all violated zones (weights accumulate globally). Sort: `(zone_id, -severity, vehicle_id)`.
 
-## Problem
+## Symptoms
 
-The system produces incorrect alerts: some boundary points are misclassified, dwell tracking miscounts confirmations, time-window grouping excludes valid readings, severity normalization resets per zone, and output ordering is non-deterministic.
+Vehicles never reach INSIDE state, boundary points misclassified, severity exceeds 1.0, non-deterministic ordering.
 
-## Output
+## Expected output
 
-- `/app/runtime/output/alerts.json`: fields `zone_id` (str), `vehicle_id` (str), `severity` (float), `dwell_seconds` (int), `readings_inside` (int)
-- `/app/runtime/output/summary.json`: fields `total_alerts` (int), `zones_violated` (int), `total_dwell` (int), `max_severity` (float)
+- `/app/runtime/output/alerts.json`: 9 alerts, schema: `zone_id`(str), `vehicle_id`(str), `severity`(float), `dwell_seconds`(int), `readings_inside`(int)
+- `/app/runtime/output/summary.json`: `total_alerts`=9, `zones_violated`=3, `total_dwell`=1765, `max_severity`≈0.7769
+
+## Key files
+
+| File | Purpose |
+|------|---------|
+| `/app/runtime/geofence.py` | Point-in-polygon tests |
+| `/app/runtime/tracker.py` | Dwell state machine |
+| `/app/runtime/alerts.py` | Severity + sorting |
+| `/app/runtime/loader.py` | Feed loading + time windows |
+| `/app/runtime/config.ini` | Zone defs, weights, thresholds |
 
 ## Task
 
-Fix defects in the runtime source to produce correct output.
+Fix the bugs in the runtime source. Multiple defects across files — they interact.
