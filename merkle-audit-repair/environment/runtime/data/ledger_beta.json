@@ -1,0 +1,8 @@
+{
+  "ledger_id": "beta",
+  "transactions": [
+    {"txn_id": "TXN-B001", "timestamp": 1700003100, "account": "ACC-2207", "txn_type": "debit", "amount": 340.50},
+    {"txn_id": "TXN-B002", "timestamp": 1700006400, "account": "ACC-8891", "txn_type": "credit", "amount": 175.25},
+    {"txn_id": "TXN-B003", "timestamp": 1700007800, "account": "ACC-4412", "txn_type": "credit", "amount": 620.00}
+  ]
+}

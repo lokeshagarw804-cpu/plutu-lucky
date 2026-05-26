@@ -1,0 +1,9 @@
+{
+  "ledger_id": "alpha",
+  "transactions": [
+    {"txn_id": "TXN-A001", "timestamp": 1700001000, "account": "ACC-4412", "txn_type": "credit", "amount": 250.75},
+    {"txn_id": "TXN-A002", "timestamp": 1700002500, "account": "ACC-8891", "txn_type": "debit", "amount": 89.30},
+    {"txn_id": "TXN-A003", "timestamp": 1700004200, "account": "ACC-4412", "txn_type": "debit", "amount": 125.00},
+    {"txn_id": "TXN-A004", "timestamp": 1700005800, "account": "ACC-2207", "txn_type": "credit", "amount": 500.00}
+  ]
+}

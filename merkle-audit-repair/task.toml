@@ -1,0 +1,37 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+category = "cryptographic_verification"
+difficulty = "hard"
+tags = ["merkle-tree", "cryptography", "hash-verification", "audit", "debugging"]
+
+difficulty_explanation = "Four interacting defects in cryptographic hash computation, tree construction, proof generation, and verification. Bugs cannot be identified from a single file — they require tracing data flow across the hasher, tree builder, proof engine, and auditor to understand which conventions must agree. Each module looks correct in isolation."
+solution_explanation = "Fix hasher to use correct canonical field order (timestamp|account|txn_type|amount), fix tree builder to append last node for odd padding instead of prepending first, fix proof engine direction semantics to indicate sibling side correctly, and fix auditor to use the same separator as hasher for leaf reconstruction."
+verification_explanation = "Tests validate tree structure, proof generation, and audit verification. Structural tests pass with buggy code (file existence, leaf count, tree depth), while verification tests require all four modules to agree on their conventions."
+expert_time_estimate_hours = 3.5
+
+[task]
+name = "merkle-audit-repair"
+description = "Debug a Merkle tree audit verification system where cryptographic proof generation and verification disagree due to four interacting defects in hash computation, tree padding, proof direction semantics, and verification reconstruction."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding Merkle tree construction, inclusion proof mechanics, and SHA-256 concatenation conventions. Defects are in computational logic, not data loading — each module appears correct in isolation but disagrees with others on conventions for field ordering, padding direction, sibling direction semantics, and separator characters."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.run_audit"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the audit system then validates output via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all four defects and re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
