@@ -1,0 +1,37 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+category = "compiler_internals"
+difficulty = "hard"
+tags = ["ast-rewriting", "compiler-optimization", "constant-folding", "dead-code-elimination", "expression-parsing"]
+
+difficulty_explanation = "Two bugs in the optimizer require understanding compiler internals: integer division during constant folding produces wrong values that propagate through dependent expressions, and dead code elimination fails to traverse conditional blocks when collecting variable references, incorrectly eliminating variables that are read inside if-statements. Both require tracing data flow through the AST transformation pipeline."
+solution_explanation = "Change integer division (//) to float division (/) in the constant folder, and add if_stmt traversal to the variable reference collector used by dead code elimination."
+verification_explanation = "Tests check operator precedence evaluation, float division results, preservation of variables used in nested scopes, conditional execution correctness, and overall accuracy across all programs."
+expert_time_estimate_hours = 3.0
+
+[task]
+name = "ast-rewrite-repair"
+description = "Debug a compiler AST rewriting engine with optimization passes. Bugs in constant folding arithmetic and dead code elimination scope analysis produce incorrect evaluation results."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding AST traversal, constant folding semantics, and liveness analysis across nested scopes. Bugs propagate through dependent computations making symptoms appear far from the root cause."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.run_compiler"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the compiler then validates evaluation results against expected values."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches constant folding division and DCE scope traversal."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"

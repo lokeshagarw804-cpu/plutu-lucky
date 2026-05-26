@@ -1,0 +1,38 @@
+[
+  {
+    "id": "P01",
+    "name": "arithmetic_mixed",
+    "source": "x = 2 + 3 * 4; y = x - 1; z = y * 2",
+    "expected_result": {"x": 14, "y": 13, "z": 26}
+  },
+  {
+    "id": "P02",
+    "name": "constant_division",
+    "source": "a = 7 / 2; b = 10 / 3; c = a + b",
+    "expected_result": {"a": 3.5, "b": 3.3333, "c": 6.8333}
+  },
+  {
+    "id": "P03",
+    "name": "nested_scope",
+    "source": "price = 100; rate = 0.15; if price > 50: tax = price * rate; total = price + tax",
+    "expected_result": {"price": 100, "rate": 0.15, "tax": 15.0, "total": 115.0}
+  },
+  {
+    "id": "P04",
+    "name": "common_subexpr",
+    "source": "a = 3 + 5; b = 3 + 5; c = a * b",
+    "expected_result": {"a": 8, "b": 8, "c": 64}
+  },
+  {
+    "id": "P05",
+    "name": "precedence_chain",
+    "source": "r = 1 + 2 * 3 + 4 * 5; s = r / 2; t = s + 0.5",
+    "expected_result": {"r": 27, "s": 13.5, "t": 14.0}
+  },
+  {
+    "id": "P06",
+    "name": "dead_code_removal",
+    "source": "width = 10; height = 20; unused = 999; area = width * height",
+    "expected_result": {"width": 10, "height": 20, "area": 200}
+  }
+]
