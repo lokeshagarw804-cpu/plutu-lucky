@@ -1,0 +1,37 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+category = "task_scheduling"
+difficulty = "hard"
+tags = ["task-scheduling", "priority-queues", "batch-processing", "resource-management", "debugging"]
+
+difficulty_explanation = "Five interacting defects across five modules require understanding configuration parsing subtleties, resource-bounded batch assignment, priority sort determinism, cumulative vs independent aggregation, and arithmetic precision in timing calculations. Bugs cannot be identified from the instruction document alone — they require tracing data flow through the scheduling stages and understanding how config values propagate."
+solution_explanation = "Fix whitespace handling in comma-split worker type list, read batch capacity from the correct config section (scheduling.precise), replace cumulative running totals with per-batch independent snapshots in resource tracker, add queue_id as sort tiebreaker for deterministic priority ordering, and remove off-by-one offset in deadline duration formula."
+verification_explanation = "Tests validate job count (all queues loaded), batch count (correct capacity), priority ordering determinism, per-batch snapshot independence, and total duration arithmetic. Tests use exact value assertions for counts and timing, making it impossible to pass without fixing all bugs."
+expert_time_estimate_hours = 3.0
+
+[task]
+name = "task-scheduler-repair"
+description = "Debug a priority-based task scheduler with five interacting defects across job loading, batch assignment, priority sorting, resource tracking, and deadline computation. Bugs involve configuration parsing subtleties, aggregation semantics, and sort determinism."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding config section semantics, whitespace handling in string parsing, cumulative vs per-window aggregation, deterministic sort tiebreakers across independent sequences, and arithmetic off-by-one patterns. Defects interact — fixing one changes batch assignment which changes downstream outputs."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.run_scheduler"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the scheduler engine then validates output via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all five defects and re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
