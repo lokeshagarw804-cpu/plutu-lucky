@@ -1,6 +1,7 @@
 #!/bin/bash
 cd /app
 python3 -m runtime.main
+mkdir -p /logs/verifier
 pytest /tests/test_outputs.py -v -rA
 
 _EXIT_CODE=$?
