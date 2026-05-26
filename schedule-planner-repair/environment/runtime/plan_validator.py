@@ -13,7 +13,7 @@ class PlanValidator:
     def __init__(self, config_path):
         self._config = configparser.ConfigParser()
         self._config.read(config_path)
-        # Read validation tolerance for comparison
+        # Tolerance for comparing execution vs snapshot progress
         self._tolerance = self._config.getint(
             "scheduler", "validation_tolerance_ms"
         )

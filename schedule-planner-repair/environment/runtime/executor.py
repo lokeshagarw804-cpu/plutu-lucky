@@ -3,11 +3,6 @@
 Processes the priority-sorted job list in rounds, each round
 allocating the configured time quantum to jobs. Tracks per-job
 execution progress, completion status, and deadline compliance.
-
-The executor relies on receiving jobs in a fully deterministic order.
-When multiple jobs share the same priority and deadline, their relative
-position must be resolved by queue origin (alphabetical) and then by
-the queue-local sequence number to prevent scheduling jitter.
 """
 import configparser
 
@@ -26,9 +21,9 @@ class Executor:
     def execute(self, sorted_jobs):
         """Run scheduling simulation across multiple rounds.
 
-        Each round allocates time_quantum_ms to each pending job.
-        Jobs complete when their accumulated execution time reaches
-        their required duration_ms.
+        Each round allocates time_quantum_ms to each pending job in
+        the order they appear in sorted_jobs. Jobs complete when their
+        accumulated execution time reaches their required duration_ms.
 
         Returns execution log with per-job completion data.
         """

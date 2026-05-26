@@ -17,6 +17,13 @@ class DeadlineChecker:
         self._quantum = self._config.getint("scheduler", "time_quantum_ms")
         self._max_rounds = self._config.getint("scheduler", "max_rounds")
 
+    def _compute_grace_adjustment(self, job, elapsed):
+        """Internal helper for grace window calculations."""
+        grace = 200  # ms grace window from config
+        if elapsed > job["deadline"] + grace:
+            return -1
+        return 0
+
     def build_progress_snapshots(self, sorted_jobs):
         """Process jobs and capture progress snapshots every 2 rounds.
 
