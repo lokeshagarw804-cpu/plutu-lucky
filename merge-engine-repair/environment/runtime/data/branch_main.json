@@ -1,0 +1,16 @@
+{
+  "branch_id": "main",
+  "strategy": "recursive",
+  "commits": [
+    {"hash": "a1b2c3", "timestamp": 1700000100, "parent": null, "message": "Initial commit", "files": {"README.md": "v1", "config.yaml": "v1"}, "seq": 1},
+    {"hash": "d4e5f6", "timestamp": 1700000200, "parent": "a1b2c3", "message": "Add logging module", "files": {"logger.py": "v1", "config.yaml": "v2"}, "seq": 2},
+    {"hash": "g7h8i9", "timestamp": 1700000300, "parent": "d4e5f6", "message": "Update config format", "files": {"config.yaml": "v3", "schema.json": "v1"}, "seq": 3},
+    {"hash": "j1k2l3", "timestamp": 1700000400, "parent": "g7h8i9", "message": "Add validation layer", "files": {"validator.py": "v1", "schema.json": "v2"}, "seq": 4},
+    {"hash": "m4n5o6", "timestamp": 1700000500, "parent": "j1k2l3", "message": "Refactor error handling", "files": {"errors.py": "v1", "logger.py": "v2"}, "seq": 5},
+    {"hash": "p7q8r9", "timestamp": 1700000600, "parent": "m4n5o6", "message": "Add test framework", "files": {"test_runner.py": "v1", "config.yaml": "v4"}, "seq": 6},
+    {"hash": "s1t2u3", "timestamp": 1700000700, "parent": "p7q8r9", "message": "Performance improvements", "files": {"cache.py": "v1", "logger.py": "v3"}, "seq": 7},
+    {"hash": "v4w5x6", "timestamp": 1700000800, "parent": "s1t2u3", "message": "Security patches", "files": {"auth.py": "v1", "config.yaml": "v5"}, "seq": 8},
+    {"hash": "y7z8a1", "timestamp": 1700000900, "parent": "v4w5x6", "message": "Documentation update", "files": {"README.md": "v2", "docs.md": "v1"}, "seq": 9},
+    {"hash": "b2c3d4", "timestamp": 1700001000, "parent": "y7z8a1", "message": "Release preparation", "files": {"version.txt": "v1", "changelog.md": "v1"}, "seq": 10}
+  ]
+}

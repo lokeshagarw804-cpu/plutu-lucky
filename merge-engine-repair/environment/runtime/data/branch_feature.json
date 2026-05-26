@@ -1,0 +1,15 @@
+{
+  "branch_id": "feature",
+  "strategy": "patience",
+  "base_commit": "g7h8i9",
+  "commits": [
+    {"hash": "f1a2b3", "timestamp": 1700000350, "parent": "g7h8i9", "message": "Feature: new API endpoint", "files": {"api.py": "v1", "routes.py": "v1"}, "seq": 1},
+    {"hash": "f4c5d6", "timestamp": 1700000450, "parent": "f1a2b3", "message": "Add request validation", "files": {"validator.py": "v2", "api.py": "v2"}, "seq": 2},
+    {"hash": "f7e8f9", "timestamp": 1700000550, "parent": "f4c5d6", "message": "Implement response caching", "files": {"cache.py": "v2", "config.yaml": "v3a"}, "seq": 3},
+    {"hash": "f1g2h3", "timestamp": 1700000650, "parent": "f7e8f9", "message": "Add rate limiting", "files": {"middleware.py": "v1", "config.yaml": "v3b"}, "seq": 4},
+    {"hash": "f4i5j6", "timestamp": 1700000750, "parent": "f1g2h3", "message": "Error response formatting", "files": {"errors.py": "v2", "api.py": "v3"}, "seq": 5},
+    {"hash": "f7k8l9", "timestamp": 1700000850, "parent": "f4i5j6", "message": "Add pagination support", "files": {"pagination.py": "v1", "routes.py": "v2"}, "seq": 6},
+    {"hash": "f1m2n3", "timestamp": 1700000950, "parent": "f7k8l9", "message": "Update API docs", "files": {"README.md": "v3", "docs.md": "v2"}, "seq": 7},
+    {"hash": "f4o5p6", "timestamp": 1700000500, "parent": "f1m2n3", "message": "Fix pagination edge case", "files": {"pagination.py": "v2", "api.py": "v4"}, "seq": 8}
+  ]
+}

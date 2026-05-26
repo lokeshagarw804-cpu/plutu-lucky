@@ -1,0 +1,15 @@
+{
+  "branch_id": "hotfix",
+  "strategy": "ours",
+  "base_commit": "m4n5o6",
+  "commits": [
+    {"hash": "h1x2y3", "timestamp": 1700000520, "parent": "m4n5o6", "message": "Hotfix: critical auth bug", "files": {"auth.py": "v2", "logger.py": "v2a"}, "seq": 1},
+    {"hash": "h4z5a6", "timestamp": 1700000580, "parent": "h1x2y3", "message": "Patch session handling", "files": {"session.py": "v1", "auth.py": "v3"}, "seq": 2},
+    {"hash": "h7b8c9", "timestamp": 1700000640, "parent": "h4z5a6", "message": "Add security headers", "files": {"middleware.py": "v2", "config.yaml": "v4a"}, "seq": 3},
+    {"hash": "h1d2e3", "timestamp": 1700000720, "parent": "h7b8c9", "message": "Fix token expiry", "files": {"auth.py": "v4", "session.py": "v2"}, "seq": 4},
+    {"hash": "h4f5g6", "timestamp": 1700000800, "parent": "h1d2e3", "message": "Update error codes", "files": {"errors.py": "v3", "config.yaml": "v4b"}, "seq": 5},
+    {"hash": "h7h8i9", "timestamp": 1700000880, "parent": "h4f5g6", "message": "Logging improvements", "files": {"logger.py": "v4", "audit.py": "v1"}, "seq": 6},
+    {"hash": "h1j2k3", "timestamp": 1700000960, "parent": "h7h8i9", "message": "Backport config fix", "files": {"config.yaml": "v5a", "version.txt": "v2"}, "seq": 7},
+    {"hash": "h4l5m6", "timestamp": 1700000500, "parent": "h1j2k3", "message": "Final hotfix validation", "files": {"test_runner.py": "v2", "auth.py": "v5"}, "seq": 8}
+  ]
+}

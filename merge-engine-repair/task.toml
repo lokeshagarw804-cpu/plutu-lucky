@@ -1,0 +1,37 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+category = "version_control"
+difficulty = "hard"
+tags = ["version-control", "merge-engine", "conflict-resolution", "graph-algorithms", "debugging"]
+
+difficulty_explanation = "Five interacting defects across six modules require understanding version control merge semantics, graph depth computation, config section resolution, string parsing edge cases, and deterministic sort ordering. Bugs cannot be identified from outputs alone — they require tracing how branch strategies propagate through loading, how depth accumulation differs from maximization, and how chunk boundaries affect diff analysis."
+solution_explanation = "Fix whitespace handling in comma-split strategy list, read similarity threshold from the correct config section (merge.resolution), replace depth summation with maximum across branches in ancestry tracer, add branch_id as sort tiebreaker for deterministic commit ordering, and correct chunk boundary step size from chunk_size+1 to chunk_size."
+verification_explanation = "Tests validate branch count and commit totals (all strategies loaded), max depth value (correct aggregation), similarity threshold (correct config section), chunk count and sizes (correct boundaries), and commit ordering at shared timestamps (deterministic tiebreaker). Tests use exact assertions making it impossible to pass without fixing all bugs."
+expert_time_estimate_hours = 3.0
+
+[task]
+name = "merge-engine-repair"
+description = "Debug a 3-way merge engine with five interacting defects across branch loading, ancestry depth computation, conflict resolution configuration, commit graph ordering, and diff chunking. Bugs involve string parsing, aggregation semantics, config section resolution, and boundary arithmetic."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding version control merge semantics, graph depth vs summation, config section hierarchy, deterministic sort tiebreakers across independent sequences, and off-by-one chunk boundary patterns. Defects interact — fixing one reveals new branches whose data changes downstream conflict detection and ordering."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.run_merge"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the merge engine then validates output via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all five defects and re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
