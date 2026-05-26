@@ -1,3 +1,3 @@
-FROM python:3.11-slim-bookworm
+FROM ghcr.io/laude-institute/t-bench/python:latest
 WORKDIR /app
 COPY runtime/ /app/runtime/
