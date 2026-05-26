@@ -1,0 +1,14 @@
+{
+  "aggregate_id": "shipping",
+  "aggregate_type": "shipping",
+  "events": [
+    {"event_id": "shp-001", "timestamp": 1700000420, "type": "ShipmentCreated", "data": {"shipment_id": "S-200", "order_id": "O-100", "carrier": "fedex"}, "seq": 1},
+    {"event_id": "shp-002", "timestamp": 1700000500, "type": "ShipmentDispatched", "data": {"shipment_id": "S-200", "tracking": "FX123456"}, "seq": 2},
+    {"event_id": "shp-003", "timestamp": 1700000620, "type": "ShipmentInTransit", "data": {"shipment_id": "S-200", "location": "Memphis Hub"}, "seq": 3},
+    {"event_id": "shp-004", "timestamp": 1700000740, "type": "ShipmentDelivered", "data": {"shipment_id": "S-200", "signed_by": "alice"}, "seq": 4},
+    {"event_id": "shp-005", "timestamp": 1700001020, "type": "ShipmentCreated", "data": {"shipment_id": "S-201", "order_id": "O-102", "carrier": "ups"}, "seq": 5},
+    {"event_id": "shp-006", "timestamp": 1700001130, "type": "ShipmentDispatched", "data": {"shipment_id": "S-201", "tracking": "UP789012"}, "seq": 6},
+    {"event_id": "shp-007", "timestamp": 1700001240, "type": "ShipmentInTransit", "data": {"shipment_id": "S-201", "location": "Louisville Sort"}, "seq": 7},
+    {"event_id": "shp-008", "timestamp": 1700001350, "type": "ShipmentDelivered", "data": {"shipment_id": "S-201", "signed_by": "carol"}, "seq": 8}
+  ]
+}

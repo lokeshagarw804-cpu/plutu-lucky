@@ -1,0 +1,19 @@
+{
+  "aggregate_id": "order",
+  "aggregate_type": "order",
+  "events": [
+    {"event_id": "ord-001", "timestamp": 1700000100, "type": "OrderCreated", "data": {"order_id": "O-100", "customer": "alice", "total": 150.00}, "seq": 1},
+    {"event_id": "ord-002", "timestamp": 1700000200, "type": "OrderConfirmed", "data": {"order_id": "O-100", "status": "confirmed"}, "seq": 2},
+    {"event_id": "ord-003", "timestamp": 1700000300, "type": "OrderCreated", "data": {"order_id": "O-101", "customer": "bob", "total": 299.99}, "seq": 3},
+    {"event_id": "ord-004", "timestamp": 1700000400, "type": "OrderShipped", "data": {"order_id": "O-100", "carrier": "fedex"}, "seq": 4},
+    {"event_id": "ord-005", "timestamp": 1700000500, "type": "OrderConfirmed", "data": {"order_id": "O-101", "status": "confirmed"}, "seq": 5},
+    {"event_id": "ord-006", "timestamp": 1700000600, "type": "OrderCreated", "data": {"order_id": "O-102", "customer": "carol", "total": 75.50}, "seq": 6},
+    {"event_id": "ord-007", "timestamp": 1700000700, "type": "OrderCancelled", "data": {"order_id": "O-101", "reason": "customer_request"}, "seq": 7},
+    {"event_id": "ord-008", "timestamp": 1700000800, "type": "OrderDelivered", "data": {"order_id": "O-100", "signed_by": "alice"}, "seq": 8},
+    {"event_id": "ord-009", "timestamp": 1700000900, "type": "OrderConfirmed", "data": {"order_id": "O-102", "status": "confirmed"}, "seq": 9},
+    {"event_id": "ord-010", "timestamp": 1700001000, "type": "OrderShipped", "data": {"order_id": "O-102", "carrier": "ups"}, "seq": 10},
+    {"event_id": "ord-011", "timestamp": 1700001100, "type": "OrderCreated", "data": {"order_id": "O-103", "customer": "dave", "total": 425.00}, "seq": 11},
+    {"event_id": "ord-012", "timestamp": 1700001200, "type": "OrderConfirmed", "data": {"order_id": "O-103", "status": "confirmed"}, "seq": 12},
+    {"event_id": "ord-013", "timestamp": 1700000500, "type": "OrderUpdated", "data": {"order_id": "O-100", "note": "gift_wrap"}, "seq": 13}
+  ]
+}

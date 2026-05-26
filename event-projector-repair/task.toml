@@ -1,0 +1,37 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+category = "event_sourcing"
+difficulty = "hard"
+tags = ["event-sourcing", "cqrs", "materialized-views", "domain-events", "debugging"]
+
+difficulty_explanation = "Five interacting defects across six modules require understanding event sourcing projection mechanics, CQRS read-model construction, snapshot interval semantics, deterministic replay ordering across independent aggregate streams, and deduplication window boundary behavior. Bugs cannot be identified from outputs alone — they require tracing how aggregate types propagate through loading, how snapshot intervals partition projection state, and how event ordering affects materialized view correctness."
+solution_explanation = "Fix whitespace handling in comma-split aggregate type list, read snapshot_interval from the correct config section (projection.materialized), replace cumulative running counters with per-interval independent state in projection snapshots, add aggregate_id as sort tiebreaker for deterministic event replay ordering, and correct dedup window boundary from window+1 to window."
+verification_explanation = "Tests validate aggregate count and event totals (all types loaded), snapshot interval (correct config section), per-interval snapshot independence, per-aggregate event counts including shipping, and replay ordering determinism at shared timestamps. Tests use exact count assertions and interval sum checks making it impossible to pass without fixing all bugs."
+expert_time_estimate_hours = 3.0
+
+[task]
+name = "event-projector-repair"
+description = "Debug an event-sourced CQRS projector with five interacting defects across aggregate loading, snapshot interval configuration, projection state accumulation, replay ordering determinism, and deduplication window boundaries. Bugs involve string parsing, config section resolution, stateful accumulation semantics, and boundary arithmetic."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding event sourcing projection patterns, CQRS materialized view construction, per-interval vs cumulative state semantics, deterministic sort tiebreakers across independent aggregate streams, and off-by-one dedup window patterns. Defects interact — fixing one reveals new aggregates whose events change downstream snapshot partitioning and ordering."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.run_projector"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the event projector then validates output via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all five defects and re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"

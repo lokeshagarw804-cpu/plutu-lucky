@@ -1,0 +1,16 @@
+{
+  "aggregate_id": "customer",
+  "aggregate_type": "customer",
+  "events": [
+    {"event_id": "cus-001", "timestamp": 1700000090, "type": "CustomerRegistered", "data": {"customer_id": "alice", "email": "alice@example.com", "tier": "standard"}, "seq": 1},
+    {"event_id": "cus-002", "timestamp": 1700000180, "type": "CustomerRegistered", "data": {"customer_id": "bob", "email": "bob@example.com", "tier": "standard"}, "seq": 2},
+    {"event_id": "cus-003", "timestamp": 1700000270, "type": "TierUpgraded", "data": {"customer_id": "alice", "new_tier": "premium"}, "seq": 3},
+    {"event_id": "cus-004", "timestamp": 1700000360, "type": "CustomerRegistered", "data": {"customer_id": "carol", "email": "carol@example.com", "tier": "standard"}, "seq": 4},
+    {"event_id": "cus-005", "timestamp": 1700000450, "type": "AddressUpdated", "data": {"customer_id": "bob", "city": "Portland"}, "seq": 5},
+    {"event_id": "cus-006", "timestamp": 1700000540, "type": "TierUpgraded", "data": {"customer_id": "bob", "new_tier": "gold"}, "seq": 6},
+    {"event_id": "cus-007", "timestamp": 1700000630, "type": "CustomerRegistered", "data": {"customer_id": "dave", "email": "dave@example.com", "tier": "standard"}, "seq": 7},
+    {"event_id": "cus-008", "timestamp": 1700000720, "type": "AddressUpdated", "data": {"customer_id": "carol", "city": "Seattle"}, "seq": 8},
+    {"event_id": "cus-009", "timestamp": 1700000810, "type": "TierUpgraded", "data": {"customer_id": "carol", "new_tier": "premium"}, "seq": 9},
+    {"event_id": "cus-010", "timestamp": 1700000900, "type": "CustomerDeactivated", "data": {"customer_id": "dave", "reason": "inactive"}, "seq": 10}
+  ]
+}
