@@ -1,0 +1,37 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+category = "spatial_indexing"
+difficulty = "hard"
+tags = ["spatial-index", "grid-partitioning", "clustering", "geospatial", "range-query"]
+
+difficulty_explanation = "Four bugs across distinct computational domains: a coordinate quantization error involving Python's int() vs floor division semantics for negative numbers, a statistical formula error (population vs sample variance), a graph connectivity error (4-neighbor vs 8-neighbor), and a query execution order error (filter-then-aggregate vs aggregate-then-filter). Each requires domain-specific reasoning that cannot be solved by pattern matching."
+solution_explanation = "Replace int(x/size) with int(x//size) for floor behavior on negatives, change /n to /(n-1) for Bessel's correction, add diagonal neighbors to the connectivity function, and restructure query to filter by cell center distance instead of individual reading distance."
+verification_explanation = "Tests check exact assignment count (35), cell count (11), sample variance values, cluster size with diagonal inclusion, and query result count from cell-center-based filtering."
+expert_time_estimate_hours = 3.5
+
+[task]
+name = "gridcell-index-repair"
+description = "Debug a spatial grid indexing system with four bugs in coordinate quantization, statistical aggregation, cluster connectivity, and query execution order. Requires understanding Python numeric semantics, statistics, graph theory, and spatial query logic."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Each bug requires domain-specific knowledge: Python int() vs floor division for negatives, Bessel's correction for sample variance, 4 vs 8 connectivity in grid graphs, and filter-before vs filter-after semantics in spatial queries."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.run_spatial"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the spatial indexer then validates assignment counts, variance values, cluster connectivity, and query results."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches coordinate quantization, variance formula, neighbor connectivity, and query execution order."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
