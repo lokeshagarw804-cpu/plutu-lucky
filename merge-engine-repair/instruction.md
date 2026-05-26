@@ -12,13 +12,13 @@ A three-way merge engine takes a base document version along with two branch mod
 
 ## Processing Stages
 
-1. *Diff Computation* — For each section, computes change regions between the base and each branch. A change region records the start and end line indices (inclusive), the original lines, and the replacement lines. Region types are "modify", "add", or "delete".
+1. *Diff Computation* — For each section, computes change regions between the base and each branch. A change region identifies the affected line range, the original content, and replacement content. Region types include "modify", "add", and "delete".
 
-2. *Conflict Detection* — Identifies pairs of change regions (one from each branch) that constitute a true merge conflict. A conflict occurs when two regions overlap in their line range AND neither is a pure addition. Non-conflapping or addition-only changes are classified as auto-resolvable.
+2. *Conflict Detection* — Classifies pairs of branch change regions as conflicting or auto-resolvable based on their spatial relationship and semantic properties. Auto-resolvable changes are applied without intervention.
 
-3. *Conflict Resolution* — Applies resolution strategy to each detected conflict pair. With "branch_a_first" precedence, branch A's lines are selected at odd resolution depths. The resolver processes conflicts iteratively with a shared context.
+3. *Conflict Resolution* — Applies resolution strategy to detected conflict pairs using configurable precedence rules with depth-based alternation for recursive merge scenarios.
 
-4. *Document Assembly* — Reconstructs the merged section by applying resolutions and auto-resolved changes to the base lines. Changes are applied in reverse position order to maintain correct indices. Line ranges use inclusive boundaries throughout the system.
+4. *Document Assembly* — Reconstructs the merged section by applying resolutions and auto-resolved changes to the base content. Changes are processed in reverse position order to maintain correct indices during modification.
 
 5. *Output Generation* — Writes the merged document, conflict report, and processing summary.
 

@@ -59,17 +59,10 @@ class TestConflictDetection:
     """Verify correct identification of merge conflicts."""
 
     def test_conflict_count(self):
-        """Only 2 true conflicts should be detected across all sections.
-
-        A conflict requires overlapping change regions from both branches
-        where neither change is a pure addition. Most non-overlapping
-        changes should be auto-resolved without conflict.
-        """
+        """Only 2 true conflicts should be detected across all sections."""
         c = load_conflicts()
         assert c["total_conflicts"] == 2, (
-            f"Expected 2 conflicts, got {c['total_conflicts']}. "
-            "Verify the conflict detection logic correctly identifies "
-            "overlapping regions versus non-overlapping changes."
+            f"Expected 2 conflicts, got {c['total_conflicts']}"
         )
 
     def test_auto_resolved_count(self):
@@ -144,39 +137,24 @@ class TestResolutionAccuracy:
     """Verify conflict resolution produces correct winners."""
 
     def test_branch_a_wins_conflicts(self):
-        """With branch_a_first precedence at depth 1, branch A lines win.
-
-        In section S01, branch A changes lines 0-1 (flask, requests) and
-        branch B also changes line 1 (requests). The conflict should
-        resolve to branch A's version of the conflicting lines.
-        """
+        """With branch_a_first precedence, branch A content should win."""
         m = load_merged()
         s01 = next(s for s in m["sections"] if s["id"] == "S01")
-        # Branch A upgraded flask to 2.1.0 and requests to 2.27.1
         assert "flask==2.1.0" in s01["lines"], (
-            "Expected branch A's flask==2.1.0 to win the conflict"
+            "Expected branch A's flask version in S01"
         )
         assert "requests==2.27.1" in s01["lines"], (
-            "Expected branch A's requests==2.27.1 to win the conflict"
+            "Expected branch A's requests version in S01"
         )
 
     def test_no_data_loss_in_assembly(self):
-        """Assembled sections must not lose lines due to boundary errors.
-
-        Each change region uses inclusive boundaries. If the assembly
-        step uses exclusive slicing on inclusive ranges, the last line
-        of each applied change will be silently dropped.
-        """
+        """Assembled sections must not lose lines."""
         m = load_merged()
-        # S04 should have metrics_collector (last addition from A)
         s04 = next(s for s in m["sections"] if s["id"] == "S04")
         assert "metrics_collector" in s04["lines"], (
-            "Addition 'metrics_collector' missing - check slice boundaries "
-            "in the assembler for inclusive vs exclusive ranges"
+            "Addition 'metrics_collector' missing from S04"
         )
-        # S05 should have health_check (last addition from A)
         s05 = next(s for s in m["sections"] if s["id"] == "S05")
         assert "health_check:*/5 * * * *" in s05["lines"], (
-            "Addition 'health_check' missing from S05 - the assembler "
-            "may be dropping the last line of each applied region"
+            "Addition 'health_check' missing from S05"
         )

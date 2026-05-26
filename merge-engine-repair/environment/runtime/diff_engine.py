@@ -3,7 +3,7 @@ Line-level diff computation engine.
 
 Computes change regions between a base document section and a
 branch version of the same section. A change region records the
-start index, end index (inclusive), and the replacement lines.
+start index, end index, and the replacement lines.
 """
 
 
@@ -45,9 +45,6 @@ def compute_section_diff(base_lines, branch_lines):
 
     Identifies modified, added, and deleted line regions.
     Returns a list of ChangeRegion objects.
-
-    Region boundaries use inclusive indexing: a region covering
-    lines 2,3,4 has start=2, end=4.
     """
     regions = []
     base_len = len(base_lines)

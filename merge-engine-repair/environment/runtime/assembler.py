@@ -5,9 +5,6 @@ Reconstructs the merged document by applying resolved changes and
 auto-resolved regions to the base document. Processes sections in
 order, applying non-overlapping changes directly and using
 resolution decisions for conflicting regions.
-
-Line ranges in change regions use inclusive boundaries:
-a region with start=2, end=4 covers lines at indices 2, 3, and 4.
 """
 
 
