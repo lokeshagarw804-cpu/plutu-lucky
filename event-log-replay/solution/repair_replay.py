@@ -1,89 +1,97 @@
-#!/usr/bin/env python3
-"""Patches bugs in the event log replay engine and re-runs it."""
+"""Repair script — patches all bugs in the event-log-replay pipeline."""
+import os
 import subprocess
 import sys
 
 
-def patch_loader():
-    """Fix merge window boundary: < should be <="""
-    path = "/app/runtime/loader.py"
-    with open(path, "r") as f:
+def patch_file(filepath, replacements):
+    with open(filepath, "r") as f:
         content = f.read()
-    content = content.replace(
-        "if event[\"ts_ms\"] - group_start < self._window_ms:",
-        "if event[\"ts_ms\"] - group_start <= self._window_ms:"
-    )
-    with open(path, "w") as f:
+    for old, new in replacements:
+        if old not in content:
+            print(f"WARNING: patch target not found in {filepath}")
+            print(f"  Looking for: {repr(old[:80])}")
+            continue
+        content = content.replace(old, new)
+    with open(filepath, "w") as f:
         f.write(content)
-
-
-def patch_causality():
-    """Fix vector clock comparison.
-
-    Three issues:
-    1. When a_dominates, A happened AFTER B, so B is before A -> "b_before_a"
-       But code returns "a_before_b" (swapped)
-    2. When b_dominates, B happened AFTER A, so A is before B -> "a_before_b"
-       But code returns "b_before_a" (swapped)
-    3. Concurrent fallback returns "a_before_b" instead of "concurrent"
-    """
-    path = "/app/runtime/causality.py"
-    with open(path, "r") as f:
-        content = f.read()
-
-    # Fix the swapped labels and concurrent fallback
-    old_block = (
-        '        if a_dominates and a_has_greater:\n'
-        '            return "a_before_b"\n'
-        '        if b_dominates and b_has_greater:\n'
-        '            return "b_before_a"\n'
-        '\n'
-        '        # Both have some greater values — should be concurrent\n'
-        '        # but we check if clocks are actually equal\n'
-        '        if not a_has_greater and not b_has_greater:\n'
-        '            return "concurrent"\n'
-        '\n'
-        '        return "a_before_b"'
-    )
-    new_block = (
-        '        if a_dominates and a_has_greater:\n'
-        '            return "b_before_a"\n'
-        '        if b_dominates and b_has_greater:\n'
-        '            return "a_before_b"\n'
-        '\n'
-        '        return "concurrent"'
-    )
-    content = content.replace(old_block, new_block)
-
-    with open(path, "w") as f:
-        f.write(content)
-
-
-def patch_reporter():
-    """Fix weight accumulator: = should be +="""
-    path = "/app/runtime/reporter.py"
-    with open(path, "r") as f:
-        content = f.read()
-    content = content.replace(
-        "total_weight = weight",
-        "total_weight += weight"
-    )
-    with open(path, "w") as f:
-        f.write(content)
+    print(f"Patched: {filepath}")
 
 
 def main():
-    patch_loader()
-    patch_causality()
-    patch_reporter()
+    runtime_dir = "/app/runtime"
 
-    # Re-run with fixes
-    result = subprocess.run(
-        ["python3", "-m", "runtime.main"],
-        cwd="/app",
-        capture_output=True
+    # Fix 1: causality.py — remove skip_node check in clock comparison
+    patch_file(
+        os.path.join(runtime_dir, "causality.py"),
+        [
+            (
+                "        for node in all_nodes:\n"
+                "            # BUG: skip_node causes incomplete comparison\n"
+                "            if node == self._skip_node:\n"
+                "                continue\n"
+                "            val_a = clock_a.get(node, 0)",
+                "        for node in all_nodes:\n"
+                "            val_a = clock_a.get(node, 0)"
+            ),
+        ]
     )
-    sys.exit(result.returncode)
+
+    # Fix 2: causality.py — drift check should be inclusive (< to <=)
+    patch_file(
+        os.path.join(runtime_dir, "causality.py"),
+        [
+            (
+                "                        # BUG: should be <= (inclusive of boundary)\n"
+                "                        if time_diff < self._max_drift:",
+                "                        if time_diff <= self._max_drift:"
+            ),
+        ]
+    )
+
+    # Fix 3: loader.py — window boundary inclusive (<= instead of <) and remove dead elif
+    patch_file(
+        os.path.join(runtime_dir, "loader.py"),
+        [
+            (
+                "            # BUG: should be <= for inclusive boundary\n"
+                "            if delta < self._window_ms:\n"
+                "                current_group.append(event)\n"
+                "            elif delta == self._window_ms and event[\"node_id\"] < current_group[0][\"node_id\"]:\n"
+                "                # Node-priority tiebreaker for boundary events\n"
+                "                current_group.append(event)\n"
+                "            else:",
+                "            if delta <= self._window_ms:\n"
+                "                current_group.append(event)\n"
+                "            else:"
+            ),
+        ]
+    )
+
+    # Fix 4: reporter.py — accumulate weight instead of overwriting
+    patch_file(
+        os.path.join(runtime_dir, "reporter.py"),
+        [
+            (
+                "                # BUG: should be total_weight += weight\n"
+                "                total_weight = weight",
+                "                total_weight += weight"
+            ),
+        ]
+    )
+
+    # Re-run the pipeline with fixes applied
+    print("\nRunning fixed pipeline...")
+    result = subprocess.run(
+        [sys.executable, "-m", "runtime.main"],
+        cwd="/app",
+        capture_output=True,
+        text=True,
+    )
+    print(result.stdout)
+    if result.returncode != 0:
+        print(f"STDERR: {result.stderr}")
+        sys.exit(result.returncode)
 
 
 if __name__ == "__main__":

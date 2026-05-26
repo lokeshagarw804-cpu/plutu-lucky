@@ -1,11 +1,9 @@
-"""Event log replay engine — main entry point.
-
-Reads distributed event logs from service nodes, merges by
-timestamp windows, checks causal ordering via vector clocks,
-and outputs anomaly reports.
-"""
+"""Main entry point — orchestrates log replay pipeline."""
 import json
 import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from runtime.loader import LogLoader
 from runtime.causality import CausalityChecker
@@ -13,7 +11,9 @@ from runtime.reporter import AnomalyReporter
 
 
 def main():
-    config_path = "/app/runtime/config.ini"
+    config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.ini")
+    output_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "output")
+    os.makedirs(output_dir, exist_ok=True)
 
     loader = LogLoader(config_path)
     events = loader.load_and_merge()
@@ -24,14 +24,14 @@ def main():
     reporter = AnomalyReporter(config_path)
     anomalies, summary = reporter.generate_report(violations, events)
 
-    output_dir = "/app/runtime/output"
-    os.makedirs(output_dir, exist_ok=True)
-
     with open(os.path.join(output_dir, "anomalies.json"), "w") as f:
         json.dump(anomalies, f, indent=2)
 
     with open(os.path.join(output_dir, "summary.json"), "w") as f:
         json.dump(summary, f, indent=2)
+
+    print(f"Pipeline complete: {summary['total_violations']} violations, "
+          f"{summary['total_anomalies']} anomalies reported.")
 
 
 if __name__ == "__main__":
