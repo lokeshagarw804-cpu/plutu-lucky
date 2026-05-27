@@ -9,12 +9,15 @@ tags = ["networking", "traffic-analysis", "classification", "windowing", "debugg
 expert_time_estimate_min = 180
 junior_time_estimate_min = 360
 
+[task]
+name = "parsewave/flow-metric-engine"
+
 [environment]
 dockerfile = "environment/Dockerfile"
 entrypoint = "python3 -m runtime.main"
 
 [verifier]
-test_script = "tests/test.sh"
+command = "bash tests/test.sh"
 
 [agent]
 timeout_sec = 900
