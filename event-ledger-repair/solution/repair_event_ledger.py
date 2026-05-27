@@ -5,12 +5,11 @@ import sys
 
 
 def patch_loader():
-    """Fix account type filtering to strip whitespace from config values."""
+    """Fix account type filtering to handle whitespace in config values."""
     path = "/app/runtime/loader.py"
     with open(path, "r") as f:
         content = f.read()
 
-    # Fix Bug A: strip whitespace from comma-separated active_types
     content = content.replace(
         "self._active_types = set(raw_types.split(\",\"))",
         "self._active_types = set(item.strip() for item in raw_types.split(\",\"))"
@@ -20,48 +19,31 @@ def patch_loader():
         f.write(content)
 
 
-def patch_sorter():
-    """Fix event ordering to include stream_id for deterministic replay."""
-    path = "/app/runtime/sorter.py"
+def patch_aggregator():
+    """Fix window balance finalization to use last snapshot value."""
+    path = "/app/runtime/aggregator.py"
     with open(path, "r") as f:
         content = f.read()
 
-    # Fix Bug D: add stream_id to sort key for deterministic ordering
+    # The bug: computes average of all intermediate running-balance snapshots
+    # for a stream within a window. Since each snapshot is the cumulative
+    # running total after processing that event, the correct final balance
+    # is simply the LAST snapshot value (the state after the final event).
     content = content.replace(
-        'all_events.sort(key=lambda e: (e["timestamp"], e["seq"]))',
-        'all_events.sort(key=lambda e: (e["timestamp"], e["stream_id"], e["seq"]))'
+        "window[\"balances\"][stream_id] = sum(balance_history) / len(balance_history)",
+        "window[\"balances\"][stream_id] = balance_history[-1]"
     )
 
     with open(path, "w") as f:
         f.write(content)
 
 
-def patch_aggregator():
-    """Fix window balance update to use assignment instead of accumulation."""
-    path = "/app/runtime/aggregator.py"
-    with open(path, "r") as f:
-        content = f.read()
-
-    # Fix Bug C: replace += accumulation with = assignment
-    old_block = """                    if stream not in windows[win_idx]["balances"]:
-                        windows[win_idx]["balances"][stream] = 0.0
-                    windows[win_idx]["balances"][stream] += snapshot["balance"]"""
-
-    new_block = """                    windows[win_idx]["balances"][stream] = snapshot["balance"]"""
-
-    content = content.replace(old_block, new_block)
-
-    with open(path, "w") as f:
-        f.write(content)
-
-
 def patch_reconciler():
-    """Fix config section to read from reconciliation.strict."""
+    """Fix reconciler to use production sensitivity parameters."""
     path = "/app/runtime/reconciler.py"
     with open(path, "r") as f:
         content = f.read()
 
-    # Fix Bug B: read from reconciliation.strict section
     content = content.replace(
         'self._threshold = self._config.getfloat(\n            "reconciliation", "balance_threshold"\n        )',
         'self._threshold = self._config.getfloat(\n            "reconciliation.strict", "balance_threshold"\n        )'
@@ -70,6 +52,10 @@ def patch_reconciler():
         'self._min_consecutive = self._config.getint(\n            "reconciliation", "min_consecutive_windows"\n        )',
         'self._min_consecutive = self._config.getint(\n            "reconciliation.strict", "min_consecutive_windows"\n        )'
     )
+    content = content.replace(
+        'self._severity_cutoff = self._config.getint(\n            "reconciliation", "severity_cutoff"\n        )',
+        'self._severity_cutoff = self._config.getint(\n            "reconciliation.strict", "severity_cutoff"\n        )'
+    )
 
     with open(path, "w") as f:
         f.write(content)
@@ -77,7 +63,6 @@ def patch_reconciler():
 
 def main():
     patch_loader()
-    patch_sorter()
     patch_aggregator()
     patch_reconciler()
 

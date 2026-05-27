@@ -1,7 +1,8 @@
 """Event stream loader — reads transaction event data from JSON files.
 
 Loads event streams from the configured source directory, filtering
-by active account types defined in configuration.
+by active account types defined in configuration. Supports multiple
+account categories for flexible stream filtering.
 """
 import configparser
 import json
@@ -22,6 +23,8 @@ class EventStreamLoader:
         """Load all event streams matching active account types.
 
         Returns dict mapping stream_id to stream data including events.
+        Only streams whose account_type appears in the configured
+        active_types set will be included in the result.
         """
         streams = {}
         source_dir = self._source_dir

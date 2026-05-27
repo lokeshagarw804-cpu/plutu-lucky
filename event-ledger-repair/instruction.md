@@ -2,7 +2,7 @@
 
 ## Overview
 
-An event sourcing ledger replay engine ingests transaction events from multiple account streams, merges them into a globally ordered sequence, aggregates running balances into fixed-duration time windows, and runs reconciliation checks to flag accounts with sustained high-balance periods. The system handles multiple account types and produces both a ledger state summary and a reconciliation anomaly report.
+An event sourcing replay engine ingests transaction events from account streams, produces a globally ordered event sequence, aggregates running balances into time windows, and performs reconciliation analysis to flag anomalous account behavior. The system processes multiple account types from JSON data files and generates two output reports.
 
 ## System Environment
 
@@ -11,33 +11,37 @@ An event sourcing ledger replay engine ingests transaction events from multiple 
 - *Global system-wide tooling*: uv and pytest are available
 - *Configuration*: /app/runtime/config.ini
 
-## Processing Stages
+## Architecture
 
-1. *Stream Loading* (`/app/runtime/loader.py`) — Reads JSON event stream files from `/app/runtime/data/`, filtering by the configured active account types listed in the `[accounts]` section
+The system processes event data through six stages:
 
-2. *Event Merging* (`/app/runtime/sorter.py`) — Merges events from all loaded streams into a single globally ordered sequence. The correct deterministic ordering is by timestamp first, then stream identifier, then sequence number within the stream
+1. *Stream Loading* (`/app/runtime/loader.py`) — Reads JSON event stream files from `/app/runtime/data/`, filtering by account types
 
-3. *Window Aggregation* (`/app/runtime/aggregator.py`) — Groups events into fixed-duration time windows and tracks per-stream balance state. Each window snapshot should reflect the final balance state at window close, not cumulative totals across snapshots
+2. *Event Merging* (`/app/runtime/sorter.py`) — Combines events from all streams into a single ordered sequence for replay
 
-4. *Reconciliation* (`/app/runtime/reconciler.py`) — Identifies streams where balance exceeds the configured threshold for consecutive windows. Production alerting parameters are defined in the strict reconciliation configuration section
+3. *Validation* (`/app/runtime/validator.py`) — Deduplicates events and validates structure
 
-5. *Report Generation* (`/app/runtime/reporter.py`) — Assembles output JSON files from aggregation and reconciliation results
+4. *Window Aggregation* (`/app/runtime/aggregator.py`) — Groups events into fixed-duration windows and tracks per-stream balance state through batch processing
+
+5. *Reconciliation* (`/app/runtime/reconciler.py`) — Detects streams with sustained high-balance positions across consecutive windows
+
+6. *Report Generation* (`/app/runtime/reporter.py`) — Writes output JSON files
 
 ## Problem
 
-The system runs without crashing but produces incorrect results:
-- Some account streams that should appear in output are missing entirely
-- Final balance values for certain streams are significantly higher than expected given the transaction history
-- The reconciliation report detects fewer anomalies than expected based on the configured thresholds
-- Event ordering appears non-deterministic when multiple streams have events at identical timestamps
+The system runs without errors but produces incorrect results in several areas:
+- The number of streams appearing in output does not match what the data directory contains
+- Balance computations produce values that are inconsistent with the raw transaction amounts
+- The reconciliation detection is less sensitive than the production configuration intends
+- Event ordering may be unstable when multiple streams produce events at the same wall-clock time
 
 ## Expected Correct Output
 
 When all defects are resolved:
-- All 5 account streams should be loaded (savings, checking, credit, merchant types)
-- The system should process 84 total events across 4 time windows
-- Final balances should reflect actual running totals (stream_alpha: 1900.0, stream_beta: 2275.0, stream_delta: 2845.0, stream_epsilon: 180.0, stream_gamma: 3380.0)
-- Reconciliation should detect 5 anomalies including stream_epsilon flagged at medium severity
+- All account streams present in `/app/runtime/data/` that match configured types should be processed
+- Window balances should accurately reflect the running account state after each event
+- Reconciliation should use production-grade sensitivity parameters
+- The total event count and stream count in the ledger state must match the actual processed data
 
 ## Output Schema
 
@@ -61,7 +65,7 @@ When all defects are resolved:
 | anomalies[].start_window | integer | First window index of anomaly |
 | anomalies[].end_window | integer | Last window index of anomaly |
 | anomalies[].consecutive_windows | integer | Number of consecutive flagged windows |
-| anomalies[].severity | string | "high" or "medium" based on duration |
+| anomalies[].severity | string | Severity classification |
 | windows_analyzed | integer | Total windows checked |
 | has_high_severity | boolean | Whether any high severity anomaly exists |
 
@@ -69,14 +73,15 @@ When all defects are resolved:
 
 | File | Purpose |
 |------|---------|
-| /app/runtime/config.ini | Ledger parameters, account filters, reconciliation thresholds |
-| /app/runtime/loader.py | Stream loading and account type filtering |
+| /app/runtime/config.ini | System parameters and threshold configuration |
+| /app/runtime/loader.py | Stream loading with account type filtering |
 | /app/runtime/sorter.py | Multi-stream event merge and ordering |
+| /app/runtime/validator.py | Event deduplication |
 | /app/runtime/aggregator.py | Time-window balance aggregation |
 | /app/runtime/reconciler.py | Balance anomaly detection |
 | /app/runtime/reporter.py | Output report generation |
-| /app/runtime/run_ledger.py | Main entry point orchestrating all stages |
+| /app/runtime/run_ledger.py | Main entry point |
 
 ## Your Task
 
-Identify and fix defects in the runtime source files under /app/runtime/ so that the system produces correct output matching the expected behavior described above. Multiple modules contain interacting defects that collectively produce incorrect results.
+Identify and fix defects in the runtime source files under `/app/runtime/` so that the system produces correct output. Multiple modules contain defects that interact with each other — the correct output requires all issues to be resolved together.

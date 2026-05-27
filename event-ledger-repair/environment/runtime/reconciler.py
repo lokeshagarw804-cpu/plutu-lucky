@@ -1,9 +1,8 @@
 """Reconciliation engine — detects anomalous balance patterns.
 
-Identifies windows where account balances exceed configured thresholds
-and flags streams with sustained high-balance periods for review.
-The strict reconciliation parameters should be used for production
-alerting as defined in the reconciliation.strict config section.
+Scans time-windowed balance data to identify accounts that maintain
+sustained high-balance positions across consecutive analysis windows.
+Configurable thresholds control sensitivity of anomaly detection.
 """
 import configparser
 
@@ -14,12 +13,14 @@ class Reconciler:
     def __init__(self, config_path):
         self._config = configparser.ConfigParser()
         self._config.read(config_path)
-        # Balance threshold for flagging anomalous windows
         self._threshold = self._config.getfloat(
             "reconciliation", "balance_threshold"
         )
         self._min_consecutive = self._config.getint(
             "reconciliation", "min_consecutive_windows"
+        )
+        self._severity_cutoff = self._config.getint(
+            "reconciliation", "severity_cutoff"
         )
 
     def reconcile(self, windows):
@@ -28,9 +29,8 @@ class Reconciler:
         A flag is raised when a stream maintains balance above threshold
         for at least min_consecutive_windows consecutive windows.
 
-        Returns list of anomaly dicts.
+        Returns list of anomaly dicts with severity classification.
         """
-        # Track per-stream consecutive high-balance windows
         stream_runs = {}
         anomalies = []
 
@@ -55,14 +55,14 @@ class Reconciler:
                             "start_window": run["start"],
                             "end_window": win_idx - 1,
                             "consecutive_windows": run["count"],
-                            "severity": "high" if run["count"] >= 4 else "medium",
+                            "severity": self._classify_severity(run["count"]),
                         })
                     ended.append(stream_id)
 
             for s in ended:
                 del stream_runs[s]
 
-        # Check remaining runs at end
+        # Check remaining runs at end of data
         for stream_id, run in stream_runs.items():
             if run["count"] >= self._min_consecutive:
                 anomalies.append({
@@ -70,7 +70,13 @@ class Reconciler:
                     "start_window": run["start"],
                     "end_window": len(windows) - 1,
                     "consecutive_windows": run["count"],
-                    "severity": "high" if run["count"] >= 4 else "medium",
+                    "severity": self._classify_severity(run["count"]),
                 })
 
         return anomalies
+
+    def _classify_severity(self, consecutive_count):
+        """Classify anomaly severity based on duration."""
+        if consecutive_count >= self._severity_cutoff:
+            return "high"
+        return "medium"

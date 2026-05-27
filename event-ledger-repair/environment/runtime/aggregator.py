@@ -1,8 +1,10 @@
 """Window aggregator — computes per-window balance snapshots.
 
 Groups events into time windows and computes running balance state
-for each account stream within each window. The final snapshot of
-each window represents the account state at window close.
+for each account stream within each window. Processes events in
+configurable batch sizes for memory efficiency on large event sets.
+
+Window balances are maintained incrementally as events arrive.
 """
 import configparser
 
@@ -22,8 +24,8 @@ class WindowAggregator:
         """Compute per-window balance snapshots from sorted events.
 
         Events are grouped into fixed-duration time windows. For each
-        stream within a window, the running balance is tracked. Each
-        window snapshot holds the balance state at window close.
+        stream within a window, the running balance is tracked through
+        sequential batch processing.
 
         Returns list of window dicts with per-stream balances.
         """
@@ -48,23 +50,30 @@ class WindowAggregator:
             })
             current_start += self._window_duration
 
-        # Process events in batches and accumulate into windows
+        # Build incremental balance state per window
         running_balances = {}
+        window_accumulators = [{} for _ in windows]
 
         for i in range(0, len(sorted_events), self._batch_size):
             batch = sorted_events[i:i + self._batch_size]
             batch_snapshots = self._process_batch(batch, running_balances)
 
-            # Merge batch results into window snapshots
             for snapshot in batch_snapshots:
                 win_idx = self._find_window(snapshot["timestamp"], windows)
                 if win_idx is not None:
                     windows[win_idx]["event_count"] += 1
-                    stream = snapshot["stream_id"]
-                    # Update window balance from batch snapshot
-                    if stream not in windows[win_idx]["balances"]:
-                        windows[win_idx]["balances"][stream] = 0.0
-                    windows[win_idx]["balances"][stream] += snapshot["balance"]
+                    sid = snapshot["stream_id"]
+                    # Accumulate snapshot into window state
+                    acc = window_accumulators[win_idx]
+                    if sid not in acc:
+                        acc[sid] = []
+                    acc[sid].append(snapshot["balance"])
+
+        # Finalize window balances from accumulated snapshots
+        for idx, window in enumerate(windows):
+            acc = window_accumulators[idx]
+            for stream_id, balance_history in acc.items():
+                window["balances"][stream_id] = sum(balance_history) / len(balance_history)
 
         return windows
 
@@ -72,6 +81,8 @@ class WindowAggregator:
         """Process a batch of events updating running balances.
 
         Returns list of snapshot dicts with balance after each event.
+        The balance in each snapshot is the cumulative running total
+        for that stream up to and including this event.
         """
         snapshots = []
 

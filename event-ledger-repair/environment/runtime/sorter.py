@@ -1,8 +1,8 @@
 """Event sorter — merges and orders events from multiple streams.
 
 Produces a globally ordered event sequence from all loaded streams.
-Events are ordered by timestamp, then by sequence number for
-deterministic replay. Note: seq is local to each stream.
+The merge guarantees a stable, repeatable ordering suitable for
+deterministic ledger replay across distributed stream sources.
 """
 
 
@@ -13,9 +13,11 @@ class EventSorter:
         """Merge all stream events into a single sorted list.
 
         Each event is annotated with its source stream_id for
-        traceability during replay.
+        traceability during replay. The sort must be fully
+        deterministic even when events from different streams
+        share the same timestamp.
 
-        Returns list of events sorted by (timestamp, seq).
+        Returns list of events in replay order.
         """
         all_events = []
 

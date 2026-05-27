@@ -4,18 +4,18 @@ category = "event_sourcing"
 difficulty = "hard"
 tags = ["event-sourcing", "ledger-replay", "reconciliation", "time-windows", "debugging"]
 
-difficulty_explanation = "Four interacting defects across five modules require understanding event sourcing replay semantics, configuration parsing edge cases, batch-windowed aggregation mechanics, and sort-stability requirements for concurrent event streams. Bugs cannot be identified from the instruction document alone — they require tracing data flow through config parsing, stream filtering, event ordering, and balance accumulation logic."
-solution_explanation = "Fix whitespace handling in comma-split config parsing for account type filtering, change config section from reconciliation to reconciliation.strict for threshold and minimum windows, replace balance accumulation with last-write assignment in window aggregator, and add stream_id to sort key for deterministic event ordering at shared timestamps."
-verification_explanation = "Tests validate stream count, total events, per-stream final balances, anomaly counts, and deterministic ordering. Tests use exact value assertions that require all bugs to be fixed together for full passage, while easy structural tests pass regardless."
+difficulty_explanation = "Three interacting defects span configuration parsing, batch aggregation semantics, and threshold parameter resolution. The aggregation bug is particularly subtle — it computes window averages of intermediate running-balance snapshots rather than using the final state, producing values that look plausible but are systematically wrong. The config section bug requires understanding which of three reconciliation sections provides production parameters, with no direct code comment indicating the correct one. The loader bug involves a whitespace parsing edge case that silently drops a stream."
+solution_explanation = "Strip whitespace from comma-split active_types to include all account streams, replace the average-of-snapshots balance computation with last-snapshot-wins semantics since each snapshot is a cumulative running total, and switch the reconciler from the default reconciliation section to reconciliation.strict for production sensitivity thresholds."
+verification_explanation = "Tests validate stream counts, exact per-stream final balances, anomaly counts at production sensitivity, and severity classification. The balance tests use exact assertions that specifically fail when snapshots are averaged rather than using the final value, ensuring the aggregation semantics are correct."
 expert_time_estimate_hours = 3.0
 
 [task]
 name = "event-ledger-repair"
-description = "Debug an event sourcing ledger replay engine with four interacting defects across stream loading, event ordering, window aggregation, and reconciliation threshold configuration. Bugs involve config parsing subtleties, batch accumulation semantics, and sort-key completeness for deterministic replay."
+description = "Debug an event sourcing ledger replay engine with three interacting defects across stream loading, window balance aggregation, and reconciliation threshold configuration. The aggregation bug requires understanding the difference between intermediate cumulative snapshots and final state values."
 
 [task.difficulty]
 level = "hard"
-reasoning = "Requires understanding interaction between config parsing whitespace handling, event-ordering sort stability across streams, batch-window snapshot semantics versus cumulative accumulation, and multi-section config file resolution. Defects interact — fixing one changes downstream computations that reveal or mask other bugs."
+reasoning = "The aggregation bug is non-obvious — averaging intermediate running balances looks intentional and produces plausible-looking output. The config section bug requires determining which of three similarly-named sections is correct without explicit hints. The loader bug silently excludes a stream due to whitespace in a comma-separated config value. Together these produce output that appears reasonable but fails precise validation."
 
 [task.runtime]
 entrypoint = "python3 -m runtime.run_ledger"
@@ -28,7 +28,7 @@ description = "Runs the ledger replay engine then validates output via pytest."
 
 [task.repair]
 command = "bash solution/solve.sh"
-description = "Patches all four defects and re-runs the system."
+description = "Patches all three defects and re-runs the system."
 
 [task.resources]
 timeout = 300
