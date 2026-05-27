@@ -10,6 +10,29 @@ tags = ["time-series", "anomaly-detection", "ewma", "data-pipeline", "debugging"
 expert_time_estimate_min = 180
 junior_time_estimate_min = 360
 
+[task]
+name = "fleet-telemetry-repair"
+description = "Debug a fleet telemetry anomaly detection pipeline with five interacting defects across EWMA scoring, window aggregation, sensor fusion, and severity classification modules."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.main"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the pipeline then validates output via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all five defects and re-runs the pipeline."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
+
 [environment]
 dockerfile = "environment/Dockerfile"
 
