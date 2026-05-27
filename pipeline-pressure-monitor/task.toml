@@ -15,22 +15,15 @@ task_name = "pipeline-pressure-monitor"
 task_description = "Debug a pipeline pressure monitoring system with five interacting defects across gradient computation, rolling window aggregation, threshold detection, event classification, and cubic spline interpolation. Bugs involve numerical computing subtleties, not simple configuration errors."
 
 [verifier]
-command = "bash tests/test.sh"
-description = "Runs the pipeline monitor then validates output via pytest."
+timeout_sec = 240.0
+
+[agent]
+timeout_sec = 900.0
 
 [environment]
-dockerfile = "environment/Dockerfile"
-entrypoint = "python3 -m runtime.run_pipeline"
-language = "python"
-dependencies = "stdlib-only"
-timeout = 300
-cpu = 2
-memory = "2GB"
-disk = "1GB"
+build_timeout_sec = 600.0
+cpus = 2
+memory = "2G"
 
 [solution]
 command = "bash solution/solve.sh"
-description = "Patches all five defects and re-runs the system."
-
-[agent]
-timeout = 900
