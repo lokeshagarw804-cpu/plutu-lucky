@@ -2,20 +2,20 @@ author_name = "Lokesh Agarwal"
 author_email = "lokeshagarw804@gmail.com"
 category = "networking"
 difficulty = "hard"
-tags = ["networking", "traffic-analysis", "metrics", "anomaly-detection", "debugging"]
+tags = ["networking", "traffic-analysis", "classification", "windowing", "debugging"]
 
-difficulty_explanation = "Four interacting defects across four modules. Bugs involve unit conversion, statistical formula confusion, natural vs lexicographic sorting, and operator precedence in a composite scoring formula. Fixing any single bug alone does not produce correct output — the anomaly detector depends on correct bandwidth units, correct jitter, and the right formula simultaneously."
-solution_explanation = "Fix bandwidth to divide by seconds not milliseconds, replace std-dev jitter with mean-absolute-consecutive-difference, sort interfaces by numeric suffix, and replace the product-based anomaly formula with the intended weighted sum."
-verification_explanation = "Tests check interface ordering, bandwidth magnitude, jitter ranges, anomaly count, top anomaly interface, and score bounds. A mix of exact and range assertions ensures all bugs must be fixed without leaking the specific fix."
+difficulty_explanation = "Four interacting defects across four modules. The classifier boundary error changes which packets land in which category, affecting downstream scoring. The aggregator window step error produces far fewer windows, which cascades through scoring and reporting. The scorer accumulation bug zeros out multi-category contributions. The reporter normalization bug uses a hardcoded denominator. Fixing any subset of 3 still fails tests because each bug's effect is independently checked."
+solution_explanation = "Fix boundary comparison to <=, window step to use config value, weight accumulation to +=, and violation ratio denominator to use actual window count."
+verification_explanation = "Tests check exact violation counts, ratios, window totals, classification boundary values, and flow ordering. Each test independently catches a different bug's absence."
 expert_time_estimate_hours = 3.0
 
 [task]
 name = "flow-metric-engine"
-description = "Debug a network flow metrics engine with four interacting defects across bandwidth calculation, jitter statistics, interface ordering, and anomaly scoring. Bugs involve unit errors, formula confusion, and sorting semantics."
+description = "Debug a packet flow metrics engine with four interacting defects across classification boundaries, window stepping, score accumulation, and ratio normalization."
 
 [task.difficulty]
 level = "hard"
-reasoning = "Requires understanding units in throughput math, statistical definitions of jitter vs standard deviation, natural sort vs string sort, and reading a composite formula for operator precedence errors. Defects interact — anomaly detection depends on all three upstream fixes being correct."
+reasoning = "Bugs interact across module boundaries. The scorer bug produces plausible-looking scores (only last category weight). The reporter bug uses a hardcoded value that happens to match the buggy aggregator output. Fixing the aggregator without the reporter causes ratio overflow. Each fix changes downstream behavior in non-obvious ways."
 
 [task.runtime]
 entrypoint = "python3 -m runtime.main"

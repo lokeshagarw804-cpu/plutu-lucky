@@ -3,84 +3,63 @@
 import sys
 
 
-def patch_bandwidth():
-    """Fix bandwidth units: divide by seconds not milliseconds."""
-    path = "/app/runtime/bandwidth.py"
+def patch_classifier():
+    """Fix boundary comparison: use <= instead of < for upper bounds."""
+    path = "/app/runtime/classifier.py"
     with open(path, "r") as f:
         content = f.read()
-
     content = content.replace(
-        "bandwidth_bps = total_bytes / duration_ms",
-        "bandwidth_bps = total_bytes / (duration_ms / 1000.0)"
+        "if size < boundary:",
+        "if size <= boundary:"
     )
-
     with open(path, "w") as f:
         f.write(content)
 
 
-def patch_latency():
-    """Fix jitter to use mean absolute consecutive difference,
-    and fix percentile rank formula off-by-one."""
-    path = "/app/runtime/latency.py"
+def patch_aggregator():
+    """Fix window step: use configured step not window_size."""
+    path = "/app/runtime/aggregator.py"
     with open(path, "r") as f:
         content = f.read()
-
-    # Fix jitter: replace std-dev with mean absolute consecutive diff
-    old_jitter = '''        mean_lat = sum(latencies) / n
-        variance = sum((lat - mean_lat) ** 2 for lat in latencies) / (n - 1)
-        return math.sqrt(variance)'''
-
-    new_jitter = '''        total_diff = sum(abs(latencies[i+1] - latencies[i]) for i in range(n-1))
-        return total_diff / (n - 1)'''
-
-    content = content.replace(old_jitter, new_jitter)
-
-    # Fix percentile: rank should use (N-1) not N
     content = content.replace(
-        "rank = (percentile / 100.0) * n",
-        "rank = (percentile / 100.0) * (n - 1)"
+        "pos += self._window_size",
+        "pos += self._window_step"
     )
-
     with open(path, "w") as f:
         f.write(content)
 
 
-def patch_matrix():
-    """Fix interface sorting to use natural numeric order."""
-    path = "/app/runtime/matrix.py"
+def patch_scorer():
+    """Fix weight accumulation: += instead of =."""
+    path = "/app/runtime/scorer.py"
     with open(path, "r") as f:
         content = f.read()
-
     content = content.replace(
-        "interface_ids = sorted(interfaces.keys())",
-        "interface_ids = sorted(interfaces.keys(), key=lambda s: int(''.join(c for c in s if c.isdigit())))"
+        "total_weight = weight",
+        "total_weight += weight"
     )
-
     with open(path, "w") as f:
         f.write(content)
 
 
-def patch_anomaly():
-    """Fix weight assignment: w1 goes to p95, w2 goes to jitter."""
-    path = "/app/runtime/anomaly.py"
+def patch_reporter():
+    """Fix violation ratio to use actual window count."""
+    path = "/app/runtime/reporter.py"
     with open(path, "r") as f:
         content = f.read()
-
-    # Weights are swapped: w2 applied to p95 and w1 to jitter, should be reversed
     content = content.replace(
-        "score = w0 * norm_bw + w2 * norm_p95 + w1 * norm_jit",
-        "score = w0 * norm_bw + w1 * norm_p95 + w2 * norm_jit"
+        "expected_windows = 150 // self._window_size",
+        "expected_windows = n_windows"
     )
-
     with open(path, "w") as f:
         f.write(content)
 
 
 def main():
-    patch_bandwidth()
-    patch_latency()
-    patch_matrix()
-    patch_anomaly()
+    patch_classifier()
+    patch_aggregator()
+    patch_scorer()
+    patch_reporter()
 
     sys.path.insert(0, "/app")
     for key in list(sys.modules.keys()):

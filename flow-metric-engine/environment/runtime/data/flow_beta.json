@@ -1,0 +1,1056 @@
+{
+  "flow_id": "flow_beta",
+  "packet_count": 150,
+  "packets": [
+    {
+      "ts": 1012.161,
+      "size": 1480,
+      "latency": 33.152,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1025.357,
+      "size": 1080,
+      "latency": 56.888,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1038.241,
+      "size": 1148,
+      "latency": 42.191,
+      "port": 445,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1048.007,
+      "size": 1382,
+      "latency": 55.569,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1059.793,
+      "size": 1038,
+      "latency": 58.349,
+      "port": 447,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1073.47,
+      "size": 200,
+      "latency": 41.529,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1084.301,
+      "size": 1266,
+      "latency": 55.901,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1098.406,
+      "size": 1002,
+      "latency": 63.923,
+      "port": 445,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1109.945,
+      "size": 1263,
+      "latency": 53.459,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1124.296,
+      "size": 200,
+      "latency": 46.356,
+      "port": 447,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1138.594,
+      "size": 985,
+      "latency": 38.629,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1153.501,
+      "size": 1096,
+      "latency": 20.348,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1166.583,
+      "size": 1217,
+      "latency": 50.474,
+      "port": 445,
+      "flags": "PSH"
+    },
+    {
+      "ts": 1177.397,
+      "size": 943,
+      "latency": 28.972,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1189.997,
+      "size": 1410,
+      "latency": 47.783,
+      "port": 447,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1199.293,
+      "size": 1312,
+      "latency": 43.028,
+      "port": 443,
+      "flags": "FIN"
+    },
+    {
+      "ts": 1211.256,
+      "size": 1132,
+      "latency": 53.999,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1219.382,
+      "size": 1273,
+      "latency": 54.973,
+      "port": 445,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1231.787,
+      "size": 1366,
+      "latency": 45.23,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1244.246,
+      "size": 1361,
+      "latency": 43.297,
+      "port": 447,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1254.455,
+      "size": 930,
+      "latency": 46.841,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1263.099,
+      "size": 933,
+      "latency": 39.324,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1277.566,
+      "size": 1267,
+      "latency": 49.135,
+      "port": 445,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1286.631,
+      "size": 1267,
+      "latency": 64.842,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1300.871,
+      "size": 912,
+      "latency": 50.739,
+      "port": 447,
+      "flags": "PSH"
+    },
+    {
+      "ts": 1312.559,
+      "size": 1005,
+      "latency": 49.495,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1321.137,
+      "size": 946,
+      "latency": 35.764,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1336.001,
+      "size": 1063,
+      "latency": 36.541,
+      "port": 445,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1344.982,
+      "size": 1038,
+      "latency": 37.427,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1353.282,
+      "size": 1042,
+      "latency": 62.464,
+      "port": 447,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1363.286,
+      "size": 1472,
+      "latency": 55.239,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1371.373,
+      "size": 1470,
+      "latency": 42.579,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1379.395,
+      "size": 981,
+      "latency": 38.654,
+      "port": 445,
+      "flags": "PSH"
+    },
+    {
+      "ts": 1388.715,
+      "size": 1388,
+      "latency": 43.754,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1399.068,
+      "size": 1052,
+      "latency": 45.913,
+      "port": 447,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1408.32,
+      "size": 1102,
+      "latency": 47.044,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1422.543,
+      "size": 1260,
+      "latency": 31.995,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1433.865,
+      "size": 1170,
+      "latency": 41.2,
+      "port": 445,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1444.999,
+      "size": 1464,
+      "latency": 53.052,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1456.025,
+      "size": 352,
+      "latency": 30.932,
+      "port": 447,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1466.672,
+      "size": 1097,
+      "latency": 59.506,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1475.145,
+      "size": 367,
+      "latency": 35.317,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1487.22,
+      "size": 800,
+      "latency": 39.683,
+      "port": 445,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1501.445,
+      "size": 1490,
+      "latency": 48.763,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1514.656,
+      "size": 322,
+      "latency": 36.392,
+      "port": 447,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1526.49,
+      "size": 900,
+      "latency": 47.631,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1539.939,
+      "size": 1428,
+      "latency": 46.617,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1553.823,
+      "size": 1158,
+      "latency": 49.208,
+      "port": 445,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1563.837,
+      "size": 1150,
+      "latency": 54.959,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1578.771,
+      "size": 910,
+      "latency": 49.874,
+      "port": 447,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1592.62,
+      "size": 1317,
+      "latency": 43.887,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1602.085,
+      "size": 911,
+      "latency": 49.685,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1611.95,
+      "size": 1195,
+      "latency": 51.26,
+      "port": 445,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1623.681,
+      "size": 1058,
+      "latency": 45.082,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1637.585,
+      "size": 800,
+      "latency": 43.329,
+      "port": 447,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1651.674,
+      "size": 1308,
+      "latency": 39.503,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1661.469,
+      "size": 919,
+      "latency": 24.158,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1674.334,
+      "size": 1098,
+      "latency": 43.347,
+      "port": 445,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1688.988,
+      "size": 1247,
+      "latency": 43.423,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1703.004,
+      "size": 393,
+      "latency": 67.409,
+      "port": 447,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1716.407,
+      "size": 949,
+      "latency": 38.977,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1727.913,
+      "size": 1013,
+      "latency": 53.774,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1738.27,
+      "size": 1339,
+      "latency": 32.319,
+      "port": 445,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1749.272,
+      "size": 1123,
+      "latency": 53.617,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1757.955,
+      "size": 979,
+      "latency": 37.716,
+      "port": 447,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1769.902,
+      "size": 800,
+      "latency": 60.457,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1783.431,
+      "size": 1378,
+      "latency": 41.98,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1795.622,
+      "size": 200,
+      "latency": 30.93,
+      "port": 445,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1803.916,
+      "size": 1494,
+      "latency": 38.391,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1815.899,
+      "size": 422,
+      "latency": 52.906,
+      "port": 447,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1830.793,
+      "size": 1180,
+      "latency": 47.098,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1840.381,
+      "size": 933,
+      "latency": 72.773,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1853.156,
+      "size": 1418,
+      "latency": 48.514,
+      "port": 445,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1862.945,
+      "size": 1066,
+      "latency": 40.198,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1876.207,
+      "size": 1187,
+      "latency": 51.015,
+      "port": 447,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1886.356,
+      "size": 954,
+      "latency": 40.433,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1898.546,
+      "size": 1048,
+      "latency": 54.442,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1908.094,
+      "size": 800,
+      "latency": 41.743,
+      "port": 445,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1916.877,
+      "size": 1136,
+      "latency": 45.443,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1931.378,
+      "size": 1372,
+      "latency": 48.657,
+      "port": 447,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1942.134,
+      "size": 800,
+      "latency": 46.857,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1952.122,
+      "size": 1253,
+      "latency": 46.08,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1965.059,
+      "size": 110,
+      "latency": 35.172,
+      "port": 445,
+      "flags": "ACK"
+    },
+    {
+      "ts": 1977.921,
+      "size": 1339,
+      "latency": 33.554,
+      "port": 446,
+      "flags": "PSH"
+    },
+    {
+      "ts": 1991.201,
+      "size": 1399,
+      "latency": 49.669,
+      "port": 447,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2003.54,
+      "size": 1403,
+      "latency": 37.22,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2013.812,
+      "size": 1479,
+      "latency": 51.654,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2022.836,
+      "size": 1064,
+      "latency": 60.019,
+      "port": 445,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2031.333,
+      "size": 1348,
+      "latency": 26.282,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2041.538,
+      "size": 1303,
+      "latency": 28.012,
+      "port": 447,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2053.599,
+      "size": 391,
+      "latency": 43.56,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2067.524,
+      "size": 1182,
+      "latency": 27.994,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2081.541,
+      "size": 200,
+      "latency": 41.639,
+      "port": 445,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2092.529,
+      "size": 200,
+      "latency": 24.992,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2102.633,
+      "size": 1186,
+      "latency": 58.194,
+      "port": 447,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2116.876,
+      "size": 1353,
+      "latency": 52.74,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2125.584,
+      "size": 1009,
+      "latency": 46.919,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2138.862,
+      "size": 1262,
+      "latency": 49.532,
+      "port": 445,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2148.627,
+      "size": 1263,
+      "latency": 31.626,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2162.108,
+      "size": 1496,
+      "latency": 45.688,
+      "port": 447,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2171.441,
+      "size": 1085,
+      "latency": 39.305,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2182.75,
+      "size": 1342,
+      "latency": 50.307,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2190.795,
+      "size": 1131,
+      "latency": 34.183,
+      "port": 445,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2204.563,
+      "size": 1066,
+      "latency": 51.291,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2217.688,
+      "size": 1190,
+      "latency": 47.449,
+      "port": 447,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2228.981,
+      "size": 1432,
+      "latency": 30.912,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2241.089,
+      "size": 1492,
+      "latency": 41.405,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2249.955,
+      "size": 900,
+      "latency": 46.317,
+      "port": 445,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2260.535,
+      "size": 323,
+      "latency": 45.571,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2268.874,
+      "size": 1363,
+      "latency": 50.17,
+      "port": 447,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2279.665,
+      "size": 162,
+      "latency": 42.135,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2292.596,
+      "size": 1178,
+      "latency": 56.16,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2304.953,
+      "size": 934,
+      "latency": 45.792,
+      "port": 445,
+      "flags": "RST"
+    },
+    {
+      "ts": 2317.702,
+      "size": 1319,
+      "latency": 49.691,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2327.82,
+      "size": 1189,
+      "latency": 52.072,
+      "port": 447,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2335.927,
+      "size": 933,
+      "latency": 13.599,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2349.048,
+      "size": 1185,
+      "latency": 31.368,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2357.884,
+      "size": 1152,
+      "latency": 43.679,
+      "port": 445,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2370.821,
+      "size": 1198,
+      "latency": 40.637,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2379.779,
+      "size": 1142,
+      "latency": 30.396,
+      "port": 447,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2392.387,
+      "size": 1125,
+      "latency": 44.399,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2401.929,
+      "size": 1380,
+      "latency": 42.223,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2410.677,
+      "size": 200,
+      "latency": 52.439,
+      "port": 445,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2423.2,
+      "size": 200,
+      "latency": 41.195,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2435.395,
+      "size": 1130,
+      "latency": 35.85,
+      "port": 447,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2446.579,
+      "size": 1397,
+      "latency": 39.785,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2455.329,
+      "size": 200,
+      "latency": 24.369,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2470.159,
+      "size": 1068,
+      "latency": 45.916,
+      "port": 445,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2481.03,
+      "size": 1417,
+      "latency": 46.885,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2494.497,
+      "size": 800,
+      "latency": 48.785,
+      "port": 447,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2508.317,
+      "size": 979,
+      "latency": 53.465,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2521.153,
+      "size": 800,
+      "latency": 37.819,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2530.19,
+      "size": 1005,
+      "latency": 41.764,
+      "port": 445,
+      "flags": "FIN"
+    },
+    {
+      "ts": 2544.71,
+      "size": 919,
+      "latency": 40.375,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2552.957,
+      "size": 187,
+      "latency": 60.668,
+      "port": 447,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2565.473,
+      "size": 1235,
+      "latency": 48.749,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2575.121,
+      "size": 935,
+      "latency": 40.059,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2585.127,
+      "size": 969,
+      "latency": 60.046,
+      "port": 445,
+      "flags": "SYN"
+    },
+    {
+      "ts": 2595.123,
+      "size": 1300,
+      "latency": 39.853,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2609.51,
+      "size": 274,
+      "latency": 61.436,
+      "port": 447,
+      "flags": "FIN"
+    },
+    {
+      "ts": 2619.848,
+      "size": 1486,
+      "latency": 33.758,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2631.07,
+      "size": 1362,
+      "latency": 27.203,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2644.258,
+      "size": 1295,
+      "latency": 52.095,
+      "port": 445,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2653.92,
+      "size": 1187,
+      "latency": 38.359,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2665.519,
+      "size": 1183,
+      "latency": 32.569,
+      "port": 447,
+      "flags": "SYN"
+    },
+    {
+      "ts": 2674.881,
+      "size": 1160,
+      "latency": 54.333,
+      "port": 443,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2686.947,
+      "size": 1010,
+      "latency": 52.178,
+      "port": 444,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2695.204,
+      "size": 1263,
+      "latency": 39.537,
+      "port": 445,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2709.235,
+      "size": 1086,
+      "latency": 32.361,
+      "port": 446,
+      "flags": "ACK"
+    },
+    {
+      "ts": 2720.793,
+      "size": 1201,
+      "latency": 39.084,
+      "port": 447,
+      "flags": "ACK"
+    }
+  ]
+}
