@@ -4,30 +4,36 @@ import sys
 
 
 def patch_scorer():
-    """Fix EWMA decay weight in mean and variance updates."""
+    """Fix EWMA update: decay weight and diff computation order."""
     path = "/app/runtime/scorer.py"
     with open(path, "r") as f:
         content = f.read()
 
-    # Fix Bug 1a: warmup mean update uses alpha*old instead of (1-alpha)*old
-    content = content.replace(
-        "ewma_mean = self._alpha * value + self._alpha * ewma_mean\n"
+    # Fix warmup branch: move diff after mean update, fix alpha*old -> (1-alpha)*old
+    old_warmup = (
         "                    diff = value - ewma_mean\n"
-        "                    ewma_var = self._alpha * (diff ** 2) + self._alpha * ewma_var",
-        "ewma_mean = self._alpha * value + (1 - self._alpha) * ewma_mean\n"
+        "                    ewma_mean = self._alpha * value + self._alpha * ewma_mean\n"
+        "                    ewma_var = self._alpha * (diff ** 2) + self._alpha * ewma_var"
+    )
+    new_warmup = (
+        "                    ewma_mean = self._alpha * value + (1 - self._alpha) * ewma_mean\n"
         "                    diff = value - ewma_mean\n"
         "                    ewma_var = self._alpha * (diff ** 2) + (1 - self._alpha) * ewma_var"
     )
+    content = content.replace(old_warmup, new_warmup)
 
-    # Fix Bug 1b: post-warmup mean/var update uses alpha*old instead of (1-alpha)*old
-    content = content.replace(
-        "ewma_mean = self._alpha * value + self._alpha * ewma_mean\n"
+    # Fix post-warmup branch: move diff after mean update, fix alpha*old -> (1-alpha)*old
+    old_main = (
         "                diff = value - ewma_mean\n"
-        "                ewma_var = self._alpha * (diff ** 2) + self._alpha * ewma_var",
-        "ewma_mean = self._alpha * value + (1 - self._alpha) * ewma_mean\n"
+        "                ewma_mean = self._alpha * value + self._alpha * ewma_mean\n"
+        "                ewma_var = self._alpha * (diff ** 2) + self._alpha * ewma_var"
+    )
+    new_main = (
+        "                ewma_mean = self._alpha * value + (1 - self._alpha) * ewma_mean\n"
         "                diff = value - ewma_mean\n"
         "                ewma_var = self._alpha * (diff ** 2) + (1 - self._alpha) * ewma_var"
     )
+    content = content.replace(old_main, new_main)
 
     with open(path, "w") as f:
         f.write(content)
@@ -39,7 +45,6 @@ def patch_aggregator():
     with open(path, "r") as f:
         content = f.read()
 
-    # Fix Bug 2: use >= instead of > for window boundary
     content = content.replace(
         "while ts - current_start > self._window_size:",
         "while ts - current_start >= self._window_size:"
@@ -55,7 +60,6 @@ def patch_classifier():
     with open(path, "r") as f:
         content = f.read()
 
-    # Fix Bug 3: check thresholds from highest to lowest
     old_method = '''    def _determine_severity(self, score):
         """Map score to severity tier using threshold cascade."""
         if score >= self._warning:
@@ -83,18 +87,18 @@ def patch_classifier():
 
 
 def patch_fusion():
-    """Fix weighted average to divide by sum of weights, not sensor count."""
+    """Fix weighted average divisor and window_end computation."""
     path = "/app/runtime/fusion.py"
     with open(path, "r") as f:
         content = f.read()
 
-    # Fix Bug 4: track total_weight instead of dividing by n_sensors
+    # Fix divisor: use sum of weights instead of sensor count
     old_block = '''            for sensor, w in sensor_data.items():
                 weight = self._weights.get(sensor, 1.0)
                 total_score += weight * w["peak_z"]
                 n_sensors += 1
 
-            # Compute weighted average — divide by sensor count
+            # Compute weighted average
             fused_score = total_score / n_sensors if n_sensors > 0 else 0.0'''
 
     new_block = '''            total_weight = 0.0
@@ -104,10 +108,16 @@ def patch_fusion():
                 total_weight += weight
                 n_sensors += 1
 
-            # Compute weighted average — divide by sum of weights
+            # Compute weighted average
             fused_score = total_score / total_weight if total_weight > 0 else 0.0'''
 
     content = content.replace(old_block, new_block)
+
+    # Fix window_end: use self._window_size instead of hardcoded 5
+    content = content.replace(
+        '"window_end": start + 5,',
+        '"window_end": start + self._window_size,'
+    )
 
     with open(path, "w") as f:
         f.write(content)

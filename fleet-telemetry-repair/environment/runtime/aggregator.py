@@ -1,11 +1,8 @@
 """Window aggregator — groups z-scores into fixed-size time windows.
 
 Slides a window of configurable size across the sorted z-score stream,
-computing the maximum absolute z-score per window. Windows are defined
-as [window_start, window_start + window_size) — left-inclusive,
-right-exclusive.
-
-A window is only emitted if it contains at least min_readings data points.
+computing the maximum absolute z-score per window. A window is only
+emitted if it contains at least min_readings data points.
 """
 import configparser
 

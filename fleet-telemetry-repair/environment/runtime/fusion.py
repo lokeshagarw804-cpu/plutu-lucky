@@ -1,12 +1,8 @@
 """Sensor fusion — combines per-sensor anomaly windows into vehicle score.
 
-Each sensor has a configured weight. The fused anomaly score for a time
-window is the weighted average of peak z-scores across all sensors that
-reported data in that window.
-
-Weighted average formula:
-    fused = sum(weight_i * score_i) / sum(weight_i)
-where the sum is over sensors with data in the window.
+Each sensor has a configured weight reflecting its diagnostic importance.
+The fused score for a time window combines per-sensor peak z-scores
+weighted by these factors.
 """
 import configparser
 
@@ -24,6 +20,7 @@ class SensorFusion:
             self._weights[sensor] = self._config.getfloat(
                 "sensors", f"weight_{sensor}"
             )
+        self._window_size = self._config.getint("windows", "window_size")
 
     def fuse(self, sensor_windows):
         """Fuse per-sensor window data into vehicle-level scores.
@@ -57,7 +54,7 @@ class SensorFusion:
                 total_score += weight * w["peak_z"]
                 n_sensors += 1
 
-            # Compute weighted average — divide by sensor count
+            # Compute weighted average
             fused_score = total_score / n_sensors if n_sensors > 0 else 0.0
 
             fused_results.append({

@@ -1,12 +1,8 @@
 """Anomaly scorer — computes rolling Z-scores using EWMA statistics.
 
 Uses exponential weighted moving average to track per-sensor mean and
-variance. The EWMA decay parameter alpha controls how much weight is
-given to new observations vs. historical estimates.
-
-EWMA update rules:
-    new_mean = alpha * observation + (1 - alpha) * old_mean
-    new_var  = alpha * (observation - new_mean)^2 + (1 - alpha) * old_var
+variance. The decay parameter alpha weights recent observations more
+heavily when closer to 1.0.
 """
 import configparser
 import math
@@ -45,8 +41,8 @@ class AnomalyScorer:
                     ewma_mean = value
                     ewma_var = 0.0
                 else:
-                    ewma_mean = self._alpha * value + self._alpha * ewma_mean
                     diff = value - ewma_mean
+                    ewma_mean = self._alpha * value + self._alpha * ewma_mean
                     ewma_var = self._alpha * (diff ** 2) + self._alpha * ewma_var
                 results.append((ts, 0.0))
             else:
@@ -55,8 +51,8 @@ class AnomalyScorer:
                 z_score = (value - ewma_mean) / std
 
                 # Update EWMA statistics
-                ewma_mean = self._alpha * value + self._alpha * ewma_mean
                 diff = value - ewma_mean
+                ewma_mean = self._alpha * value + self._alpha * ewma_mean
                 ewma_var = self._alpha * (diff ** 2) + self._alpha * ewma_var
 
                 results.append((ts, round(z_score, 4)))

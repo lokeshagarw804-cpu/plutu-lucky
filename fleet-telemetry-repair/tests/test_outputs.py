@@ -114,7 +114,7 @@ def test_severity_warning_count():
 def test_max_fused_score():
     """Maximum fused anomaly score must be approximately 59.01."""
     summary = load_summary()
-    assert abs(summary["max_fused_score"] - 59.0067) < 0.1, (
+    assert abs(summary["max_fused_score"] - 59.0067) < 0.05, (
         f"Expected max_fused_score near 59.0067 but got "
         f"{summary['max_fused_score']}"
     )
@@ -123,7 +123,7 @@ def test_max_fused_score():
 def test_avg_fused_score():
     """Average fused score across all anomalies must be approximately 10.18."""
     summary = load_summary()
-    assert abs(summary["avg_fused_score"] - 10.1757) < 0.1, (
+    assert abs(summary["avg_fused_score"] - 10.1757) < 0.05, (
         f"Expected avg_fused_score near 10.1757 but got "
         f"{summary['avg_fused_score']}"
     )
@@ -146,7 +146,7 @@ def test_v200_emergency_score():
     v200_emerg = [a for a in anomalies
                   if a["vehicle_id"] == "V200" and a["severity"] == "emergency"]
     assert len(v200_emerg) == 1, "V200 must have exactly one emergency"
-    assert abs(v200_emerg[0]["fused_score"] - 12.9955) < 0.15, (
+    assert abs(v200_emerg[0]["fused_score"] - 12.9955) < 0.1, (
         f"V200 emergency score should be ~12.9955 but got "
         f"{v200_emerg[0]['fused_score']}"
     )
@@ -173,6 +173,17 @@ def test_v201_all_warnings():
         )
 
 
+def test_window_end_values():
+    """All anomaly window_end values must equal window_start + 15."""
+    anomalies = load_anomalies()
+    for a in anomalies:
+        expected_end = a["window_start"] + 15
+        assert a["window_end"] == expected_end, (
+            f"Anomaly at ts={a['window_start']} has window_end={a['window_end']} "
+            f"but expected {expected_end}"
+        )
+
+
 def test_window_boundaries_aligned():
     """All anomaly window_start values must align to 15-second boundaries from 1000."""
     anomalies = load_anomalies()
@@ -180,4 +191,25 @@ def test_window_boundaries_aligned():
         offset = (a["window_start"] - 1000) % 15
         assert offset == 0, (
             f"Window start {a['window_start']} not aligned to 15s boundary"
+        )
+
+
+def test_v202_anomaly_count():
+    """Vehicle V202 must have exactly 2 anomalies detected."""
+    anomalies = load_anomalies()
+    v202 = [a for a in anomalies if a["vehicle_id"] == "V202"]
+    assert len(v202) == 2, (
+        f"V202 should have 2 anomalies but got {len(v202)}"
+    )
+
+
+def test_v202_both_emergency():
+    """Both V202 anomalies must be classified as emergency severity."""
+    anomalies = load_anomalies()
+    v202 = [a for a in anomalies if a["vehicle_id"] == "V202"]
+    assert len(v202) == 2
+    for a in v202:
+        assert a["severity"] == "emergency", (
+            f"V202 anomaly at ts={a['window_start']} has severity "
+            f"'{a['severity']}' but should be 'emergency'"
         )

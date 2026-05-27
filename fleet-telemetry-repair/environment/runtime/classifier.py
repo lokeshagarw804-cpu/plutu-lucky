@@ -1,11 +1,6 @@
 """Severity classifier — assigns severity tiers to fused anomaly scores.
 
-Thresholds are checked from highest to lowest:
-    score >= emergency_threshold  -> "emergency"
-    score >= critical_threshold   -> "critical"
-    score >= warning_threshold    -> "warning"
-    otherwise                     -> "normal"
-
+Maps fused scores to severity tiers based on configured thresholds.
 Only windows classified as warning or above are emitted as anomalies.
 """
 import configparser
