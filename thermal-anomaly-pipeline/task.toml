@@ -1,0 +1,26 @@
+[task]
+name = "thermal-anomaly-pipeline"
+description = "Debug a thermal anomaly detection pipeline with incorrect deduplication, broken weight accumulation, and non-deterministic alert ordering"
+category = "debugging"
+difficulty = "hard"
+
+[environment]
+dockerfile = "environment/Dockerfile"
+runtime_dir = "environment/runtime"
+
+[solution]
+solve_script = "solution/solve.sh"
+repair_script = "solution/repair_pipeline.py"
+
+[tests]
+test_script = "tests/test.sh"
+test_file = "tests/test_pipeline.py"
+framework = "pytest"
+total_tests = 21
+
+[constraints]
+immutable_files = [
+    "environment/runtime/data/",
+    "environment/runtime/config.ini",
+    "environment/runtime/loader.py"
+]

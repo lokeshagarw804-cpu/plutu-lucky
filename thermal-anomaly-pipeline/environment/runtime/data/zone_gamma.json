@@ -1,0 +1,22 @@
+{
+  "zone_id": "zone_gamma",
+  "zone_name": "Cooling Tower C - Auxiliary",
+  "threshold_high": 78.0,
+  "threshold_critical": 90.0,
+  "weight_factors": [1.0],
+  "window_size": 4,
+  "readings": [
+    {"timestamp": 1000, "temperature": 65.2, "sensor_id": "C01"},
+    {"timestamp": 1005, "temperature": 67.8, "sensor_id": "C01"},
+    {"timestamp": 1010, "temperature": 72.4, "sensor_id": "C02"},
+    {"timestamp": 1015, "temperature": 75.1, "sensor_id": "C01"},
+    {"timestamp": 1020, "temperature": 79.6, "sensor_id": "C02"},
+    {"timestamp": 1025, "temperature": 83.2, "sensor_id": "C01"},
+    {"timestamp": 1030, "temperature": 86.9, "sensor_id": "C02"},
+    {"timestamp": 1035, "temperature": 91.4, "sensor_id": "C01"},
+    {"timestamp": 1040, "temperature": 88.7, "sensor_id": "C02"},
+    {"timestamp": 1045, "temperature": 84.3, "sensor_id": "C01"},
+    {"timestamp": 1050, "temperature": 80.1, "sensor_id": "C02"},
+    {"timestamp": 1055, "temperature": 76.5, "sensor_id": "C01"}
+  ]
+}

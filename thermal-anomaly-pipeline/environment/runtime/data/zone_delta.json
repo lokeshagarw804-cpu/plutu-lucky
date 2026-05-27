@@ -1,0 +1,22 @@
+{
+  "zone_id": "zone_delta",
+  "zone_name": "Exhaust Stack D - Critical",
+  "threshold_high": 85.0,
+  "threshold_critical": 98.0,
+  "weight_factors": [0.7, 1.8, 0.6],
+  "window_size": 3,
+  "readings": [
+    {"timestamp": 1000, "temperature": 78.3, "sensor_id": "D01"},
+    {"timestamp": 1005, "temperature": 80.1, "sensor_id": "D01"},
+    {"timestamp": 1010, "temperature": 83.9, "sensor_id": "D02"},
+    {"timestamp": 1015, "temperature": 87.4, "sensor_id": "D01"},
+    {"timestamp": 1020, "temperature": 89.8, "sensor_id": "D02"},
+    {"timestamp": 1025, "temperature": 92.6, "sensor_id": "D01"},
+    {"timestamp": 1030, "temperature": 95.3, "sensor_id": "D02"},
+    {"timestamp": 1035, "temperature": 91.4, "sensor_id": "D01"},
+    {"timestamp": 1040, "temperature": 88.2, "sensor_id": "D02"},
+    {"timestamp": 1045, "temperature": 86.1, "sensor_id": "D01"},
+    {"timestamp": 1050, "temperature": 83.5, "sensor_id": "D02"},
+    {"timestamp": 1055, "temperature": 80.7, "sensor_id": "D01"}
+  ]
+}

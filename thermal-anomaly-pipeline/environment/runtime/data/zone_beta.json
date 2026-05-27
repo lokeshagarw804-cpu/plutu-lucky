@@ -1,0 +1,22 @@
+{
+  "zone_id": "zone_beta",
+  "zone_name": "Reactor Hall B - Secondary",
+  "threshold_high": 80.0,
+  "threshold_critical": 92.0,
+  "weight_factors": [0.8, 1.5],
+  "window_size": 3,
+  "readings": [
+    {"timestamp": 1000, "temperature": 68.4, "sensor_id": "B01"},
+    {"timestamp": 1005, "temperature": 71.2, "sensor_id": "B01"},
+    {"timestamp": 1010, "temperature": 76.8, "sensor_id": "B02"},
+    {"timestamp": 1015, "temperature": 81.5, "sensor_id": "B01"},
+    {"timestamp": 1020, "temperature": 84.9, "sensor_id": "B02"},
+    {"timestamp": 1025, "temperature": 87.3, "sensor_id": "B01"},
+    {"timestamp": 1030, "temperature": 93.7, "sensor_id": "B02"},
+    {"timestamp": 1035, "temperature": 96.8, "sensor_id": "B01"},
+    {"timestamp": 1040, "temperature": 91.2, "sensor_id": "B02"},
+    {"timestamp": 1045, "temperature": 85.6, "sensor_id": "B01"},
+    {"timestamp": 1050, "temperature": 79.4, "sensor_id": "B01"},
+    {"timestamp": 1055, "temperature": 74.1, "sensor_id": "B02"}
+  ]
+}
