@@ -1,0 +1,25 @@
+{
+  "stream_id": "stream_delta",
+  "account_type": "credit",
+  "owner": "acct_4004",
+  "events": [
+    {"event_id": "ev_d001", "seq": 1, "timestamp": 800, "type": "deposit", "amount": 1500.00},
+    {"event_id": "ev_d002", "seq": 2, "timestamp": 1600, "type": "withdrawal", "amount": 400.00},
+    {"event_id": "ev_d003", "seq": 3, "timestamp": 2300, "type": "deposit", "amount": 250.00},
+    {"event_id": "ev_d004", "seq": 4, "timestamp": 3000, "type": "withdrawal", "amount": 300.00},
+    {"event_id": "ev_d005", "seq": 5, "timestamp": 3600, "type": "deposit", "amount": 600.00},
+    {"event_id": "ev_d006", "seq": 6, "timestamp": 4400, "type": "withdrawal", "amount": 200.00},
+    {"event_id": "ev_d007", "seq": 7, "timestamp": 5100, "type": "deposit", "amount": 350.00},
+    {"event_id": "ev_d008", "seq": 8, "timestamp": 5800, "type": "withdrawal", "amount": 150.00},
+    {"event_id": "ev_d009", "seq": 9, "timestamp": 6600, "type": "deposit", "amount": 500.00},
+    {"event_id": "ev_d010", "seq": 10, "timestamp": 7200, "type": "withdrawal", "amount": 275.00},
+    {"event_id": "ev_d011", "seq": 11, "timestamp": 7900, "type": "deposit", "amount": 400.00},
+    {"event_id": "ev_d012", "seq": 12, "timestamp": 8500, "type": "withdrawal", "amount": 180.00},
+    {"event_id": "ev_d013", "seq": 13, "timestamp": 9200, "type": "deposit", "amount": 650.00},
+    {"event_id": "ev_d014", "seq": 14, "timestamp": 9900, "type": "withdrawal", "amount": 300.00},
+    {"event_id": "ev_d015", "seq": 15, "timestamp": 10600, "type": "deposit", "amount": 225.00},
+    {"event_id": "ev_d016", "seq": 16, "timestamp": 11300, "type": "withdrawal", "amount": 175.00},
+    {"event_id": "ev_d017", "seq": 17, "timestamp": 11900, "type": "deposit", "amount": 450.00},
+    {"event_id": "ev_d018", "seq": 18, "timestamp": 12500, "type": "withdrawal", "amount": 100.00}
+  ]
+}

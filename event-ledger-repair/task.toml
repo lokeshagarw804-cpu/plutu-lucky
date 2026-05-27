@@ -1,0 +1,37 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+category = "event_sourcing"
+difficulty = "hard"
+tags = ["event-sourcing", "ledger-replay", "reconciliation", "time-windows", "debugging"]
+
+difficulty_explanation = "Four interacting defects across five modules require understanding event sourcing replay semantics, configuration parsing edge cases, batch-windowed aggregation mechanics, and sort-stability requirements for concurrent event streams. Bugs cannot be identified from the instruction document alone — they require tracing data flow through config parsing, stream filtering, event ordering, and balance accumulation logic."
+solution_explanation = "Fix whitespace handling in comma-split config parsing for account type filtering, change config section from reconciliation to reconciliation.strict for threshold and minimum windows, replace balance accumulation with last-write assignment in window aggregator, and add stream_id to sort key for deterministic event ordering at shared timestamps."
+verification_explanation = "Tests validate stream count, total events, per-stream final balances, anomaly counts, and deterministic ordering. Tests use exact value assertions that require all bugs to be fixed together for full passage, while easy structural tests pass regardless."
+expert_time_estimate_hours = 3.0
+
+[task]
+name = "event-ledger-repair"
+description = "Debug an event sourcing ledger replay engine with four interacting defects across stream loading, event ordering, window aggregation, and reconciliation threshold configuration. Bugs involve config parsing subtleties, batch accumulation semantics, and sort-key completeness for deterministic replay."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding interaction between config parsing whitespace handling, event-ordering sort stability across streams, batch-window snapshot semantics versus cumulative accumulation, and multi-section config file resolution. Defects interact — fixing one changes downstream computations that reveal or mask other bugs."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.run_ledger"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the ledger replay engine then validates output via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all four defects and re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"

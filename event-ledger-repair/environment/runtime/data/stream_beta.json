@@ -1,0 +1,25 @@
+{
+  "stream_id": "stream_beta",
+  "account_type": "checking",
+  "owner": "acct_2002",
+  "events": [
+    {"event_id": "ev_b001", "seq": 1, "timestamp": 1100, "type": "deposit", "amount": 1000.00},
+    {"event_id": "ev_b002", "seq": 2, "timestamp": 1800, "type": "withdrawal", "amount": 250.00},
+    {"event_id": "ev_b003", "seq": 3, "timestamp": 2500, "type": "withdrawal", "amount": 300.00},
+    {"event_id": "ev_b004", "seq": 4, "timestamp": 3200, "type": "deposit", "amount": 150.00},
+    {"event_id": "ev_b005", "seq": 5, "timestamp": 3600, "type": "withdrawal", "amount": 100.00},
+    {"event_id": "ev_b006", "seq": 6, "timestamp": 4500, "type": "deposit", "amount": 800.00},
+    {"event_id": "ev_b007", "seq": 7, "timestamp": 5200, "type": "withdrawal", "amount": 350.00},
+    {"event_id": "ev_b008", "seq": 8, "timestamp": 5800, "type": "deposit", "amount": 200.00},
+    {"event_id": "ev_b009", "seq": 9, "timestamp": 6400, "type": "withdrawal", "amount": 175.00},
+    {"event_id": "ev_b010", "seq": 10, "timestamp": 7000, "type": "deposit", "amount": 450.00},
+    {"event_id": "ev_b011", "seq": 11, "timestamp": 7200, "type": "withdrawal", "amount": 125.00},
+    {"event_id": "ev_b012", "seq": 12, "timestamp": 7900, "type": "deposit", "amount": 300.00},
+    {"event_id": "ev_b013", "seq": 13, "timestamp": 8600, "type": "withdrawal", "amount": 200.00},
+    {"event_id": "ev_b014", "seq": 14, "timestamp": 9300, "type": "deposit", "amount": 550.00},
+    {"event_id": "ev_b015", "seq": 15, "timestamp": 10000, "type": "withdrawal", "amount": 400.00},
+    {"event_id": "ev_b016", "seq": 16, "timestamp": 10800, "type": "deposit", "amount": 275.00},
+    {"event_id": "ev_b017", "seq": 17, "timestamp": 11500, "type": "withdrawal", "amount": 150.00},
+    {"event_id": "ev_b018", "seq": 18, "timestamp": 12100, "type": "deposit", "amount": 600.00}
+  ]
+}

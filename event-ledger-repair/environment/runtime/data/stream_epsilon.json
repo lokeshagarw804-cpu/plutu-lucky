@@ -1,0 +1,19 @@
+{
+  "stream_id": "stream_epsilon",
+  "account_type": "savings",
+  "owner": "acct_5005",
+  "events": [
+    {"event_id": "ev_e001", "seq": 1, "timestamp": 1300, "type": "deposit", "amount": 120.00},
+    {"event_id": "ev_e002", "seq": 2, "timestamp": 2100, "type": "withdrawal", "amount": 30.00},
+    {"event_id": "ev_e003", "seq": 3, "timestamp": 2900, "type": "deposit", "amount": 45.00},
+    {"event_id": "ev_e004", "seq": 4, "timestamp": 3800, "type": "withdrawal", "amount": 20.00},
+    {"event_id": "ev_e005", "seq": 5, "timestamp": 4600, "type": "deposit", "amount": 55.00},
+    {"event_id": "ev_e006", "seq": 6, "timestamp": 5500, "type": "withdrawal", "amount": 40.00},
+    {"event_id": "ev_e007", "seq": 7, "timestamp": 6300, "type": "deposit", "amount": 30.00},
+    {"event_id": "ev_e008", "seq": 8, "timestamp": 7100, "type": "withdrawal", "amount": 25.00},
+    {"event_id": "ev_e009", "seq": 9, "timestamp": 7800, "type": "deposit", "amount": 60.00},
+    {"event_id": "ev_e010", "seq": 10, "timestamp": 8700, "type": "withdrawal", "amount": 35.00},
+    {"event_id": "ev_e011", "seq": 11, "timestamp": 9600, "type": "deposit", "amount": 40.00},
+    {"event_id": "ev_e012", "seq": 12, "timestamp": 10400, "type": "withdrawal", "amount": 20.00}
+  ]
+}
