@@ -4,6 +4,9 @@ Orchestrates the full CQRS event replay: load aggregate streams,
 sequence events into global order, batch for processing, project
 state through fold operations, materialize the final view, and
 generate the replay summary report.
+
+The replay.checkpointing section governs production batch sizing
+and final-snapshot semantics for the materialized output.
 """
 import json
 import os

@@ -2,7 +2,7 @@
 
 ## Overview
 
-A CQRS event replay engine processes domain events from multiple aggregate streams (orders, inventory, payments), merges them into a deterministic global sequence, replays them through batch-based projections, and produces a materialized view with a summary report. The system handles cross-stream ordering and batch-boundary checkpointing.
+A CQRS event replay engine processes domain events from multiple aggregate streams, merges them into a global sequence, replays them through batch-based projections, and produces a materialized view with a replay summary. The engine handles cross-stream event ordering and batch-boundary state management.
 
 ## System Environment
 
@@ -13,36 +13,38 @@ A CQRS event replay engine processes domain events from multiple aggregate strea
 
 ## Architecture
 
-The system replays events through six stages:
+The system replays events through six processing stages:
 
-1. *Loading* (`/app/runtime/loader.py`) — Reads JSON-format aggregate stream files from `/app/runtime/data/` for each stream listed in the active_aggregates configuration
+1. *Loading* (`/app/runtime/loader.py`) — Reads JSON-format aggregate stream files from `/app/runtime/data/` based on configuration
 
-2. *Sequencing* (`/app/runtime/sequencer.py`) — Merges events from all loaded streams into a single deterministic global order sorted by timestamp, then stream_id, then sequence number
+2. *Sequencing* (`/app/runtime/sequencer.py`) — Merges events from all loaded streams into a single globally-ordered sequence for deterministic replay
 
-3. *Batching* (`/app/runtime/batcher.py`) — Splits the sequenced event list into fixed-size batches according to the strict replay batch configuration for controlled processing
+3. *Batching* (`/app/runtime/batcher.py`) — Splits the sequenced event list into fixed-size batches for controlled processing
 
-4. *Projection* (`/app/runtime/projector.py`) — Applies each batch of events through fold operations to build aggregate state, producing per-batch snapshots
+4. *Projection* (`/app/runtime/projector.py`) — Applies each batch of events through fold operations to build aggregate state, producing per-batch snapshots at each boundary
 
-5. *Materialization* (`/app/runtime/materializer.py`) — Assembles the final materialized view from batch snapshots using the configured snapshot mode (the strict configuration specifies latest-wins semantics)
+5. *Materialization* (`/app/runtime/materializer.py`) — Assembles the final materialized view from batch snapshots using the configured view-building strategy
 
 6. *Summarization* (`/app/runtime/summarizer.py`) — Generates a summary report with per-stream statistics and an ordering verification hash
 
 ## Problem
 
 The system produces output but with several anomalies:
-- One of the three configured aggregate streams does not appear in the output
-- Event totals in the materialized view appear inflated beyond expected values
+- Not all configured aggregate streams appear in the materialized output
+- Aggregate totals in the materialized view do not match expected values derived from the source event data
 - The ordering verification hash does not match the expected deterministic sequence
-- Batch boundaries seem larger than the intended strict processing configuration
+- Batch processing behavior does not align with the intended checkpoint granularity
 
 ## Expected Correct Output
 
 When all defects are resolved:
-- All three streams (orders, inventory, payments) must be present in the materialized view
-- Total events processed must equal 53 (19 + 18 + 16)
-- Order total value must be exactly 815.25 (not inflated by batch accumulation)
-- The ordering hash must be `d744fb63ad2a3a5a` reflecting deterministic cross-stream ordering
+- All configured streams must be present in the materialized view
+- Total events processed must equal 53
+- Order total value must be exactly 815.25
+- The ordering hash must be `d744fb63ad2a3a5a`
 - Settled payment total must be 747.15
+- Inventory total stock must be 470
+- Payment captured total must be 815.25
 
 ## Output Schema
 

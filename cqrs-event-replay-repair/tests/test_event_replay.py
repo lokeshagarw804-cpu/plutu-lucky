@@ -25,25 +25,21 @@ class TestOutputFileStructure:
     """Basic output file and structure validation."""
 
     def test_materialized_view_exists(self):
-        """Materialized view output file must be generated at expected path."""
-        assert os.path.isfile(VIEW_PATH), (
-            f"Expected materialized view at {VIEW_PATH}"
-        )
+        """Materialized view output file must be generated."""
+        assert os.path.isfile(VIEW_PATH)
 
     def test_replay_summary_exists(self):
-        """Replay summary output file must be generated at expected path."""
-        assert os.path.isfile(SUMMARY_PATH), (
-            f"Expected replay summary at {SUMMARY_PATH}"
-        )
+        """Replay summary output file must be generated."""
+        assert os.path.isfile(SUMMARY_PATH)
 
     def test_view_has_stream_keys(self):
-        """Materialized view must contain top-level stream identifiers."""
+        """Materialized view must contain stream identifiers."""
         view = load_view()
-        assert isinstance(view, dict), "View must be a JSON object"
-        assert len(view) > 0, "View must contain at least one stream"
+        assert isinstance(view, dict)
+        assert len(view) > 0
 
     def test_summary_has_required_fields(self):
-        """Summary must include total_events_processed, stream_count, streams, ordering_hash."""
+        """Summary must include required fields."""
         summary = load_summary()
         assert "total_events_processed" in summary
         assert "stream_count" in summary
@@ -55,29 +51,20 @@ class TestStreamCompleteness:
     """Validates all configured streams are present in output."""
 
     def test_all_three_streams_present(self):
-        """All three configured aggregates (orders, inventory, payments) must appear.
-
-        The active_aggregates setting in /app/runtime/config.ini lists all
-        three streams. Check that /app/runtime/loader.py correctly parses
-        the comma-separated list including items with surrounding whitespace.
-        """
+        """All three configured aggregates must appear in the view."""
         view = load_view()
         expected_streams = {"orders", "inventory", "payments"}
         actual_streams = set(view.keys())
         missing = expected_streams - actual_streams
         assert not missing, (
-            f"Missing streams: {missing}. The loader in /app/runtime/loader.py "
-            f"must handle whitespace when parsing active_aggregates from "
-            f"/app/runtime/config.ini — check how the comma-separated list is split."
+            f"Missing streams in output: {missing}"
         )
 
     def test_stream_count_in_summary(self):
         """Summary must report exactly 3 active streams."""
         summary = load_summary()
         assert summary["stream_count"] == 3, (
-            f"Expected 3 streams but got {summary['stream_count']}. "
-            f"Verify /app/runtime/loader.py parses all entries from "
-            f"active_aggregates in /app/runtime/config.ini."
+            f"Expected 3 streams, got {summary['stream_count']}"
         )
 
 
@@ -85,58 +72,46 @@ class TestEventCounts:
     """Validates correct event counting per stream."""
 
     def test_total_events_processed(self):
-        """Total events must equal sum of all stream events (53 total)."""
+        """Total events must equal 53."""
         summary = load_summary()
         assert summary["total_events_processed"] == 53, (
-            f"Expected 53 total events but got {summary['total_events_processed']}. "
-            f"All three streams must be loaded and their events counted once each."
+            f"Expected 53 total events, got {summary['total_events_processed']}"
         )
 
     def test_orders_event_count(self):
-        """Orders stream must process exactly 19 events."""
+        """Orders stream must have exactly 19 events."""
         view = load_view()
-        assert "orders" in view, "Orders stream missing from view"
+        assert "orders" in view
         assert view["orders"]["event_count"] == 19, (
-            f"Expected 19 order events but got {view['orders']['event_count']}"
+            f"Expected 19 order events, got {view['orders']['event_count']}"
         )
 
     def test_inventory_event_count(self):
-        """Inventory stream must process exactly 18 events."""
+        """Inventory stream must have exactly 18 events."""
         view = load_view()
-        assert "inventory" in view, "Inventory stream missing from view"
+        assert "inventory" in view
         assert view["inventory"]["event_count"] == 18, (
-            f"Expected 18 inventory events but got {view['inventory']['event_count']}"
+            f"Expected 18 inventory events, got {view['inventory']['event_count']}"
         )
 
     def test_payments_event_count(self):
-        """Payments stream must process exactly 16 events."""
+        """Payments stream must have exactly 16 events."""
         view = load_view()
-        assert "payments" in view, "Payments stream missing from view"
+        assert "payments" in view
         assert view["payments"]["event_count"] == 16, (
-            f"Expected 16 payment events but got {view['payments']['event_count']}"
+            f"Expected 16 payment events, got {view['payments']['event_count']}"
         )
 
 
 class TestMaterializedTotals:
-    """Validates materialized view totals use last-write-wins semantics."""
+    """Validates materialized view totals match expected values."""
 
     def test_order_total_value(self):
-        """Total order value must be 815.25 (sum of 5 orders, counted once).
-
-        The materializer must use the final batch snapshot (latest mode)
-        rather than accumulating totals across all batch snapshots. Check
-        which config section /app/runtime/materializer.py reads
-        snapshot_mode from — it should use replay.strict (latest), not
-        replay (cumulative).
-        """
+        """Total order value must be 815.25."""
         view = load_view()
         orders_total = view["orders"]["totals"]["total_order_value"]
         assert abs(orders_total - 815.25) < 0.01, (
-            f"Expected total_order_value=815.25 but got {orders_total}. "
-            f"If the value is inflated (e.g. >1000), the materializer is "
-            f"summing across batch snapshots instead of using the final snapshot. "
-            f"Check which config section /app/runtime/materializer.py reads "
-            f"snapshot_mode from — replay.strict has 'latest', not replay."
+            f"Expected total_order_value=815.25, got {orders_total}"
         )
 
     def test_order_count(self):
@@ -144,8 +119,7 @@ class TestMaterializedTotals:
         view = load_view()
         order_count = view["orders"]["totals"]["order_count"]
         assert order_count == 5, (
-            f"Expected order_count=5 but got {order_count}. "
-            f"Totals should reflect final state, not accumulated across batches."
+            f"Expected order_count=5, got {order_count}"
         )
 
     def test_payment_captured_total(self):
@@ -153,17 +127,15 @@ class TestMaterializedTotals:
         view = load_view()
         captured = view["payments"]["totals"]["captured_total"]
         assert abs(captured - 815.25) < 0.01, (
-            f"Expected captured_total=815.25 but got {captured}. "
-            f"Check materializer snapshot_mode configuration."
+            f"Expected captured_total=815.25, got {captured}"
         )
 
     def test_inventory_total_stock(self):
-        """Total stock additions must equal 470 (initial + replenished)."""
+        """Total stock must equal 470."""
         view = load_view()
         total_stock = view["inventory"]["totals"]["total_stock"]
         assert total_stock == 470, (
-            f"Expected total_stock=470 but got {total_stock}. "
-            f"Materializer must use final snapshot, not sum across batches."
+            f"Expected total_stock=470, got {total_stock}"
         )
 
 
@@ -173,29 +145,21 @@ class TestDeterministicOrdering:
     def test_ordering_hash_deterministic(self):
         """Ordering hash must match the expected deterministic sequence.
 
-        Events with identical timestamps from different streams must be
-        ordered by stream_id then seq for a fully deterministic replay.
-        The sequencer in /app/runtime/sequencer.py must sort by
-        (timestamp, stream_id, seq) — not just (timestamp, seq) — because
-        seq values are local to each stream and cannot break ties across
-        different streams.
+        The hash captures the full event ordering including stream
+        provenance at each position in the global sequence.
         """
         summary = load_summary()
         expected_hash = "d744fb63ad2a3a5a"
         actual_hash = summary["ordering_hash"]
         assert actual_hash == expected_hash, (
-            f"Ordering hash mismatch: expected '{expected_hash}' but got "
-            f"'{actual_hash}'. Events with the same timestamp from different "
-            f"streams must be ordered by stream_id for deterministic replay. "
-            f"Check the sort key in /app/runtime/sequencer.py — it should "
-            f"include stream_id between timestamp and seq."
+            f"Ordering hash mismatch: expected '{expected_hash}', "
+            f"got '{actual_hash}'"
         )
 
     def test_payment_settled_total(self):
-        """Settled payment total must be 747.15 (requires correct ordering and snapshot)."""
+        """Settled payment total must be 747.15."""
         view = load_view()
         settled = view["payments"]["totals"]["settled_total"]
         assert abs(settled - 747.15) < 0.01, (
-            f"Expected settled_total=747.15 but got {settled}. "
-            f"This requires both correct event ordering and latest-snapshot mode."
+            f"Expected settled_total=747.15, got {settled}"
         )

@@ -41,8 +41,10 @@ class ReplaySummarizer:
     def _compute_ordering_hash(self, events):
         """Hash the event ordering for determinism verification.
 
-        Uses stream_id + seq + timestamp to produce a fingerprint
-        of the exact replay order used.
+        The hash encodes the full ordering including stream provenance.
+        For determinism across replays, events at the same timestamp
+        must have a stable tiebreaker — stream_id provides this since
+        sequence numbers are only unique within a single stream.
         """
         hasher = hashlib.sha256()
         for event in events:

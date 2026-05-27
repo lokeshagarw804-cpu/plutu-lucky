@@ -10,7 +10,6 @@ def patch_loader():
     with open(path, "r") as f:
         content = f.read()
 
-    # Fix Bug A: strip whitespace from split items
     content = content.replace(
         'self._active = set(raw_aggregates.split(","))',
         'self._active = set(s.strip() for s in raw_aggregates.split(","))'
@@ -26,10 +25,9 @@ def patch_batcher():
     with open(path, "r") as f:
         content = f.read()
 
-    # Fix Bug B: read from replay.strict instead of replay
     content = content.replace(
         'self._batch_size = self._config.getint("replay", "batch_size")',
-        'self._batch_size = self._config.getint("replay.strict", "batch_size")'
+        'self._batch_size = self._config.getint("replay.checkpointing", "batch_size")'
     )
 
     with open(path, "w") as f:
@@ -42,10 +40,9 @@ def patch_materializer():
     with open(path, "r") as f:
         content = f.read()
 
-    # Fix Bug C: read snapshot_mode from replay.strict (latest) not replay (cumulative)
     content = content.replace(
         'self._snapshot_mode = self._config.get("replay", "snapshot_mode")',
-        'self._snapshot_mode = self._config.get("replay.strict", "snapshot_mode")'
+        'self._snapshot_mode = self._config.get("replay.checkpointing", "snapshot_mode")'
     )
 
     with open(path, "w") as f:
@@ -58,7 +55,6 @@ def patch_sequencer():
     with open(path, "r") as f:
         content = f.read()
 
-    # Fix Bug D: add stream_id to sort key for cross-stream determinism
     content = content.replace(
         'merged.sort(key=lambda e: (e["timestamp"], e["seq"]))',
         'merged.sort(key=lambda e: (e["timestamp"], e["stream_id"], e["seq"]))'

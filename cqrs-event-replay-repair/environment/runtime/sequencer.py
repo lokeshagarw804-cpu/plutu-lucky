@@ -1,8 +1,8 @@
 """Event sequencer — merges and orders events from multiple streams.
 
 Combines events from all loaded aggregate streams into a single ordered
-sequence for replay. Events are sorted by timestamp and sequence number
-to produce a deterministic total order across streams.
+sequence for replay. The ordering must be fully deterministic to ensure
+consistent materialized views across replays.
 """
 
 
@@ -13,8 +13,7 @@ class EventSequencer:
         """Merge all stream events into a global ordered sequence.
 
         Each event is tagged with its source stream_id for provenance.
-        Events are ordered by timestamp then sequence number for
-        deterministic replay. Note: seq is local to each stream.
+        The sort produces a deterministic total order suitable for replay.
         """
         merged = []
         for stream_id, stream_data in streams.items():

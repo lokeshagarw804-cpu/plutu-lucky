@@ -1,10 +1,15 @@
 """Event projector — applies events to build materialized view state.
 
 Processes batches of events through fold operations to build aggregate
-state. Each batch produces a snapshot that captures the cumulative state
-after processing all events in that batch.
+state. Each batch produces a snapshot that captures the state after
+processing all events up to that batch boundary.
+
+The projector maintains running state across batches — each new batch
+starts from the prior batch's final state and applies only its own events.
+Snapshots are independent copies used for downstream materialization.
 """
 import configparser
+import copy
 
 
 class EventProjector:
@@ -34,8 +39,12 @@ class EventProjector:
         return snapshots
 
     def _process_batch(self, batch, current_state):
-        """Apply events in a single batch to current aggregate state."""
-        state = dict(current_state)
+        """Apply events in a single batch to current aggregate state.
+
+        Creates a working copy of state to avoid mutating the snapshot
+        record, then applies all events in the batch sequentially.
+        """
+        state = copy.deepcopy(current_state)
 
         for event in batch:
             stream = event["stream_id"]
@@ -166,6 +175,5 @@ class EventProjector:
                 totals["settled_total"] = totals.get("settled_total", 0) + payload["net_amount"]
 
     def _take_snapshot(self, state):
-        """Create a deep copy snapshot of current state."""
-        import copy
+        """Create a snapshot of current state for checkpointing."""
         return copy.deepcopy(state)

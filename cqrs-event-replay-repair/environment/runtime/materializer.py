@@ -1,8 +1,7 @@
 """View materializer — builds final materialized view from snapshots.
 
 Assembles the final projected state from batch snapshots. The snapshot
-mode determines how batch results combine: cumulative mode sums values
-across snapshots, while latest mode uses only the final snapshot.
+mode determines how batch results combine into the final view.
 """
 import configparser
 
@@ -24,7 +23,7 @@ class ViewMaterializer:
         if not snapshots:
             return {}
 
-        if self._snapshot_mode == "latest":
+        if self._snapshot_mode == "final":
             return snapshots[-1]
 
         # Cumulative: sum totals across all snapshots
