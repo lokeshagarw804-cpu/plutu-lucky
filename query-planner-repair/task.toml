@@ -1,0 +1,37 @@
+author_name = "Lokesh Agarwal"
+author_email = "lokeshagarw804@gmail.com"
+category = "database_query_engines"
+difficulty = "hard"
+tags = ["spatial-indexing", "query-planning", "geospatial", "numerical-computing", "debugging"]
+
+difficulty_explanation = "Four interacting defects across four modules require understanding config parsing edge cases, spatial query radius semantics, batch-based index accumulation patterns, and multi-key sort determinism. The config-space bug is invisible without careful string inspection, the wrong-section bug requires reading two config sections to notice the discrepancy, the accumulation bug requires understanding batch processing semantics, and the sort bug only manifests with specific data that produces tied distances."
+solution_explanation = "Strip whitespace when splitting active_sources config list, read radius_km from query.spatial instead of query section, replace feature_count accumulation (+=) with direct assignment (=) for per-batch snapshot, and add source_id to the sort key tuple for deterministic ordering of tied distances."
+verification_explanation = "Tests validate source loading completeness, query radius correctness via max_distance bounds, index feature count accuracy against actual data, result ordering determinism for tied distances, and per-source result distribution. Graduated difficulty ensures partial fixes are detectable."
+expert_time_estimate_hours = 3.0
+
+[task]
+name = "query-planner-repair"
+description = "Debug a spatial query planner with four interacting defects across source loading, query radius configuration, spatial index batch accumulation, and result ordering. Bugs involve config parsing subtleties and batch processing semantics."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding INI parsing whitespace behavior, config section hierarchy, batch-vs-snapshot accumulation patterns, and multi-key sort determinism with tied values. Defects interact: fixing source loading changes which features are indexed and queried, affecting all downstream outputs."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.run_query"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the query planner then validates output via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all four defects and re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"

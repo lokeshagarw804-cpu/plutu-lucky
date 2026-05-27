@@ -1,0 +1,18 @@
+{
+  "source_id": "infrastructure",
+  "features": [
+    {"feature_id": "I001", "lat": 45.00, "lon": -93.00, "category": "road"},
+    {"feature_id": "I002", "lat": 45.03, "lon": -93.02, "category": "bridge"},
+    {"feature_id": "I003", "lat": 44.97, "lon": -92.98, "category": "road"},
+    {"feature_id": "I004", "lat": 45.06, "lon": -93.05, "category": "utility"},
+    {"feature_id": "I005", "lat": 44.94, "lon": -93.01, "category": "bridge"},
+    {"feature_id": "I006", "lat": 45.01, "lon": -92.96, "category": "road"},
+    {"feature_id": "I007", "lat": 44.99, "lon": -93.07, "category": "utility"},
+    {"feature_id": "I008", "lat": 45.04, "lon": -93.10, "category": "bridge"},
+    {"feature_id": "I009", "lat": 44.96, "lon": -92.93, "category": "road"},
+    {"feature_id": "I010", "lat": 45.08, "lon": -92.99, "category": "utility"},
+    {"feature_id": "I011", "lat": 44.92, "lon": -93.06, "category": "road"},
+    {"feature_id": "I012", "lat": 45.02, "lon": -93.13, "category": "bridge"},
+    {"feature_id": "I013", "lat": 45.00, "lon": -93.00, "category": "utility"}
+  ]
+}
