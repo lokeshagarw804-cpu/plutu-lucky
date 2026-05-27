@@ -1,0 +1,86 @@
+[
+  {
+    "batch_id": "B001",
+    "station": "alpha",
+    "events": [
+      {"ts": 1000, "value": 12.5, "seq": 1},
+      {"ts": 1001, "value": 14.2, "seq": 2},
+      {"ts": 1002, "value": 11.8, "seq": 3},
+      {"ts": 1003, "value": 13.1, "seq": 4},
+      {"ts": 1004, "value": 15.0, "seq": 5}
+    ],
+    "window_start": 1000,
+    "window_end": 1004,
+    "status": "PENDING"
+  },
+  {
+    "batch_id": "B002",
+    "station": "alpha",
+    "events": [
+      {"ts": 1004, "value": 16.3, "seq": 6},
+      {"ts": 1005, "value": 17.1, "seq": 7},
+      {"ts": 1006, "value": 12.9, "seq": 8},
+      {"ts": 1007, "value": 14.4, "seq": 9},
+      {"ts": 1008, "value": 13.7, "seq": 10}
+    ],
+    "window_start": 1004,
+    "window_end": 1008,
+    "status": "PENDING"
+  },
+  {
+    "batch_id": "B003",
+    "station": "beta",
+    "events": [
+      {"ts": 1000, "value": 22.1, "seq": 1},
+      {"ts": 1001, "value": 21.7, "seq": 3},
+      {"ts": 1001, "value": 23.4, "seq": 2},
+      {"ts": 1002, "value": 24.0, "seq": 4},
+      {"ts": 1003, "value": 22.8, "seq": 5}
+    ],
+    "window_start": 1000,
+    "window_end": 1003,
+    "status": "PENDING"
+  },
+  {
+    "batch_id": "B004",
+    "station": "beta",
+    "events": [
+      {"ts": 1003, "value": 25.2, "seq": 6},
+      {"ts": 1003, "value": 20.9, "seq": 7},
+      {"ts": 1004, "value": 23.6, "seq": 8},
+      {"ts": 1005, "value": 21.3, "seq": 9},
+      {"ts": 1006, "value": 24.7, "seq": 10}
+    ],
+    "window_start": 1003,
+    "window_end": 1006,
+    "status": "PENDING"
+  },
+  {
+    "batch_id": "B005",
+    "station": "gamma",
+    "events": [
+      {"ts": 1000, "value": 5.1, "seq": 1},
+      {"ts": 1001, "value": 5.3, "seq": 2},
+      {"ts": 1002, "value": 5.2, "seq": 4},
+      {"ts": 1002, "value": 5.0, "seq": 3},
+      {"ts": 1003, "value": 5.4, "seq": 5}
+    ],
+    "window_start": 1000,
+    "window_end": 1003,
+    "status": "PENDING"
+  },
+  {
+    "batch_id": "B006",
+    "station": "gamma",
+    "events": [
+      {"ts": 1003, "value": 5.5, "seq": 6},
+      {"ts": 1004, "value": 5.7, "seq": 7},
+      {"ts": 1005, "value": 5.9, "seq": 8},
+      {"ts": 1006, "value": 5.3, "seq": 10},
+      {"ts": 1006, "value": 5.1, "seq": 9}
+    ],
+    "window_start": 1003,
+    "window_end": 1006,
+    "status": "PENDING"
+  }
+]

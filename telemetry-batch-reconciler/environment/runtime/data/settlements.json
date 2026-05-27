@@ -1,0 +1,10 @@
+[
+  {"batch_id": "B001", "settled_at": 1300, "action": "SETTLE"},
+  {"batch_id": "B002", "settled_at": 1350, "action": "SETTLE"},
+  {"batch_id": "B002", "settled_at": 1380, "action": "RETRY"},
+  {"batch_id": "B003", "settled_at": 1310, "action": "SETTLE"},
+  {"batch_id": "B004", "settled_at": 1360, "action": "SETTLE"},
+  {"batch_id": "B004", "settled_at": 1400, "action": "RETRY"},
+  {"batch_id": "B005", "settled_at": 1320, "action": "SETTLE"},
+  {"batch_id": "B006", "settled_at": 1370, "action": "SETTLE"}
+]

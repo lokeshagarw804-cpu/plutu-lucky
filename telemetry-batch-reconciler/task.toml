@@ -1,0 +1,14 @@
+version = "1.0"
+
+[metadata]
+difficulty = "hard"
+category = "debugging"
+tags = ["state-management", "event-processing", "aggregation"]
+expert_time_estimate_min = 90
+junior_time_estimate_min = 240
+
+[agent]
+timeout_sec = 900
+
+[verifier]
+command = "bash tests/test.sh"

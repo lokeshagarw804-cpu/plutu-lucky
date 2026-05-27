@@ -1,0 +1,14 @@
+[
+  {"batch_id": "B002", "attempt": 1, "ts": 1100, "result": "TIMEOUT"},
+  {"batch_id": "B002", "attempt": 2, "ts": 1150, "result": "TIMEOUT"},
+  {"batch_id": "B002", "attempt": 3, "ts": 1200, "result": "SUCCESS"},
+  {"batch_id": "B004", "attempt": 1, "ts": 1110, "result": "ERROR"},
+  {"batch_id": "B004", "attempt": 2, "ts": 1160, "result": "ERROR"},
+  {"batch_id": "B004", "attempt": 3, "ts": 1210, "result": "TIMEOUT"},
+  {"batch_id": "B004", "attempt": 4, "ts": 1260, "result": "SUCCESS"},
+  {"batch_id": "B006", "attempt": 1, "ts": 1120, "result": "TIMEOUT"},
+  {"batch_id": "B006", "attempt": 2, "ts": 1170, "result": "SUCCESS"},
+  {"batch_id": "B001", "attempt": 1, "ts": 1050, "result": "SUCCESS"},
+  {"batch_id": "B003", "attempt": 1, "ts": 1060, "result": "SUCCESS"},
+  {"batch_id": "B005", "attempt": 1, "ts": 1070, "result": "SUCCESS"}
+]
