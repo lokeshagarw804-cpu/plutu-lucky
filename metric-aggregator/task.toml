@@ -1,4 +1,5 @@
 version = "1.0"
+name = "metric-aggregator"
 
 [metadata]
 author_name = "Lokesh Agarwal"
@@ -10,11 +11,12 @@ expert_time_estimate_min = 180
 junior_time_estimate_min = 480
 
 [verifier]
-command = "bash tests/test.sh"
-description = "Runs the aggregation engine then validates output via pytest."
-
-[environment]
-Dockerfile = "environment/Dockerfile"
+timeout_sec = 240.0
 
 [agent]
-timeout = 900
+timeout_sec = 900.0
+
+[environment]
+build_timeout_sec = 600.0
+cpus = 2
+memory = "2G"
