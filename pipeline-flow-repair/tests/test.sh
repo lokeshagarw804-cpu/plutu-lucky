@@ -1,5 +1,6 @@
 #!/bin/bash
 cd /app
+export PYTHONDONTWRITEBYTECODE=1
 python3 -m runtime.main
 mkdir -p /logs/verifier
 set +e
