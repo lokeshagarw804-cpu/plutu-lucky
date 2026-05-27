@@ -1,0 +1,9 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+timeout = 300
+
+[task]
+name = "regalloc-spill-repair"
+description = "Debug and repair a register allocation system that computes variable liveness, builds interference graphs, and performs graph coloring with spill decisions."
+category = "debugging"
+difficulty = "hard"

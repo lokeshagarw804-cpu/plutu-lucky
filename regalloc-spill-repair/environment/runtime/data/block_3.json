@@ -1,0 +1,17 @@
+{
+  "block_id": "loop_body",
+  "loop_depth": 2,
+  "predecessors": ["loop_header"],
+  "successors": ["loop_header", "loop_exit"],
+  "instructions": [
+    {"op": "add", "dest": "v13", "srcs": ["v12", "v10"], "line": 16},
+    {"op": "mul", "dest": "v14", "srcs": ["v13", "v11"], "line": 17},
+    {"op": "load", "dest": "v15", "srcs": [], "line": 18},
+    {"op": "add", "dest": "v16", "srcs": ["v15", "v14"], "line": 19},
+    {"op": "sub", "dest": "v17", "srcs": ["v16", "v12"], "line": 20},
+    {"op": "mul", "dest": "v18", "srcs": ["v17", "v13"], "line": 21},
+    {"op": "store", "dest": null, "srcs": ["v18"], "line": 22},
+    {"op": "add", "dest": "v19", "srcs": ["v14", "v15"], "line": 23},
+    {"op": "store", "dest": null, "srcs": ["v19", "v16"], "line": 24}
+  ]
+}
