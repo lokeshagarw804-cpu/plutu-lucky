@@ -25,8 +25,7 @@ def simplify_graph(adjacency, spill_costs):
         spilled: set of variables that must be spilled
     
     Algorithm:
-        1. Find a low-degree node (degree strictly below K guarantees
-           colorability since K-1 neighbors occupy at most K-1 colors)
+        1. Find a low-degree node that can be trivially colored
         2. Push it onto the stack with its current neighbors
         3. Remove it from the graph (reduce neighbors' degrees)
         4. Repeat until no more simplifiable nodes

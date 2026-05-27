@@ -10,8 +10,7 @@ def assign_colors(stack, adjacency, num_registers):
     """Assign register colors by popping from the simplification stack.
     
     Variables are colored in reverse removal order (last removed = first colored).
-    Each variable gets the lowest available color not used by any of its
-    already-colored neighbors (neighbors not yet colored impose no constraint).
+    Each variable gets the lowest available color not used by its neighbors.
     
     Returns:
         coloring: dict mapping variable -> register number (0-indexed)
