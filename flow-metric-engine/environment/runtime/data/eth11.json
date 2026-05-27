@@ -1,0 +1,1407 @@
+{
+  "interface_id": "eth11",
+  "capture_start_ms": 25.0,
+  "sample_interval_ms": 100.0,
+  "packets": [
+    {
+      "timestamp_ms": 125.0,
+      "bytes": 6689,
+      "latency_ms": 60.432,
+      "src_port": 80,
+      "dst_port": 11760
+    },
+    {
+      "timestamp_ms": 225.0,
+      "bytes": 6177,
+      "latency_ms": 60.208,
+      "src_port": 3306,
+      "dst_port": 52337
+    },
+    {
+      "timestamp_ms": 325.0,
+      "bytes": 6619,
+      "latency_ms": 53.043,
+      "src_port": 8080,
+      "dst_port": 9342
+    },
+    {
+      "timestamp_ms": 425.0,
+      "bytes": 3499,
+      "latency_ms": 14.667,
+      "src_port": 80,
+      "dst_port": 51580
+    },
+    {
+      "timestamp_ms": 525.0,
+      "bytes": 3755,
+      "latency_ms": 29.686,
+      "src_port": 22,
+      "dst_port": 18848
+    },
+    {
+      "timestamp_ms": 625.0,
+      "bytes": 6229,
+      "latency_ms": 58.834,
+      "src_port": 3306,
+      "dst_port": 42149
+    },
+    {
+      "timestamp_ms": 725.0,
+      "bytes": 6841,
+      "latency_ms": 65.131,
+      "src_port": 8080,
+      "dst_port": 4657
+    },
+    {
+      "timestamp_ms": 825.0,
+      "bytes": 6047,
+      "latency_ms": 60.032,
+      "src_port": 8080,
+      "dst_port": 11333
+    },
+    {
+      "timestamp_ms": 925.0,
+      "bytes": 3494,
+      "latency_ms": 39.658,
+      "src_port": 3306,
+      "dst_port": 45203
+    },
+    {
+      "timestamp_ms": 1025.0,
+      "bytes": 3457,
+      "latency_ms": 27.904,
+      "src_port": 3306,
+      "dst_port": 1192
+    },
+    {
+      "timestamp_ms": 1125.0,
+      "bytes": 7171,
+      "latency_ms": 65.446,
+      "src_port": 443,
+      "dst_port": 4037
+    },
+    {
+      "timestamp_ms": 1225.0,
+      "bytes": 6161,
+      "latency_ms": 61.734,
+      "src_port": 443,
+      "dst_port": 12752
+    },
+    {
+      "timestamp_ms": 1325.0,
+      "bytes": 7127,
+      "latency_ms": 51.726,
+      "src_port": 3306,
+      "dst_port": 53656
+    },
+    {
+      "timestamp_ms": 1425.0,
+      "bytes": 3993,
+      "latency_ms": 26.543,
+      "src_port": 22,
+      "dst_port": 15737
+    },
+    {
+      "timestamp_ms": 1525.0,
+      "bytes": 3341,
+      "latency_ms": 44.338,
+      "src_port": 8080,
+      "dst_port": 18801
+    },
+    {
+      "timestamp_ms": 1625.0,
+      "bytes": 6709,
+      "latency_ms": 48.437,
+      "src_port": 80,
+      "dst_port": 33925
+    },
+    {
+      "timestamp_ms": 1725.0,
+      "bytes": 6446,
+      "latency_ms": 57.085,
+      "src_port": 443,
+      "dst_port": 53737
+    },
+    {
+      "timestamp_ms": 1825.0,
+      "bytes": 6393,
+      "latency_ms": 59.697,
+      "src_port": 22,
+      "dst_port": 5541
+    },
+    {
+      "timestamp_ms": 1925.0,
+      "bytes": 4002,
+      "latency_ms": 21.0,
+      "src_port": 8080,
+      "dst_port": 22473
+    },
+    {
+      "timestamp_ms": 2025.0,
+      "bytes": 3831,
+      "latency_ms": 40.706,
+      "src_port": 8080,
+      "dst_port": 14175
+    },
+    {
+      "timestamp_ms": 2125.0,
+      "bytes": 6341,
+      "latency_ms": 76.925,
+      "src_port": 3306,
+      "dst_port": 16921
+    },
+    {
+      "timestamp_ms": 2225.0,
+      "bytes": 6043,
+      "latency_ms": 63.008,
+      "src_port": 22,
+      "dst_port": 51657
+    },
+    {
+      "timestamp_ms": 2325.0,
+      "bytes": 6592,
+      "latency_ms": 43.975,
+      "src_port": 3306,
+      "dst_port": 50862
+    },
+    {
+      "timestamp_ms": 2425.0,
+      "bytes": 3556,
+      "latency_ms": 29.524,
+      "src_port": 22,
+      "dst_port": 2590
+    },
+    {
+      "timestamp_ms": 2525.0,
+      "bytes": 3534,
+      "latency_ms": 44.17,
+      "src_port": 80,
+      "dst_port": 63348
+    },
+    {
+      "timestamp_ms": 2625.0,
+      "bytes": 6199,
+      "latency_ms": 74.518,
+      "src_port": 22,
+      "dst_port": 56664
+    },
+    {
+      "timestamp_ms": 2725.0,
+      "bytes": 6477,
+      "latency_ms": 51.451,
+      "src_port": 443,
+      "dst_port": 35745
+    },
+    {
+      "timestamp_ms": 2825.0,
+      "bytes": 6863,
+      "latency_ms": 58.895,
+      "src_port": 80,
+      "dst_port": 64761
+    },
+    {
+      "timestamp_ms": 2925.0,
+      "bytes": 4051,
+      "latency_ms": 34.699,
+      "src_port": 80,
+      "dst_port": 3901
+    },
+    {
+      "timestamp_ms": 3025.0,
+      "bytes": 4157,
+      "latency_ms": 24.872,
+      "src_port": 3306,
+      "dst_port": 28094
+    },
+    {
+      "timestamp_ms": 3125.0,
+      "bytes": 6397,
+      "latency_ms": 50.803,
+      "src_port": 80,
+      "dst_port": 39085
+    },
+    {
+      "timestamp_ms": 3225.0,
+      "bytes": 6654,
+      "latency_ms": 63.025,
+      "src_port": 22,
+      "dst_port": 5928
+    },
+    {
+      "timestamp_ms": 3325.0,
+      "bytes": 6394,
+      "latency_ms": 58.042,
+      "src_port": 443,
+      "dst_port": 16541
+    },
+    {
+      "timestamp_ms": 3425.0,
+      "bytes": 3323,
+      "latency_ms": 53.845,
+      "src_port": 22,
+      "dst_port": 46946
+    },
+    {
+      "timestamp_ms": 3525.0,
+      "bytes": 3653,
+      "latency_ms": 27.264,
+      "src_port": 22,
+      "dst_port": 18846
+    },
+    {
+      "timestamp_ms": 3625.0,
+      "bytes": 6586,
+      "latency_ms": 83.85,
+      "src_port": 443,
+      "dst_port": 52137
+    },
+    {
+      "timestamp_ms": 3725.0,
+      "bytes": 6521,
+      "latency_ms": 55.235,
+      "src_port": 80,
+      "dst_port": 11796
+    },
+    {
+      "timestamp_ms": 3825.0,
+      "bytes": 6211,
+      "latency_ms": 62.705,
+      "src_port": 80,
+      "dst_port": 36146
+    },
+    {
+      "timestamp_ms": 3925.0,
+      "bytes": 3122,
+      "latency_ms": 48.334,
+      "src_port": 22,
+      "dst_port": 21229
+    },
+    {
+      "timestamp_ms": 4025.0,
+      "bytes": 2833,
+      "latency_ms": 39.466,
+      "src_port": 80,
+      "dst_port": 11353
+    },
+    {
+      "timestamp_ms": 4125.0,
+      "bytes": 6605,
+      "latency_ms": 52.034,
+      "src_port": 3306,
+      "dst_port": 3667
+    },
+    {
+      "timestamp_ms": 4225.0,
+      "bytes": 6650,
+      "latency_ms": 79.233,
+      "src_port": 443,
+      "dst_port": 7001
+    },
+    {
+      "timestamp_ms": 4325.0,
+      "bytes": 6277,
+      "latency_ms": 34.494,
+      "src_port": 22,
+      "dst_port": 34674
+    },
+    {
+      "timestamp_ms": 4425.0,
+      "bytes": 3781,
+      "latency_ms": 37.551,
+      "src_port": 443,
+      "dst_port": 3060
+    },
+    {
+      "timestamp_ms": 4525.0,
+      "bytes": 4156,
+      "latency_ms": 29.178,
+      "src_port": 3306,
+      "dst_port": 50050
+    },
+    {
+      "timestamp_ms": 4625.0,
+      "bytes": 6351,
+      "latency_ms": 58.618,
+      "src_port": 80,
+      "dst_port": 53708
+    },
+    {
+      "timestamp_ms": 4725.0,
+      "bytes": 6548,
+      "latency_ms": 55.103,
+      "src_port": 80,
+      "dst_port": 55443
+    },
+    {
+      "timestamp_ms": 4825.0,
+      "bytes": 6547,
+      "latency_ms": 53.043,
+      "src_port": 443,
+      "dst_port": 55004
+    },
+    {
+      "timestamp_ms": 4925.0,
+      "bytes": 3067,
+      "latency_ms": 43.905,
+      "src_port": 80,
+      "dst_port": 39187
+    },
+    {
+      "timestamp_ms": 5025.0,
+      "bytes": 2829,
+      "latency_ms": 23.496,
+      "src_port": 80,
+      "dst_port": 2452
+    },
+    {
+      "timestamp_ms": 5125.0,
+      "bytes": 6732,
+      "latency_ms": 59.882,
+      "src_port": 22,
+      "dst_port": 54062
+    },
+    {
+      "timestamp_ms": 5225.0,
+      "bytes": 7024,
+      "latency_ms": 75.706,
+      "src_port": 8080,
+      "dst_port": 9053
+    },
+    {
+      "timestamp_ms": 5325.0,
+      "bytes": 6875,
+      "latency_ms": 62.947,
+      "src_port": 443,
+      "dst_port": 61587
+    },
+    {
+      "timestamp_ms": 5425.0,
+      "bytes": 2918,
+      "latency_ms": 26.686,
+      "src_port": 22,
+      "dst_port": 33538
+    },
+    {
+      "timestamp_ms": 5525.0,
+      "bytes": 4021,
+      "latency_ms": 37.793,
+      "src_port": 443,
+      "dst_port": 24220
+    },
+    {
+      "timestamp_ms": 5625.0,
+      "bytes": 6549,
+      "latency_ms": 66.28,
+      "src_port": 8080,
+      "dst_port": 30253
+    },
+    {
+      "timestamp_ms": 5725.0,
+      "bytes": 6569,
+      "latency_ms": 58.224,
+      "src_port": 3306,
+      "dst_port": 41458
+    },
+    {
+      "timestamp_ms": 5825.0,
+      "bytes": 6507,
+      "latency_ms": 68.36,
+      "src_port": 22,
+      "dst_port": 58877
+    },
+    {
+      "timestamp_ms": 5925.0,
+      "bytes": 3382,
+      "latency_ms": 33.889,
+      "src_port": 8080,
+      "dst_port": 26125
+    },
+    {
+      "timestamp_ms": 6025.0,
+      "bytes": 3651,
+      "latency_ms": 40.065,
+      "src_port": 3306,
+      "dst_port": 17352
+    },
+    {
+      "timestamp_ms": 6125.0,
+      "bytes": 6070,
+      "latency_ms": 46.819,
+      "src_port": 80,
+      "dst_port": 26091
+    },
+    {
+      "timestamp_ms": 6225.0,
+      "bytes": 6565,
+      "latency_ms": 50.756,
+      "src_port": 3306,
+      "dst_port": 52236
+    },
+    {
+      "timestamp_ms": 6325.0,
+      "bytes": 5730,
+      "latency_ms": 62.122,
+      "src_port": 3306,
+      "dst_port": 22100
+    },
+    {
+      "timestamp_ms": 6425.0,
+      "bytes": 3331,
+      "latency_ms": 39.063,
+      "src_port": 8080,
+      "dst_port": 40156
+    },
+    {
+      "timestamp_ms": 6525.0,
+      "bytes": 3643,
+      "latency_ms": 55.864,
+      "src_port": 8080,
+      "dst_port": 4863
+    },
+    {
+      "timestamp_ms": 6625.0,
+      "bytes": 6642,
+      "latency_ms": 49.462,
+      "src_port": 8080,
+      "dst_port": 51279
+    },
+    {
+      "timestamp_ms": 6725.0,
+      "bytes": 6279,
+      "latency_ms": 56.334,
+      "src_port": 443,
+      "dst_port": 7586
+    },
+    {
+      "timestamp_ms": 6825.0,
+      "bytes": 6503,
+      "latency_ms": 67.428,
+      "src_port": 3306,
+      "dst_port": 54520
+    },
+    {
+      "timestamp_ms": 6925.0,
+      "bytes": 3646,
+      "latency_ms": 19.2,
+      "src_port": 443,
+      "dst_port": 38752
+    },
+    {
+      "timestamp_ms": 7025.0,
+      "bytes": 3856,
+      "latency_ms": 20.317,
+      "src_port": 8080,
+      "dst_port": 62313
+    },
+    {
+      "timestamp_ms": 7125.0,
+      "bytes": 6859,
+      "latency_ms": 43.64,
+      "src_port": 443,
+      "dst_port": 16526
+    },
+    {
+      "timestamp_ms": 7225.0,
+      "bytes": 5970,
+      "latency_ms": 50.052,
+      "src_port": 8080,
+      "dst_port": 60922
+    },
+    {
+      "timestamp_ms": 7325.0,
+      "bytes": 6042,
+      "latency_ms": 51.517,
+      "src_port": 8080,
+      "dst_port": 63123
+    },
+    {
+      "timestamp_ms": 7425.0,
+      "bytes": 3323,
+      "latency_ms": 32.717,
+      "src_port": 443,
+      "dst_port": 55857
+    },
+    {
+      "timestamp_ms": 7525.0,
+      "bytes": 4221,
+      "latency_ms": 33.445,
+      "src_port": 22,
+      "dst_port": 36552
+    },
+    {
+      "timestamp_ms": 7625.0,
+      "bytes": 6352,
+      "latency_ms": 70.822,
+      "src_port": 80,
+      "dst_port": 4705
+    },
+    {
+      "timestamp_ms": 7725.0,
+      "bytes": 6526,
+      "latency_ms": 66.986,
+      "src_port": 3306,
+      "dst_port": 32349
+    },
+    {
+      "timestamp_ms": 7825.0,
+      "bytes": 7282,
+      "latency_ms": 60.096,
+      "src_port": 443,
+      "dst_port": 53875
+    },
+    {
+      "timestamp_ms": 7925.0,
+      "bytes": 3879,
+      "latency_ms": 46.615,
+      "src_port": 8080,
+      "dst_port": 4927
+    },
+    {
+      "timestamp_ms": 8025.0,
+      "bytes": 3960,
+      "latency_ms": 36.824,
+      "src_port": 443,
+      "dst_port": 51772
+    },
+    {
+      "timestamp_ms": 8125.0,
+      "bytes": 6828,
+      "latency_ms": 67.846,
+      "src_port": 8080,
+      "dst_port": 63975
+    },
+    {
+      "timestamp_ms": 8225.0,
+      "bytes": 6990,
+      "latency_ms": 66.873,
+      "src_port": 22,
+      "dst_port": 39429
+    },
+    {
+      "timestamp_ms": 8325.0,
+      "bytes": 6738,
+      "latency_ms": 65.026,
+      "src_port": 443,
+      "dst_port": 64978
+    },
+    {
+      "timestamp_ms": 8425.0,
+      "bytes": 3968,
+      "latency_ms": 55.371,
+      "src_port": 22,
+      "dst_port": 43568
+    },
+    {
+      "timestamp_ms": 8525.0,
+      "bytes": 3274,
+      "latency_ms": 49.293,
+      "src_port": 3306,
+      "dst_port": 46477
+    },
+    {
+      "timestamp_ms": 8625.0,
+      "bytes": 6871,
+      "latency_ms": 51.182,
+      "src_port": 8080,
+      "dst_port": 15654
+    },
+    {
+      "timestamp_ms": 8725.0,
+      "bytes": 6174,
+      "latency_ms": 44.17,
+      "src_port": 22,
+      "dst_port": 21131
+    },
+    {
+      "timestamp_ms": 8825.0,
+      "bytes": 6470,
+      "latency_ms": 51.689,
+      "src_port": 443,
+      "dst_port": 48788
+    },
+    {
+      "timestamp_ms": 8925.0,
+      "bytes": 4044,
+      "latency_ms": 35.176,
+      "src_port": 3306,
+      "dst_port": 26687
+    },
+    {
+      "timestamp_ms": 9025.0,
+      "bytes": 3855,
+      "latency_ms": 21.161,
+      "src_port": 3306,
+      "dst_port": 3146
+    },
+    {
+      "timestamp_ms": 9125.0,
+      "bytes": 6626,
+      "latency_ms": 67.968,
+      "src_port": 3306,
+      "dst_port": 15500
+    },
+    {
+      "timestamp_ms": 9225.0,
+      "bytes": 6395,
+      "latency_ms": 56.394,
+      "src_port": 22,
+      "dst_port": 10241
+    },
+    {
+      "timestamp_ms": 9325.0,
+      "bytes": 6431,
+      "latency_ms": 63.513,
+      "src_port": 8080,
+      "dst_port": 65405
+    },
+    {
+      "timestamp_ms": 9425.0,
+      "bytes": 3289,
+      "latency_ms": 47.885,
+      "src_port": 80,
+      "dst_port": 54872
+    },
+    {
+      "timestamp_ms": 9525.0,
+      "bytes": 3372,
+      "latency_ms": 21.195,
+      "src_port": 8080,
+      "dst_port": 30294
+    },
+    {
+      "timestamp_ms": 9625.0,
+      "bytes": 6739,
+      "latency_ms": 60.491,
+      "src_port": 80,
+      "dst_port": 23993
+    },
+    {
+      "timestamp_ms": 9725.0,
+      "bytes": 6493,
+      "latency_ms": 64.778,
+      "src_port": 80,
+      "dst_port": 4179
+    },
+    {
+      "timestamp_ms": 9825.0,
+      "bytes": 6071,
+      "latency_ms": 70.669,
+      "src_port": 443,
+      "dst_port": 58993
+    },
+    {
+      "timestamp_ms": 9925.0,
+      "bytes": 2879,
+      "latency_ms": 45.629,
+      "src_port": 8080,
+      "dst_port": 36808
+    },
+    {
+      "timestamp_ms": 10025.0,
+      "bytes": 3034,
+      "latency_ms": 48.256,
+      "src_port": 3306,
+      "dst_port": 43685
+    },
+    {
+      "timestamp_ms": 10125.0,
+      "bytes": 6512,
+      "latency_ms": 52.859,
+      "src_port": 22,
+      "dst_port": 5854
+    },
+    {
+      "timestamp_ms": 10225.0,
+      "bytes": 6527,
+      "latency_ms": 57.516,
+      "src_port": 80,
+      "dst_port": 21911
+    },
+    {
+      "timestamp_ms": 10325.0,
+      "bytes": 6488,
+      "latency_ms": 64.692,
+      "src_port": 8080,
+      "dst_port": 12172
+    },
+    {
+      "timestamp_ms": 10425.0,
+      "bytes": 3658,
+      "latency_ms": 31.165,
+      "src_port": 80,
+      "dst_port": 36875
+    },
+    {
+      "timestamp_ms": 10525.0,
+      "bytes": 4403,
+      "latency_ms": 25.123,
+      "src_port": 8080,
+      "dst_port": 39954
+    },
+    {
+      "timestamp_ms": 10625.0,
+      "bytes": 7237,
+      "latency_ms": 58.046,
+      "src_port": 80,
+      "dst_port": 29291
+    },
+    {
+      "timestamp_ms": 10725.0,
+      "bytes": 6696,
+      "latency_ms": 57.875,
+      "src_port": 22,
+      "dst_port": 11319
+    },
+    {
+      "timestamp_ms": 10825.0,
+      "bytes": 6796,
+      "latency_ms": 62.961,
+      "src_port": 443,
+      "dst_port": 27846
+    },
+    {
+      "timestamp_ms": 10925.0,
+      "bytes": 3317,
+      "latency_ms": 19.871,
+      "src_port": 3306,
+      "dst_port": 18408
+    },
+    {
+      "timestamp_ms": 11025.0,
+      "bytes": 3343,
+      "latency_ms": 27.889,
+      "src_port": 80,
+      "dst_port": 4276
+    },
+    {
+      "timestamp_ms": 11125.0,
+      "bytes": 6154,
+      "latency_ms": 67.873,
+      "src_port": 22,
+      "dst_port": 11089
+    },
+    {
+      "timestamp_ms": 11225.0,
+      "bytes": 6528,
+      "latency_ms": 60.294,
+      "src_port": 80,
+      "dst_port": 20327
+    },
+    {
+      "timestamp_ms": 11325.0,
+      "bytes": 6719,
+      "latency_ms": 47.475,
+      "src_port": 22,
+      "dst_port": 14109
+    },
+    {
+      "timestamp_ms": 11425.0,
+      "bytes": 3695,
+      "latency_ms": 38.898,
+      "src_port": 8080,
+      "dst_port": 65056
+    },
+    {
+      "timestamp_ms": 11525.0,
+      "bytes": 4086,
+      "latency_ms": 44.487,
+      "src_port": 8080,
+      "dst_port": 52461
+    },
+    {
+      "timestamp_ms": 11625.0,
+      "bytes": 6175,
+      "latency_ms": 66.96,
+      "src_port": 8080,
+      "dst_port": 6996
+    },
+    {
+      "timestamp_ms": 11725.0,
+      "bytes": 6282,
+      "latency_ms": 52.297,
+      "src_port": 8080,
+      "dst_port": 59055
+    },
+    {
+      "timestamp_ms": 11825.0,
+      "bytes": 6334,
+      "latency_ms": 64.357,
+      "src_port": 80,
+      "dst_port": 18279
+    },
+    {
+      "timestamp_ms": 11925.0,
+      "bytes": 3245,
+      "latency_ms": 37.89,
+      "src_port": 8080,
+      "dst_port": 38002
+    },
+    {
+      "timestamp_ms": 12025.0,
+      "bytes": 4041,
+      "latency_ms": 41.309,
+      "src_port": 80,
+      "dst_port": 6640
+    },
+    {
+      "timestamp_ms": 12125.0,
+      "bytes": 6187,
+      "latency_ms": 44.179,
+      "src_port": 22,
+      "dst_port": 64640
+    },
+    {
+      "timestamp_ms": 12225.0,
+      "bytes": 6510,
+      "latency_ms": 52.821,
+      "src_port": 80,
+      "dst_port": 56126
+    },
+    {
+      "timestamp_ms": 12325.0,
+      "bytes": 6177,
+      "latency_ms": 67.92,
+      "src_port": 3306,
+      "dst_port": 46051
+    },
+    {
+      "timestamp_ms": 12425.0,
+      "bytes": 3766,
+      "latency_ms": 26.577,
+      "src_port": 443,
+      "dst_port": 32236
+    },
+    {
+      "timestamp_ms": 12525.0,
+      "bytes": 3394,
+      "latency_ms": 44.554,
+      "src_port": 80,
+      "dst_port": 33929
+    },
+    {
+      "timestamp_ms": 12625.0,
+      "bytes": 6119,
+      "latency_ms": 54.781,
+      "src_port": 3306,
+      "dst_port": 45426
+    },
+    {
+      "timestamp_ms": 12725.0,
+      "bytes": 6696,
+      "latency_ms": 59.389,
+      "src_port": 22,
+      "dst_port": 12353
+    },
+    {
+      "timestamp_ms": 12825.0,
+      "bytes": 6700,
+      "latency_ms": 58.097,
+      "src_port": 443,
+      "dst_port": 54007
+    },
+    {
+      "timestamp_ms": 12925.0,
+      "bytes": 3536,
+      "latency_ms": 37.764,
+      "src_port": 80,
+      "dst_port": 45793
+    },
+    {
+      "timestamp_ms": 13025.0,
+      "bytes": 2395,
+      "latency_ms": 48.568,
+      "src_port": 443,
+      "dst_port": 55688
+    },
+    {
+      "timestamp_ms": 13125.0,
+      "bytes": 6245,
+      "latency_ms": 55.064,
+      "src_port": 80,
+      "dst_port": 6727
+    },
+    {
+      "timestamp_ms": 13225.0,
+      "bytes": 6231,
+      "latency_ms": 66.507,
+      "src_port": 8080,
+      "dst_port": 57163
+    },
+    {
+      "timestamp_ms": 13325.0,
+      "bytes": 6436,
+      "latency_ms": 70.921,
+      "src_port": 80,
+      "dst_port": 52571
+    },
+    {
+      "timestamp_ms": 13425.0,
+      "bytes": 3357,
+      "latency_ms": 22.331,
+      "src_port": 22,
+      "dst_port": 8398
+    },
+    {
+      "timestamp_ms": 13525.0,
+      "bytes": 3329,
+      "latency_ms": 37.9,
+      "src_port": 3306,
+      "dst_port": 39210
+    },
+    {
+      "timestamp_ms": 13625.0,
+      "bytes": 6543,
+      "latency_ms": 36.336,
+      "src_port": 80,
+      "dst_port": 37900
+    },
+    {
+      "timestamp_ms": 13725.0,
+      "bytes": 6613,
+      "latency_ms": 42.748,
+      "src_port": 3306,
+      "dst_port": 58704
+    },
+    {
+      "timestamp_ms": 13825.0,
+      "bytes": 6299,
+      "latency_ms": 68.549,
+      "src_port": 22,
+      "dst_port": 43936
+    },
+    {
+      "timestamp_ms": 13925.0,
+      "bytes": 3022,
+      "latency_ms": 36.239,
+      "src_port": 80,
+      "dst_port": 12309
+    },
+    {
+      "timestamp_ms": 14025.0,
+      "bytes": 3468,
+      "latency_ms": 40.502,
+      "src_port": 3306,
+      "dst_port": 45641
+    },
+    {
+      "timestamp_ms": 14125.0,
+      "bytes": 6465,
+      "latency_ms": 57.362,
+      "src_port": 8080,
+      "dst_port": 46277
+    },
+    {
+      "timestamp_ms": 14225.0,
+      "bytes": 6545,
+      "latency_ms": 76.499,
+      "src_port": 8080,
+      "dst_port": 59811
+    },
+    {
+      "timestamp_ms": 14325.0,
+      "bytes": 6278,
+      "latency_ms": 66.523,
+      "src_port": 8080,
+      "dst_port": 21402
+    },
+    {
+      "timestamp_ms": 14425.0,
+      "bytes": 3422,
+      "latency_ms": 46.421,
+      "src_port": 80,
+      "dst_port": 64757
+    },
+    {
+      "timestamp_ms": 14525.0,
+      "bytes": 3627,
+      "latency_ms": 31.058,
+      "src_port": 22,
+      "dst_port": 51750
+    },
+    {
+      "timestamp_ms": 14625.0,
+      "bytes": 6627,
+      "latency_ms": 52.959,
+      "src_port": 22,
+      "dst_port": 40671
+    },
+    {
+      "timestamp_ms": 14725.0,
+      "bytes": 6362,
+      "latency_ms": 54.888,
+      "src_port": 443,
+      "dst_port": 60886
+    },
+    {
+      "timestamp_ms": 14825.0,
+      "bytes": 6757,
+      "latency_ms": 45.307,
+      "src_port": 3306,
+      "dst_port": 57856
+    },
+    {
+      "timestamp_ms": 14925.0,
+      "bytes": 3416,
+      "latency_ms": 37.422,
+      "src_port": 443,
+      "dst_port": 5324
+    },
+    {
+      "timestamp_ms": 15025.0,
+      "bytes": 3344,
+      "latency_ms": 46.024,
+      "src_port": 443,
+      "dst_port": 52175
+    },
+    {
+      "timestamp_ms": 15125.0,
+      "bytes": 6927,
+      "latency_ms": 43.461,
+      "src_port": 80,
+      "dst_port": 12410
+    },
+    {
+      "timestamp_ms": 15225.0,
+      "bytes": 6733,
+      "latency_ms": 77.707,
+      "src_port": 80,
+      "dst_port": 17374
+    },
+    {
+      "timestamp_ms": 15325.0,
+      "bytes": 6610,
+      "latency_ms": 60.665,
+      "src_port": 8080,
+      "dst_port": 47202
+    },
+    {
+      "timestamp_ms": 15425.0,
+      "bytes": 3605,
+      "latency_ms": 44.1,
+      "src_port": 22,
+      "dst_port": 34127
+    },
+    {
+      "timestamp_ms": 15525.0,
+      "bytes": 2867,
+      "latency_ms": 48.662,
+      "src_port": 80,
+      "dst_port": 16879
+    },
+    {
+      "timestamp_ms": 15625.0,
+      "bytes": 6173,
+      "latency_ms": 69.645,
+      "src_port": 443,
+      "dst_port": 63972
+    },
+    {
+      "timestamp_ms": 15725.0,
+      "bytes": 6819,
+      "latency_ms": 50.335,
+      "src_port": 8080,
+      "dst_port": 23584
+    },
+    {
+      "timestamp_ms": 15825.0,
+      "bytes": 6883,
+      "latency_ms": 78.153,
+      "src_port": 80,
+      "dst_port": 19706
+    },
+    {
+      "timestamp_ms": 15925.0,
+      "bytes": 3610,
+      "latency_ms": 35.548,
+      "src_port": 3306,
+      "dst_port": 52130
+    },
+    {
+      "timestamp_ms": 16025.0,
+      "bytes": 4173,
+      "latency_ms": 30.687,
+      "src_port": 443,
+      "dst_port": 45437
+    },
+    {
+      "timestamp_ms": 16125.0,
+      "bytes": 6636,
+      "latency_ms": 73.988,
+      "src_port": 3306,
+      "dst_port": 2338
+    },
+    {
+      "timestamp_ms": 16225.0,
+      "bytes": 7103,
+      "latency_ms": 40.355,
+      "src_port": 80,
+      "dst_port": 32094
+    },
+    {
+      "timestamp_ms": 16325.0,
+      "bytes": 6929,
+      "latency_ms": 52.38,
+      "src_port": 3306,
+      "dst_port": 53509
+    },
+    {
+      "timestamp_ms": 16425.0,
+      "bytes": 3766,
+      "latency_ms": 35.405,
+      "src_port": 8080,
+      "dst_port": 47734
+    },
+    {
+      "timestamp_ms": 16525.0,
+      "bytes": 3991,
+      "latency_ms": 32.048,
+      "src_port": 22,
+      "dst_port": 59710
+    },
+    {
+      "timestamp_ms": 16625.0,
+      "bytes": 6268,
+      "latency_ms": 66.487,
+      "src_port": 8080,
+      "dst_port": 15324
+    },
+    {
+      "timestamp_ms": 16725.0,
+      "bytes": 5985,
+      "latency_ms": 63.124,
+      "src_port": 3306,
+      "dst_port": 27051
+    },
+    {
+      "timestamp_ms": 16825.0,
+      "bytes": 6463,
+      "latency_ms": 59.385,
+      "src_port": 8080,
+      "dst_port": 37819
+    },
+    {
+      "timestamp_ms": 16925.0,
+      "bytes": 3211,
+      "latency_ms": 24.048,
+      "src_port": 8080,
+      "dst_port": 45877
+    },
+    {
+      "timestamp_ms": 17025.0,
+      "bytes": 3598,
+      "latency_ms": 37.282,
+      "src_port": 8080,
+      "dst_port": 43006
+    },
+    {
+      "timestamp_ms": 17125.0,
+      "bytes": 6371,
+      "latency_ms": 67.171,
+      "src_port": 8080,
+      "dst_port": 13368
+    },
+    {
+      "timestamp_ms": 17225.0,
+      "bytes": 6850,
+      "latency_ms": 73.774,
+      "src_port": 80,
+      "dst_port": 53808
+    },
+    {
+      "timestamp_ms": 17325.0,
+      "bytes": 6898,
+      "latency_ms": 45.763,
+      "src_port": 22,
+      "dst_port": 44312
+    },
+    {
+      "timestamp_ms": 17425.0,
+      "bytes": 3418,
+      "latency_ms": 39.974,
+      "src_port": 80,
+      "dst_port": 43976
+    },
+    {
+      "timestamp_ms": 17525.0,
+      "bytes": 3207,
+      "latency_ms": 35.138,
+      "src_port": 22,
+      "dst_port": 27539
+    },
+    {
+      "timestamp_ms": 17625.0,
+      "bytes": 6428,
+      "latency_ms": 61.732,
+      "src_port": 3306,
+      "dst_port": 54502
+    },
+    {
+      "timestamp_ms": 17725.0,
+      "bytes": 6707,
+      "latency_ms": 74.97,
+      "src_port": 443,
+      "dst_port": 46002
+    },
+    {
+      "timestamp_ms": 17825.0,
+      "bytes": 5900,
+      "latency_ms": 56.215,
+      "src_port": 8080,
+      "dst_port": 34271
+    },
+    {
+      "timestamp_ms": 17925.0,
+      "bytes": 3433,
+      "latency_ms": 40.803,
+      "src_port": 3306,
+      "dst_port": 12894
+    },
+    {
+      "timestamp_ms": 18025.0,
+      "bytes": 3392,
+      "latency_ms": 45.857,
+      "src_port": 8080,
+      "dst_port": 48549
+    },
+    {
+      "timestamp_ms": 18125.0,
+      "bytes": 6712,
+      "latency_ms": 44.161,
+      "src_port": 443,
+      "dst_port": 63081
+    },
+    {
+      "timestamp_ms": 18225.0,
+      "bytes": 6364,
+      "latency_ms": 51.824,
+      "src_port": 80,
+      "dst_port": 15589
+    },
+    {
+      "timestamp_ms": 18325.0,
+      "bytes": 6144,
+      "latency_ms": 73.03,
+      "src_port": 8080,
+      "dst_port": 28580
+    },
+    {
+      "timestamp_ms": 18425.0,
+      "bytes": 3574,
+      "latency_ms": 26.284,
+      "src_port": 8080,
+      "dst_port": 39399
+    },
+    {
+      "timestamp_ms": 18525.0,
+      "bytes": 3313,
+      "latency_ms": 53.778,
+      "src_port": 22,
+      "dst_port": 4541
+    },
+    {
+      "timestamp_ms": 18625.0,
+      "bytes": 6809,
+      "latency_ms": 50.148,
+      "src_port": 3306,
+      "dst_port": 5691
+    },
+    {
+      "timestamp_ms": 18725.0,
+      "bytes": 6273,
+      "latency_ms": 61.142,
+      "src_port": 80,
+      "dst_port": 57876
+    },
+    {
+      "timestamp_ms": 18825.0,
+      "bytes": 6318,
+      "latency_ms": 48.861,
+      "src_port": 22,
+      "dst_port": 4567
+    },
+    {
+      "timestamp_ms": 18925.0,
+      "bytes": 3637,
+      "latency_ms": 30.853,
+      "src_port": 443,
+      "dst_port": 23481
+    },
+    {
+      "timestamp_ms": 19025.0,
+      "bytes": 3117,
+      "latency_ms": 42.011,
+      "src_port": 22,
+      "dst_port": 10410
+    },
+    {
+      "timestamp_ms": 19125.0,
+      "bytes": 6275,
+      "latency_ms": 74.5,
+      "src_port": 80,
+      "dst_port": 32978
+    },
+    {
+      "timestamp_ms": 19225.0,
+      "bytes": 5989,
+      "latency_ms": 85.507,
+      "src_port": 8080,
+      "dst_port": 42606
+    },
+    {
+      "timestamp_ms": 19325.0,
+      "bytes": 6858,
+      "latency_ms": 63.91,
+      "src_port": 443,
+      "dst_port": 50909
+    },
+    {
+      "timestamp_ms": 19425.0,
+      "bytes": 3567,
+      "latency_ms": 22.038,
+      "src_port": 443,
+      "dst_port": 33108
+    },
+    {
+      "timestamp_ms": 19525.0,
+      "bytes": 3633,
+      "latency_ms": 18.029,
+      "src_port": 443,
+      "dst_port": 41294
+    },
+    {
+      "timestamp_ms": 19625.0,
+      "bytes": 6160,
+      "latency_ms": 64.286,
+      "src_port": 22,
+      "dst_port": 64287
+    },
+    {
+      "timestamp_ms": 19725.0,
+      "bytes": 6466,
+      "latency_ms": 60.137,
+      "src_port": 3306,
+      "dst_port": 14092
+    },
+    {
+      "timestamp_ms": 19825.0,
+      "bytes": 6396,
+      "latency_ms": 35.697,
+      "src_port": 8080,
+      "dst_port": 50624
+    },
+    {
+      "timestamp_ms": 19925.0,
+      "bytes": 3613,
+      "latency_ms": 29.366,
+      "src_port": 80,
+      "dst_port": 42094
+    },
+    {
+      "timestamp_ms": 20025.0,
+      "bytes": 3474,
+      "latency_ms": 27.875,
+      "src_port": 8080,
+      "dst_port": 21477
+    }
+  ]
+}

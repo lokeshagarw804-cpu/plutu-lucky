@@ -1,0 +1,40 @@
+author_name = "Lokesh Agarwal"
+author_email = "lokeshagarw804@gmail.com"
+category = "networking"
+difficulty = "hard"
+tags = ["networking", "traffic-analysis", "metrics", "anomaly-detection", "debugging"]
+
+difficulty_explanation = "Four interacting defects across four modules. Bugs involve unit conversion, statistical formula confusion, natural vs lexicographic sorting, and operator precedence in a composite scoring formula. Fixing any single bug alone does not produce correct output — the anomaly detector depends on correct bandwidth units, correct jitter, and the right formula simultaneously."
+solution_explanation = "Fix bandwidth to divide by seconds not milliseconds, replace std-dev jitter with mean-absolute-consecutive-difference, sort interfaces by numeric suffix, and replace the product-based anomaly formula with the intended weighted sum."
+verification_explanation = "Tests check interface ordering, bandwidth magnitude, jitter ranges, anomaly count, top anomaly interface, and score bounds. A mix of exact and range assertions ensures all bugs must be fixed without leaking the specific fix."
+expert_time_estimate_hours = 3.0
+
+[task]
+name = "flow-metric-engine"
+description = "Debug a network flow metrics engine with four interacting defects across bandwidth calculation, jitter statistics, interface ordering, and anomaly scoring. Bugs involve unit errors, formula confusion, and sorting semantics."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding units in throughput math, statistical definitions of jitter vs standard deviation, natural sort vs string sort, and reading a composite formula for operator precedence errors. Defects interact — anomaly detection depends on all three upstream fixes being correct."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.main"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the flow engine then validates output via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all four defects and re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
+
+[agent]
+timeout_sec = 900
