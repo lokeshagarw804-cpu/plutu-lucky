@@ -39,13 +39,13 @@ Output is written to `/app/runtime/output/`:
 When working correctly, the system should:
 
 1. Process 3 IR blocks containing 20 variables (v0 through v19) total
-2. Compute correct live intervals using half-open interval representation [start, end)
+2. Compute correct live intervals for all variables
 3. Build an interference graph with exactly 64 conflict edges
 4. The maximum variable degree in the interference graph should be 11
 5. Variable v0 should have live interval [0, 8]
 6. Variables v7 and v8 have adjacent live ranges — v7 should have degree 4 and v8 should have degree 6
-7. Calculate spill costs using exponential loop nesting factor — variable v19 (in a depth-2 loop) should have spill cost approximately 66.6667
-8. Apply Chaitin-Briggs simplification with the strict threshold (degree < K, not degree <= K)
+7. Variable v19 (in a depth-2 loop) should have spill cost approximately 66.6667
+8. Apply Chaitin-Briggs simplification to identify spill candidates
 9. Exactly 6 variables should be spilled: v2, v6, v9, v12, v13, v17
 10. Exactly 14 variables should be allocated to registers
 11. All 4 registers (R0, R1, R2, R3) must be used
@@ -63,7 +63,7 @@ The allocation must satisfy the interference constraint: no two variables assign
 | Field | Type | Description |
 |-------|------|-------------|
 | variables | object | Per-variable allocation details, keyed by variable name (v0-v19) |
-| variables[].interval | array[int, int] | Live interval as [start, end) half-open pair |
+| variables[].interval | array[int, int] | Live interval pair |
 | variables[].degree | integer | Number of interfering neighbors in the graph |
 | variables[].spill_cost | float | Computed spill priority cost |
 | variables[].spilled | boolean | Whether the variable was spilled to stack |
@@ -83,12 +83,11 @@ Plain text summary with allocation counts and per-variable assignment listing.
 - The system uses K=4 registers (R0, R1, R2, R3)
 - Variables that cannot be colored are spilled to STACK
 - Spill cost determines which variable to evict when simplification stalls
-- The interference check uses half-open interval overlap semantics
-- Loop nesting should exponentially increase spill cost (base weight from config)
+- Loop nesting should increase spill cost for deeply nested variables (base weight from config)
 
 ## System Environment
 
-- *Global system-wide tooling*: uv and pytest are available
+- Global system-wide tooling: uv and pytest are available
 
 ## Notes
 

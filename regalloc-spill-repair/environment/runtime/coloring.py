@@ -28,8 +28,7 @@ def assign_colors(stack, adjacency, num_registers):
             if color is not None:
                 used_colors.add(color)
             else:
-                # Neighbor not yet colored or was removed - treat as
-                # potentially conflicting at register 0 to be safe
+                # Conservative constraint for unassigned neighbors
                 if neighbor in coloring:
                     used_colors.add(coloring[neighbor])
                 else:

@@ -1,6 +1,6 @@
 """Repair script for the register allocation system.
 
-Fixes four subtle bugs in the liveness, simplifier, spill cost,
+Fixes four semantic defects across the liveness, simplifier, spill cost,
 and coloring modules.
 """
 
@@ -18,10 +18,10 @@ def write_file(path, content):
 
 
 def fix_liveness():
-    """Fix Bug A: liveness intervals must use exclusive end points.
+    """Fix Bug A: liveness interval endpoints must be exclusive.
     
-    The interference graph uses half-open interval comparison [start, end),
-    so the liveness module must produce end = last_use + 1, not last_use.
+    The interference module checks overlap with start_a < end_b and start_b < end_a,
+    which requires intervals to use exclusive end points (end = last_use + 1).
     """
     path = "/app/runtime/liveness.py"
     content = read_file(path)
@@ -55,10 +55,9 @@ def fix_liveness():
 
 
 def fix_simplifier():
-    """Fix Bug B: simplification threshold must be < K, not <= K.
+    """Fix Bug B: simplification threshold must be strict less-than.
     
-    A node with degree < K can always be colored (K-1 neighbors use at most
-    K-1 colors, leaving at least 1 available). Degree == K may not be safe.
+    A node with degree < K can always be colored. Degree == K is not guaranteed.
     """
     path = "/app/runtime/simplifier.py"
     content = read_file(path)
@@ -69,22 +68,21 @@ def fix_simplifier():
     )
     
     write_file(path, content)
-    print("Fixed simplifier.py: degree threshold now uses strict less-than")
+    print("Fixed simplifier.py: degree threshold corrected")
 
 
 def fix_spill_cost():
-    """Fix Bug C: loop depth factor must use exponentiation, not multiplication.
+    """Fix Bug C: loop depth factor must use exponentiation.
     
     The cost formula should be: (uses + defs) * base_weight^loop_depth / degree
-    Using multiplication (base_weight * loop_depth) underestimates deeply nested costs.
     """
     path = "/app/runtime/spill_cost.py"
     content = read_file(path)
     
     content = content.replace(
-        '        # Apply loop nesting factor: deeper nesting = higher cost\n'
+        '        # Apply loop depth scaling factor\n'
         '        loop_factor = base_weight * loop_depth if loop_depth > 0 else 1',
-        '        # Apply loop nesting factor: deeper nesting = higher cost\n'
+        '        # Apply loop depth scaling factor\n'
         '        loop_factor = base_weight ** loop_depth'
     )
     
@@ -93,10 +91,9 @@ def fix_spill_cost():
 
 
 def fix_coloring():
-    """Fix Bug D: coloring must not add phantom constraints from uncolored neighbors.
+    """Fix Bug D: uncolored neighbors must not contribute color constraints.
     
-    When a neighbor hasn't been colored yet, it should not contribute any
-    color constraint. Adding 0 for uncolored neighbors wastes register 0.
+    When a neighbor hasn't been colored yet, it should not block any register.
     """
     path = "/app/runtime/coloring.py"
     content = read_file(path)
@@ -109,8 +106,7 @@ def fix_coloring():
         '            if color is not None:\n'
         '                used_colors.add(color)\n'
         '            else:\n'
-        '                # Neighbor not yet colored or was removed - treat as\n'
-        '                # potentially conflicting at register 0 to be safe\n'
+        '                # Conservative constraint for unassigned neighbors\n'
         '                if neighbor in coloring:\n'
         '                    used_colors.add(coloring[neighbor])\n'
         '                else:\n'
@@ -124,7 +120,7 @@ def fix_coloring():
     )
     
     write_file(path, content)
-    print("Fixed coloring.py: uncolored neighbors no longer add phantom constraints")
+    print("Fixed coloring.py: uncolored neighbors no longer add constraints")
 
 
 if __name__ == "__main__":

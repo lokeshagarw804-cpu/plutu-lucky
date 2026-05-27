@@ -1,9 +1,8 @@
 """Graph simplification using Chaitin-Briggs algorithm.
 
-The simplification phase iteratively removes nodes from the interference
-graph that can be trivially colored. A node with degree less than K
-(number of available registers) can always be colored, since even in
-the worst case its neighbors use at most K-1 colors.
+The simplification phase iteratively removes low-degree nodes from the
+interference graph. Nodes that can be trivially colored are pushed onto
+a stack for later assignment; remaining nodes are spill candidates.
 """
 
 import configparser
@@ -26,7 +25,7 @@ def simplify_graph(adjacency, spill_costs):
         spilled: set of variables that must be spilled
     
     Algorithm:
-        1. Find a node with degree <= K (can be trivially colored)
+        1. Find a low-degree node that can be trivially colored
         2. Push it onto the stack with its current neighbors
         3. Remove it from the graph (reduce neighbors' degrees)
         4. Repeat until no more simplifiable nodes
@@ -41,7 +40,7 @@ def simplify_graph(adjacency, spill_costs):
     spilled = set()
     
     while working:
-        # Find a node that can be simplified (degree <= K)
+        # Find a node that can be simplified
         simplifiable = None
         for var in sorted(working.keys()):
             if len(working[var]) <= num_registers:

@@ -51,10 +51,10 @@ def compute_variable_usage(blocks):
 def compute_spill_costs(blocks, adjacency):
     """Compute spill cost for each variable.
     
-    Formula: cost = (uses + defs) * base_weight * loop_depth_factor / degree
+    Formula: cost = (uses + defs) * loop_depth_factor / degree
     
-    The loop depth factor increases cost exponentially for variables in
-    deeply nested loops, making them less desirable to spill.
+    The loop depth factor scales cost based on nesting level, making
+    variables in deeper loops less desirable to spill.
     """
     base_weight = load_spill_config()
     usage = compute_variable_usage(blocks)
@@ -68,7 +68,7 @@ def compute_spill_costs(blocks, adjacency):
         use_def_count = info["uses"] + info["defs"]
         loop_depth = info["max_loop_depth"]
         
-        # Apply loop nesting factor: deeper nesting = higher cost
+        # Apply loop depth scaling factor
         loop_factor = base_weight * loop_depth if loop_depth > 0 else 1
         
         cost = use_def_count * loop_factor / degree

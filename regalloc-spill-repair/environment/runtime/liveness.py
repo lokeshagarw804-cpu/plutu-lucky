@@ -1,7 +1,8 @@
 """Compute live intervals for variables across all blocks.
 
-Each variable gets a live interval [start, end] representing the range
-of instruction indices where the variable is live (from first def to last use).
+Each variable gets a live interval representing the range of instruction
+indices where the variable is active (from first definition to last use).
+The interval [start, end] covers the complete lifetime of the variable.
 """
 
 
@@ -36,7 +37,7 @@ def compute_live_intervals(blocks):
             
             global_index += 1
     
-    # Convert to tuples with end point representing last use position
+    # Convert to tuples
     result = {}
     for var, (start, end) in intervals.items():
         result[var] = (start, end)
