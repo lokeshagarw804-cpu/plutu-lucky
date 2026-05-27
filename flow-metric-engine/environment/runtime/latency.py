@@ -1,7 +1,7 @@
 """Latency analyzer — computes percentile latencies and jitter.
 
 Processes per-packet latency measurements to produce windowed statistics
-including configurable percentile calculations and inter-packet jitter.
+including percentile calculations and jitter variability metrics.
 """
 import configparser
 import math
@@ -17,12 +17,7 @@ class LatencyAnalyzer:
         self._percentile = self._config.getint("metrics", "percentile")
 
     def compute(self, interface_data):
-        """Calculate per-window latency percentile and jitter.
-
-        Percentile uses linear interpolation on sorted window samples.
-        Jitter is the mean absolute difference between consecutive
-        latency measurements within each window.
-        """
+        """Calculate per-window latency statistics."""
         packets = interface_data["packets"]
         results = []
 
@@ -43,18 +38,13 @@ class LatencyAnalyzer:
         return results
 
     def _compute_percentile(self, values, percentile):
-        """Compute the given percentile using linear interpolation.
-
-        Sorts values and finds position. For the Pth percentile with N
-        values, the rank is (P/100) * (N - 1). Uses linear interpolation
-        between adjacent ranks.
-        """
+        """Compute the given percentile with interpolation."""
         sorted_vals = sorted(values)
         n = len(sorted_vals)
         if n == 0:
             return 0.0
 
-        rank = (percentile / 100.0) * (n - 1)
+        rank = (percentile / 100.0) * n
         lower = int(rank)
         upper = lower + 1
         frac = rank - lower
@@ -65,11 +55,7 @@ class LatencyAnalyzer:
             return sorted_vals[lower]
 
     def _compute_jitter(self, latencies):
-        """Compute jitter as mean absolute difference of consecutive values.
-
-        Jitter measures the variability between adjacent measurements,
-        defined as (1/(N-1)) * sum(|lat[i+1] - lat[i]|) for i in 0..N-2.
-        """
+        """Compute jitter variability for a window of latency samples."""
         n = len(latencies)
         if n < 2:
             return 0.0

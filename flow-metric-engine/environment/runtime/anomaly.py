@@ -1,9 +1,8 @@
 """Anomaly detector — identifies abnormal traffic flows.
 
-Computes a composite anomaly score for each interface using weighted
-combination of normalized bandwidth, latency percentile, and jitter
-metrics. Flags interfaces where the score exceeds the threshold for
-a minimum number of consecutive windows.
+Computes a composite anomaly score for each interface from normalized
+per-window metrics. Flags interfaces where the score exceeds the
+configured threshold for a minimum number of consecutive windows.
 """
 import configparser
 
@@ -22,8 +21,8 @@ class AnomalyDetector:
     def detect(self, interfaces, bw_results, lat_results):
         """Detect anomalous interfaces based on composite scoring.
 
-        Score = w0 * norm_bandwidth + w1 * norm_p95_latency + w2 * norm_jitter
-        where normalization is min-max across all interfaces for each metric.
+        Uses min-max normalization across all interfaces for each metric,
+        then applies configured weights to produce a per-window score.
 
         Returns list of anomaly records for flagged interfaces.
         """
@@ -64,7 +63,7 @@ class AnomalyDetector:
                 norm_p95 = (lat[idx]["percentile_value"] - p95_min) / p95_range
                 norm_jit = (lat[idx]["jitter"] - jit_min) / jit_range
 
-                score = w0 * (norm_bw + w1) * (norm_p95 + w2) * norm_jit
+                score = w0 * norm_bw + w2 * norm_p95 + w1 * norm_jit
 
                 scores.append(round(score, 6))
 

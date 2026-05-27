@@ -4,12 +4,11 @@ import sys
 
 
 def patch_bandwidth():
-    """Fix bandwidth calculation: divide by seconds not milliseconds."""
+    """Fix bandwidth units: divide by seconds not milliseconds."""
     path = "/app/runtime/bandwidth.py"
     with open(path, "r") as f:
         content = f.read()
 
-    # Fix Bug E: convert ms to seconds before dividing
     content = content.replace(
         "bandwidth_bps = total_bytes / duration_ms",
         "bandwidth_bps = total_bytes / (duration_ms / 1000.0)"
@@ -20,12 +19,13 @@ def patch_bandwidth():
 
 
 def patch_latency():
-    """Fix jitter computation to use mean absolute consecutive difference."""
+    """Fix jitter to use mean absolute consecutive difference,
+    and fix percentile rank formula off-by-one."""
     path = "/app/runtime/latency.py"
     with open(path, "r") as f:
         content = f.read()
 
-    # Fix Bug B: replace variance-based jitter with consecutive diff
+    # Fix jitter: replace std-dev with mean absolute consecutive diff
     old_jitter = '''        mean_lat = sum(latencies) / n
         variance = sum((lat - mean_lat) ** 2 for lat in latencies) / (n - 1)
         return math.sqrt(variance)'''
@@ -34,6 +34,12 @@ def patch_latency():
         return total_diff / (n - 1)'''
 
     content = content.replace(old_jitter, new_jitter)
+
+    # Fix percentile: rank should use (N-1) not N
+    content = content.replace(
+        "rank = (percentile / 100.0) * n",
+        "rank = (percentile / 100.0) * (n - 1)"
+    )
 
     with open(path, "w") as f:
         f.write(content)
@@ -45,7 +51,6 @@ def patch_matrix():
     with open(path, "r") as f:
         content = f.read()
 
-    # Fix Bug C: sort by numeric suffix
     content = content.replace(
         "interface_ids = sorted(interfaces.keys())",
         "interface_ids = sorted(interfaces.keys(), key=lambda s: int(''.join(c for c in s if c.isdigit())))"
@@ -56,14 +61,14 @@ def patch_matrix():
 
 
 def patch_anomaly():
-    """Fix anomaly scoring formula: weighted sum not product."""
+    """Fix weight assignment: w1 goes to p95, w2 goes to jitter."""
     path = "/app/runtime/anomaly.py"
     with open(path, "r") as f:
         content = f.read()
 
-    # Fix Bug D: replace product formula with correct weighted sum
+    # Weights are swapped: w2 applied to p95 and w1 to jitter, should be reversed
     content = content.replace(
-        "score = w0 * (norm_bw + w1) * (norm_p95 + w2) * norm_jit",
+        "score = w0 * norm_bw + w2 * norm_p95 + w1 * norm_jit",
         "score = w0 * norm_bw + w1 * norm_p95 + w2 * norm_jit"
     )
 

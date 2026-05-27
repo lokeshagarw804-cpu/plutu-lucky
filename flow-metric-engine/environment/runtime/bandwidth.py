@@ -1,8 +1,6 @@
 """Bandwidth calculator — computes per-window throughput metrics.
 
-Calculates bytes-per-second throughput for sliding windows over the
-packet stream. Window duration is derived from the number of packets
-and the sample interval.
+Calculates throughput for sliding windows over the packet stream.
 """
 import configparser
 
@@ -16,12 +14,7 @@ class BandwidthCalculator:
         self._window_size = self._config.getint("metrics", "window_size")
 
     def compute(self, interface_data):
-        """Calculate per-window bandwidth in bytes/second.
-
-        Each window spans window_size consecutive packets. The duration
-        of a window is determined by the timestamp range of packets in
-        that window, converted from milliseconds to seconds.
-        """
+        """Calculate per-window bandwidth for an interface."""
         packets = interface_data["packets"]
         interval_ms = interface_data["sample_interval_ms"]
         results = []
