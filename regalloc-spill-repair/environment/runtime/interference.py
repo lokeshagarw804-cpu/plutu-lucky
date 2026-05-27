@@ -6,10 +6,11 @@ graph is an undirected graph where edges connect interfering variables.
 
 
 def intervals_overlap(interval_a, interval_b):
-    """Check if two intervals overlap.
+    """Check if two intervals overlap using exclusive-end semantics.
     
-    Two intervals overlap when they share at least one common point
-    in the instruction stream.
+    Intervals are assumed to be half-open [start, end) — a variable
+    whose interval ends at position N is NOT live at position N itself.
+    Two intervals [s1, e1) and [s2, e2) overlap iff s1 < e2 and s2 < e1.
     """
     start_a, end_a = interval_a
     start_b, end_b = interval_b

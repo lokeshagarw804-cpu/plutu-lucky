@@ -86,7 +86,11 @@ class TestInterferenceGraph:
         )
 
     def test_v0_interval(self, report):
-        """Variable v0 must have the correct live interval."""
+        """Variable v0 must have the correct live interval.
+        
+        The interval end should reflect exclusive-end semantics as used
+        by the interference overlap check in /app/runtime/interference.py.
+        """
         v0_interval = report["variables"]["v0"]["interval"]
         assert v0_interval == [0, 8], (
             f"v0 interval: expected [0, 8], got {v0_interval}"
@@ -125,7 +129,11 @@ class TestSpillDecisions:
         )
 
     def test_v19_spill_cost(self, report):
-        """Variable v19 must have correct spill cost."""
+        """Variable v19 must have correct spill cost.
+        
+        v19 is at loop_depth=2 with spill_base_weight=10 from config.
+        The depth factor should be base^depth (10^2=100), not base*depth.
+        """
         v19_cost = report["variables"]["v19"]["spill_cost"]
         assert abs(v19_cost - 66.6667) < 0.01, (
             f"v19 spill cost: expected ~66.6667, got {v19_cost}"
@@ -148,7 +156,12 @@ class TestSpillDecisions:
         )
 
     def test_register_zero_usage(self, report):
-        """Register R0 must be assigned to at least 3 variables."""
+        """Register R0 must be assigned to at least 3 variables.
+        
+        If R0 is under-utilized, check whether the coloring phase in
+        /app/runtime/coloring.py adds false constraints from neighbors
+        that have not been assigned a color yet.
+        """
         r0_vars = [
             var for var, info in report["variables"].items()
             if info.get("color") == 0 and not info["spilled"]
