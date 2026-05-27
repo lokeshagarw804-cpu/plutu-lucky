@@ -1,0 +1,15 @@
+{
+  "vehicle_id": "V1",
+  "pings": [
+    {"timestamp": 1000, "lat": 28.5000, "lon": 77.1000, "speed_kmh": 45, "fuel_delta": 0.0, "idle_seconds": 0},
+    {"timestamp": 1030, "lat": 28.5200, "lon": 77.1030, "speed_kmh": 52, "fuel_delta": 0.35, "idle_seconds": 0},
+    {"timestamp": 1060, "lat": 28.5400, "lon": 77.1055, "speed_kmh": 48, "fuel_delta": 0.38, "idle_seconds": 0},
+    {"timestamp": 1090, "lat": 28.5600, "lon": 77.1080, "speed_kmh": 55, "fuel_delta": 0.36, "idle_seconds": 0},
+    {"timestamp": 1120, "lat": 28.5800, "lon": 77.1110, "speed_kmh": 50, "fuel_delta": 0.34, "idle_seconds": 0},
+    {"timestamp": 1150, "lat": 28.6000, "lon": 77.1135, "speed_kmh": 47, "fuel_delta": 0.32, "idle_seconds": 0},
+    {"timestamp": 1480, "lat": 28.6200, "lon": 77.1160, "speed_kmh": 40, "fuel_delta": 0.0, "idle_seconds": 0},
+    {"timestamp": 1510, "lat": 28.6400, "lon": 77.1190, "speed_kmh": 58, "fuel_delta": 0.40, "idle_seconds": 0},
+    {"timestamp": 1540, "lat": 28.6600, "lon": 77.1215, "speed_kmh": 62, "fuel_delta": 0.42, "idle_seconds": 0},
+    {"timestamp": 1570, "lat": 28.6800, "lon": 77.1245, "speed_kmh": 53, "fuel_delta": 0.37, "idle_seconds": 0}
+  ]
+}

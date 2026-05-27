@@ -1,0 +1,40 @@
+author_name = "Lokesh Agarwal"
+author_email = "lokeshagarw804@gmail.com"
+category = "data_pipeline"
+difficulty = "hard"
+tags = ["telemetry", "geospatial", "haversine", "debugging", "data-aggregation"]
+
+difficulty_explanation = "Five interacting defects across distance calculation, trip segmentation, fuel accumulation, weighted scoring, and report ordering. Fixing one bug shifts downstream values so all must be addressed together. Requires understanding Haversine math, accumulator patterns, and weighted-average edge cases."
+solution_explanation = "Fix lat/lon delta swap in Haversine, correct idle threshold from >= to >, change fuel accumulator from = to +=, use sum of applicable weights as denominator in scorer, and sort vehicles by numeric suffix instead of lexicographic string."
+verification_explanation = "Tests validate trip counts, total distance, fuel efficiency ranges, score bounds, ordering, and specific per-vehicle values computed from known input data."
+expert_time_estimate_hours = 3.0
+
+[task]
+name = "fleet-telemetry-repair"
+description = "Debug a fleet telemetry aggregation engine with five interacting defects across Haversine distance, trip segmentation, fuel accumulation, driver scoring, and report ordering."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding geospatial math (Haversine), accumulator bugs, weighted-average edge cases with missing categories, lexicographic vs numeric sorting, and threshold boundary conditions. Defects cascade through the pipeline."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.main"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the telemetry engine then validates output via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all five defects and re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
+
+[agent]
+timeout_sec = 900

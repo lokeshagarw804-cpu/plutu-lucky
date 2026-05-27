@@ -1,0 +1,11 @@
+{
+  "vehicle_id": "V10",
+  "pings": [
+    {"timestamp": 4000, "lat": 28.3000, "lon": 77.0000, "speed_kmh": null, "fuel_delta": 0.0, "idle_seconds": 10},
+    {"timestamp": 4030, "lat": 28.3150, "lon": 77.0015, "speed_kmh": null, "fuel_delta": 0.28, "idle_seconds": 5},
+    {"timestamp": 4060, "lat": 28.3300, "lon": 77.0035, "speed_kmh": null, "fuel_delta": 0.30, "idle_seconds": 0},
+    {"timestamp": 4090, "lat": 28.3450, "lon": 77.0050, "speed_kmh": null, "fuel_delta": 0.32, "idle_seconds": 0},
+    {"timestamp": 4120, "lat": 28.3600, "lon": 77.0070, "speed_kmh": null, "fuel_delta": 0.29, "idle_seconds": 8},
+    {"timestamp": 4150, "lat": 28.3750, "lon": 77.0085, "speed_kmh": null, "fuel_delta": 0.27, "idle_seconds": 0}
+  ]
+}
