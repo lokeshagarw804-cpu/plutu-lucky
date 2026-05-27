@@ -48,6 +48,6 @@ class WindowAggregator:
                 "mean_latency": round(mean_lat, 4),
             })
 
-            pos += self._window_size  # BUG 2: should be self._window_step
+            pos += self._window_size
 
         return windows

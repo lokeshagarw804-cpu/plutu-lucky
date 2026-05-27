@@ -31,7 +31,7 @@ class FlowScorer:
 
             for i, cat in enumerate(self._categories):
                 weight = self._weights[i] * fracs.get(cat, 0.0)
-                total_weight = weight  # BUG 3: should be total_weight += weight
+                total_weight = weight
 
             lat_factor = 1.0 + (win["mean_latency"] / (self._latency_penalty * 100.0))
             score = total_weight * lat_factor

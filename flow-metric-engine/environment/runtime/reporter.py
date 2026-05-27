@@ -44,9 +44,7 @@ class ViolationReporter:
             avg_score = sum(w["raw_score"] for w in scored) / n_windows if n_windows > 0 else 0.0
 
             # Violation density: violations per expected window count
-            # BUG 4: uses packet_count // window_size as denominator
-            # instead of actual n_windows
-            expected_windows = 150 // self._window_size  # hardcoded packet count
+            expected_windows = 150 // self._window_size
             violation_ratio = n_violations / expected_windows if expected_windows > 0 else 0.0
 
             flow_reports.append({
