@@ -1,40 +1,20 @@
+version = "1.0"
+
+[metadata]
 author_name = "Lokesh Agarwal"
 author_email = "lokeshagarw804@gmail.com"
 category = "networking"
 difficulty = "hard"
 tags = ["networking", "traffic-analysis", "classification", "windowing", "debugging"]
+expert_time_estimate_min = 180
+junior_time_estimate_min = 360
 
-difficulty_explanation = "Four interacting defects across four modules. The classifier boundary error changes which packets land in which category, affecting downstream scoring. The aggregator window step error produces far fewer windows, which cascades through scoring and reporting. The scorer accumulation bug zeros out multi-category contributions. The reporter normalization bug uses a hardcoded denominator. Fixing any subset of 3 still fails tests because each bug's effect is independently checked."
-solution_explanation = "Fix boundary comparison to <=, window step to use config value, weight accumulation to +=, and violation ratio denominator to use actual window count."
-verification_explanation = "Tests check exact violation counts, ratios, window totals, classification boundary values, and flow ordering. Each test independently catches a different bug's absence."
-expert_time_estimate_hours = 3.0
-
-[task]
-name = "flow-metric-engine"
-description = "Debug a packet flow metrics engine with four interacting defects across classification boundaries, window stepping, score accumulation, and ratio normalization."
-
-[task.difficulty]
-level = "hard"
-reasoning = "Bugs interact across module boundaries. The scorer bug produces plausible-looking scores (only last category weight). The reporter bug uses a hardcoded value that happens to match the buggy aggregator output. Fixing the aggregator without the reporter causes ratio overflow. Each fix changes downstream behavior in non-obvious ways."
-
-[task.runtime]
+[environment]
+dockerfile = "environment/Dockerfile"
 entrypoint = "python3 -m runtime.main"
-language = "python"
-dependencies = "stdlib-only"
 
-[task.validator]
-command = "bash tests/test.sh"
-description = "Runs the flow engine then validates output via pytest."
-
-[task.repair]
-command = "bash solution/solve.sh"
-description = "Patches all four defects and re-runs the system."
-
-[task.resources]
-timeout = 300
-cpu = 2
-memory = "2GB"
-disk = "1GB"
+[verifier]
+test_script = "tests/test.sh"
 
 [agent]
 timeout_sec = 900
