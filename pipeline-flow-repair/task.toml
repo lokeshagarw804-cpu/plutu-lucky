@@ -9,6 +9,9 @@ tags = ["pipeline-monitoring", "pressure-analysis", "anomaly-detection", "debugg
 expert_time_estimate_min = 180
 junior_time_estimate_min = 360
 
+[task]
+name = "parsewave/pipeline-flow-repair"
+
 [environment]
 dockerfile = "environment/Dockerfile"
 entrypoint = "python3 -m runtime.main"
