@@ -1,37 +1,36 @@
+version = "1.0"
+
+[metadata]
 author_name = "Lokesh Agarwal"
 author_email = "lokeshagarw804@gmail.com"
 category = "signal_processing"
 difficulty = "hard"
 tags = ["signal-processing", "numerical-computing", "time-series", "finite-difference", "debugging"]
-
 difficulty_explanation = "Five interacting defects across six modules require understanding numerical differentiation, cubic spline boundary conditions, sliding window mechanics, bidirectional threshold detection, and the relationship between gradient computation denominators and event detection sensitivity. Bugs cannot be identified from the instruction document alone — they require tracing data flow and understanding mathematical properties of finite differences and interpolation."
 solution_explanation = "Fix gradient denominator from segment_length to delta_time for correct dP/dt computation, fix aggregator window slice off-by-one from (window_size-1) to (window_size), use abs() for bidirectional threshold comparison in threshold_engine, classify events by dominant gradient sign (surge vs leak), and implement clamped boundary conditions in the cubic spline interpolator."
 verification_explanation = "Tests validate segment ordering, event counts and types, gradient magnitude ranges, window counts, and per-segment event classification. Tests use range assertions and type checks rather than exact floating-point values to avoid trivially leaking the solution while still requiring all bugs to be fixed for passage."
-expert_time_estimate_hours = 3.5
+expert_time_estimate_min = 210
+junior_time_estimate_min = 480
+task_name = "pipeline-pressure-monitor"
+task_description = "Debug a pipeline pressure monitoring system with five interacting defects across gradient computation, rolling window aggregation, threshold detection, event classification, and cubic spline interpolation. Bugs involve numerical computing subtleties, not simple configuration errors."
 
-[task]
-name = "pipeline-pressure-monitor"
-description = "Debug a pipeline pressure monitoring system with five interacting defects across gradient computation, rolling window aggregation, threshold detection, event classification, and cubic spline interpolation. Bugs involve numerical computing subtleties, not simple configuration errors."
-
-[task.difficulty]
-level = "hard"
-reasoning = "Requires understanding finite difference denominators, sliding window boundary arithmetic, bidirectional magnitude thresholding, gradient-based event classification, and cubic spline boundary conditions. Defects interact — fixing the gradient denominator changes magnitudes that determine whether threshold detection triggers events."
-
-[task.runtime]
-entrypoint = "python3 -m runtime.run_pipeline"
-language = "python"
-dependencies = "stdlib-only"
-
-[task.validator]
+[verifier]
 command = "bash tests/test.sh"
 description = "Runs the pipeline monitor then validates output via pytest."
 
-[task.repair]
-command = "bash solution/solve.sh"
-description = "Patches all five defects and re-runs the system."
-
-[task.resources]
+[environment]
+dockerfile = "environment/Dockerfile"
+entrypoint = "python3 -m runtime.run_pipeline"
+language = "python"
+dependencies = "stdlib-only"
 timeout = 300
 cpu = 2
 memory = "2GB"
 disk = "1GB"
+
+[solution]
+command = "bash solution/solve.sh"
+description = "Patches all five defects and re-runs the system."
+
+[agent]
+timeout = 900
