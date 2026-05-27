@@ -13,28 +13,27 @@ Particle collision simulation. Loads particle positions from three simulation st
 
 1. **Load** — Read particle position streams from simulation data files.
 2. **Hash** — Assign particles to spatial grid cells for broad-phase detection.
-3. **Detect** — Check particle pairs in nearby cells for actual collisions.
-4. **Resolve** — Compute collision responses and update velocity history.
+3. **Detect** — Check particle pairs in nearby cells for actual collisions within the configured radius.
+4. **Resolve** — Compute elastic collision impulse using standard restitution formula. Every detected pair gets a response computed — do not skip or filter any pairs.
 5. **Report** — Generate collision statistics and summary metrics.
 
 ## Symptoms
 
-Some collisions go undetected. Collision response values seem off. Statistics don't match expected particle interaction counts.
+Some collisions go undetected. Response velocity values are wrong. Statistics don't match expected counts.
 
 ## Expected output
 
-- `/app/runtime/output/collisions.json`: list of objects with `pair`(list[str]), `cell`(list[int]), `response_velocity`(float), `restitution`(float)
-- `/app/runtime/output/summary.json`: `total_collisions`(int), `unique_pairs`(int), `avg_response_velocity`(float), `max_response_velocity`(float), `cells_with_collisions`(int)
+- `/app/runtime/output/collisions.json`: list with `pair`(list[str]), `cell`(list[int]), `response_velocity`(float), `restitution`(float)
+- `/app/runtime/output/summary.json`: `total_collisions`=123, `unique_pairs`=63, `avg_response_velocity`=1.254651, `max_response_velocity`=3.603748, `cells_with_collisions`=21
 
 ## Key files
 
 | File | Purpose |
 |------|---------|
-| `runtime/hasher.py` | Spatial hashing and neighbor search |
-| `runtime/resolver.py` | Collision response computation |
-| `runtime/config.ini` | Grid sizes, physics parameters |
-| `runtime/main.py` | Pipeline orchestration |
+| `/app/runtime/hasher.py` | Spatial hashing and neighbor search |
+| `/app/runtime/resolver.py` | Collision response computation |
+| `/app/runtime/config.ini` | Grid sizes, physics parameters |
 
 ## Task
 
-Find and fix the bugs causing incorrect collision detection and response calculations. Multiple interacting defects exist across files.
+Find and fix the bugs only. Do not add new logic or optimizations — just correct the existing code.
