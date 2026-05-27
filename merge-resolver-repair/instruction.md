@@ -19,7 +19,7 @@ The system processes branch data through six stages:
 
 2. *Diffing* (`/app/runtime/differ.py`) — Computes line-level diffs between each branch and the common base, producing hunk records with similarity scores. Each hunk carries a strategy annotation from the edit metadata, validated against the configured strategy list.
 
-3. *Classification* (`/app/runtime/classifier.py`) — Categorizes hunks as conflicts or auto-resolvable using the configured conflict threshold. Hunks scoring below the threshold are conflicts; those at or above are auto-resolved.
+3. *Classification* (`/app/runtime/classifier.py`) — Categorizes hunks as conflicts or auto-resolvable using the conflict threshold. The configuration provides both a base threshold (used during development) and a strict threshold under `[merge.strict]` for production accuracy. Hunks scoring below the active threshold are conflicts; those at or above are auto-resolved.
 
 4. *Scoring* (`/app/runtime/scorer.py`) — Groups hunks into overlapping line regions and computes a single conflict score per region representing severity.
 

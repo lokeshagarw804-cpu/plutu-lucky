@@ -1,0 +1,31 @@
+{
+  "branch_id": "base",
+  "parent_commit": "a0b1c2d3",
+  "timestamp": 1700000000,
+  "edits": [
+    {
+      "line_start": 1,
+      "line_end": 15,
+      "content": "import os\nimport sys\nfrom pathlib import Path\n\ndef initialize():\n    config = load_config()\n    validate(config)\n    return config\n\ndef load_config():\n    path = Path('/etc/app.conf')\n    return path.read_text()\n\ndef validate(config):\n    assert config is not None",
+      "strategy": "recursive"
+    },
+    {
+      "line_start": 20,
+      "line_end": 40,
+      "content": "class DataProcessor:\n    def __init__(self):\n        self.buffer = []\n        self.count = 0\n\n    def process(self, record):\n        self.buffer.append(record)\n        self.count += 1\n        if self.count >= 10:\n            self.flush()\n\n    def flush(self):\n        for item in self.buffer:\n            write_output(item)\n        self.buffer.clear()\n        self.count = 0\n\n    def status(self):\n        return f'buffered={self.count}'\n\ndef write_output(item):\n    print(item)",
+      "strategy": "recursive"
+    },
+    {
+      "line_start": 45,
+      "line_end": 60,
+      "content": "def compute_metrics(data):\n    total = sum(data)\n    mean = total / len(data)\n    variance = sum((x - mean)**2 for x in data) / len(data)\n    return {'total': total, 'mean': mean, 'variance': variance}\n\ndef filter_outliers(data, threshold=2.0):\n    mean = sum(data) / len(data)\n    std = (sum((x-mean)**2 for x in data) / len(data)) ** 0.5\n    return [x for x in data if abs(x - mean) <= threshold * std]\n\ndef normalize(data):\n    mn = min(data)\n    mx = max(data)\n    rng = mx - mn\n    return [(x - mn) / rng for x in data] if rng > 0 else data",
+      "strategy": "patience"
+    },
+    {
+      "line_start": 65,
+      "line_end": 80,
+      "content": "class EventLoop:\n    def __init__(self):\n        self.handlers = {}\n        self.queue = []\n\n    def register(self, event_type, handler):\n        self.handlers[event_type] = handler\n\n    def emit(self, event_type, payload):\n        self.queue.append((event_type, payload))\n\n    def tick(self):\n        while self.queue:\n            etype, payload = self.queue.pop(0)\n            if etype in self.handlers:\n                self.handlers[etype](payload)",
+      "strategy": "histogram"
+    }
+  ]
+}
