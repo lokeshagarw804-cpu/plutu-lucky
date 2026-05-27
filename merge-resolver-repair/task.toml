@@ -1,0 +1,37 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+category = "version_control"
+difficulty = "hard"
+tags = ["merge-resolution", "three-way-merge", "conflict-detection", "version-control", "debugging"]
+
+difficulty_explanation = "Four interacting defects across six modules require understanding merge conflict semantics, config section hierarchy, string parsing subtleties, accumulation vs replacement scoring logic, and deterministic sort tiebreaking with branch-local identifiers. Bugs cannot be identified from instruction alone — they require tracing data flow across module boundaries."
+solution_explanation = "Fix strategy list parsing to strip whitespace in differ.py, change classifier.py to read threshold from merge.strict config section, replace accumulation with last-write-wins in scorer.py, and add branch_id to sort key in resolver.py for deterministic conflict ordering."
+verification_explanation = "Tests validate conflict counts, auto-resolve counts, strategy recognition, region scores, conflict ordering, and report structure. Tests use range assertions and structural checks rather than exact values to avoid trivially leaking the solution while still requiring all bugs to be fixed for passage."
+expert_time_estimate_hours = 3.0
+
+[task]
+name = "merge-resolver-repair"
+description = "Debug a three-way merge resolution engine with four interacting defects across diff computation, conflict classification, region scoring, and deterministic ordering. Bugs involve config parsing subtleties, threshold section hierarchy, accumulation semantics, and sort tiebreaking with branch-local identifiers."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding merge conflict semantics, configparser section hierarchy, string whitespace handling in split operations, last-write-wins vs accumulation scoring semantics, and stable sort ordering with locally-scoped identifiers. Defects interact — fixing classification changes which hunks appear in the resolution output."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.run_merge"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the merge engine then validates output via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all four defects and re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
