@@ -1,0 +1,14 @@
+{"meter_id": "meter_20", "location": "overflow_south", "readings": [
+  {"timestamp": 0, "voltage": 4.2, "temperature": 23.8},
+  {"timestamp": 15, "voltage": 4.5, "temperature": 23.6},
+  {"timestamp": 30, "voltage": 4.3, "temperature": 24.0},
+  {"timestamp": 45, "voltage": 4.6, "temperature": 23.9},
+  {"timestamp": 60, "voltage": 4.8, "temperature": 24.1},
+  {"timestamp": 75, "voltage": 4.7, "temperature": 23.7},
+  {"timestamp": 90, "voltage": 5.0, "temperature": 24.2},
+  {"timestamp": 105, "voltage": 4.9, "temperature": 23.8},
+  {"timestamp": 120, "voltage": 4.6, "temperature": 24.0},
+  {"timestamp": 135, "voltage": 4.4, "temperature": 23.9},
+  {"timestamp": 150, "voltage": 4.3, "temperature": 23.7},
+  {"timestamp": 165, "voltage": 4.5, "temperature": 24.1}
+]}

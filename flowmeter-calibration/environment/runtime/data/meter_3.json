@@ -1,0 +1,12 @@
+{"meter_id": "meter_3", "location": "bypass_east", "readings": [
+  {"timestamp": 0, "voltage": 1.8, "temperature": 19.5},
+  {"timestamp": 15, "voltage": 1.9, "temperature": 19.6},
+  {"timestamp": 30, "voltage": 2.0, "temperature": 19.4},
+  {"timestamp": 45, "voltage": 1.7, "temperature": 19.7},
+  {"timestamp": 60, "voltage": 2.1, "temperature": 19.3},
+  {"timestamp": 75, "voltage": 2.2, "temperature": 19.5},
+  {"timestamp": 90, "voltage": 2.0, "temperature": 19.8},
+  {"timestamp": 105, "voltage": 2.3, "temperature": 19.4},
+  {"timestamp": 120, "voltage": 2.1, "temperature": 19.6},
+  {"timestamp": 135, "voltage": 1.9, "temperature": 19.5}
+]}

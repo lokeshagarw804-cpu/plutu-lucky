@@ -1,0 +1,14 @@
+{"meter_id": "meter_1", "location": "intake_north", "readings": [
+  {"timestamp": 0, "voltage": 2.1, "temperature": 22.5},
+  {"timestamp": 15, "voltage": 2.3, "temperature": 22.4},
+  {"timestamp": 30, "voltage": 2.5, "temperature": 22.6},
+  {"timestamp": 45, "voltage": 2.4, "temperature": 22.3},
+  {"timestamp": 60, "voltage": 2.6, "temperature": 22.7},
+  {"timestamp": 75, "voltage": 2.8, "temperature": 22.5},
+  {"timestamp": 90, "voltage": 2.7, "temperature": 22.8},
+  {"timestamp": 105, "voltage": 2.9, "temperature": 22.6},
+  {"timestamp": 120, "voltage": 3.0, "temperature": 22.4},
+  {"timestamp": 135, "voltage": 2.8, "temperature": 22.5},
+  {"timestamp": 150, "voltage": 2.6, "temperature": 22.3},
+  {"timestamp": 165, "voltage": 2.5, "temperature": 22.6}
+]}

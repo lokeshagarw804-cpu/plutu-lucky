@@ -1,0 +1,40 @@
+author_name = "Lokesh Agarwal"
+author_email = "lokeshagarw804@gmail.com"
+category = "data_processing"
+difficulty = "hard"
+tags = ["calibration", "polynomial", "temperature-compensation", "data-pipeline", "debugging"]
+
+difficulty_explanation = "Four interacting bugs across four modules require understanding polynomial evaluation order (Horner's method), temperature offset vs absolute value in compensation, interval boundary semantics, and the distinction between raw vs compensated flow in compliance checks. Partial fixes produce plausible but incorrect output."
+solution_explanation = "Fix Horner iteration to use reversed coefficients, change temperature compensation to use offset from reference, remove boundary subtraction in aggregator, and switch compliance check from raw to compensated flow while fixing meter sort order."
+verification_explanation = "Tests verify meter ordering, compliance counts, specific violation intervals, reading counts, and interval totals. Values are deterministically derived from input data and correct algorithm but not directly stated in instructions."
+expert_time_estimate_hours = 2.5
+
+[task]
+name = "flowmeter-calibration"
+description = "Debug a flow meter calibration pipeline with four interacting defects across polynomial evaluation, temperature compensation, interval aggregation, and compliance reporting."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding Horner's method coefficient ordering, the difference between absolute temperature and offset-from-reference in compensation formulas, interval boundary inclusion semantics, and which flow value (raw vs compensated) should be used for compliance. Bugs interact so partial fixes still produce wrong output."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.main"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the calibration pipeline then validates output via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all four defects and re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
+
+[agent]
+timeout_sec = 900
