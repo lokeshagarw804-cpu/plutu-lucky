@@ -1,40 +1,23 @@
+version = "1.0"
+
+[metadata]
 author_name = "Lokesh Agarwal"
 author_email = "lokeshagarw804@gmail.com"
 category = "fluid_dynamics"
 difficulty = "hard"
 tags = ["pipeline-monitoring", "pressure-analysis", "anomaly-detection", "debugging", "numerical-computing"]
+expert_time_estimate_min = 180
+junior_time_estimate_min = 360
 
-difficulty_explanation = "Five interacting defects across four modules require understanding fluid dynamics formulas, accumulator patterns, threshold boundary semantics, and the relationship between classification rates and segment geometry. Bugs cannot be fixed independently — correcting one changes which anomalies are detected, affecting downstream classification counts."
-solution_explanation = "Fix trapezoidal integrator accumulator (= to +=), change consecutive count comparison (> to >=), replace alphabetical sort with config-based ordering, add segment length division in drop rate calculation, and fix severity weight accumulator (= to +=)."
-verification_explanation = "Tests validate segment ordering, anomaly counts, classification distributions, severity ranges, and flow volumes. Aggregate and per-segment assertions require all five bugs to be fixed simultaneously for full passage."
-expert_time_estimate_hours = 3.0
-
-[task]
-name = "pipeline-flow-repair"
-description = "Debug a pipeline flow monitoring system with five interacting defects across flow aggregation, anomaly detection thresholds, segment ordering, leak classification rates, and severity computation. Bugs involve accumulator patterns, boundary conditions, and physics-based rate calculations."
-
-[task.difficulty]
-level = "hard"
-reasoning = "Requires understanding trapezoidal numerical integration, consecutive-event detection semantics, the difference between absolute and per-unit-length rates, and weighted accumulator normalization. Defects interact — fixing classification changes severity values, fixing detection changes anomaly counts that feed classification."
-
-[task.runtime]
+[environment]
+dockerfile = "environment/Dockerfile"
 entrypoint = "python3 -m runtime.main"
 language = "python"
 dependencies = "stdlib-only"
 
-[task.validator]
+[verifier]
 command = "bash tests/test.sh"
 description = "Runs the pipeline monitor then validates output via pytest."
-
-[task.repair]
-command = "bash solution/solve.sh"
-description = "Patches all five defects and re-runs the system."
-
-[task.resources]
-timeout = 300
-cpu = 2
-memory = "2GB"
-disk = "1GB"
 
 [agent]
 timeout_sec = 900
