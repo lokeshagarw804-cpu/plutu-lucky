@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""Repair script for metric aggregation engine."""
-import sys
+"""Repair script for metric aggregation engine — patches source files only."""
 
 
 def patch_aggregator():
@@ -9,8 +8,6 @@ def patch_aggregator():
     with open(path, "r") as f:
         content = f.read()
 
-    # Fix Bug #4: window boundary — < should be <=
-    # The condition `pos + window_size < n_samples` skips the last valid window
     content = content.replace(
         "while pos + self._window_size < n_samples:",
         "while pos + self._window_size <= n_samples:"
@@ -26,7 +23,6 @@ def patch_ranker():
     with open(path, "r") as f:
         content = f.read()
 
-    # Fix Bug #3: remove exclude_node filter — all nodes must participate in ranking
     content = content.replace(
         """        # Filter out infrastructure nodes from ranking comparison
         ranked_nodes = {
@@ -38,7 +34,6 @@ def patch_ranker():
         }"""
     )
 
-    # Fix Bug #2: weight accumulator — second line should use += not =
     content = content.replace(
         "raw_score = self._weight_latency * norm_lat\n                raw_score = self._weight_error * norm_err",
         "raw_score = self._weight_latency * norm_lat\n                raw_score += self._weight_error * norm_err"
@@ -54,7 +49,6 @@ def patch_detector():
     with open(path, "r") as f:
         content = f.read()
 
-    # Fix Bug #1: threshold comparison — should use >= not >
     content = content.replace(
         "if pct > self._threshold:",
         "if pct >= self._threshold:"
@@ -64,19 +58,7 @@ def patch_detector():
         f.write(content)
 
 
-def main():
+if __name__ == "__main__":
     patch_aggregator()
     patch_ranker()
     patch_detector()
-
-    # Re-run the pipeline with fixes applied
-    sys.path.insert(0, "/app")
-    for key in list(sys.modules.keys()):
-        if key.startswith("runtime"):
-            del sys.modules[key]
-    from runtime.main import main as run_main
-    run_main()
-
-
-if __name__ == "__main__":
-    main()
