@@ -2,7 +2,8 @@
 
 Each variable gets a live interval representing the range of instruction
 indices where the variable is active (from first definition to last use).
-The interval [start, end] covers the complete lifetime of the variable.
+The interval is half-open: [start, end) where end is the exclusive bound.
+This matches the strict-less-than overlap check in the interference module.
 """
 
 
@@ -11,9 +12,11 @@ def compute_live_intervals(blocks):
     
     Returns a dict mapping variable name -> (start, end) where:
       - start is the instruction index of the first definition
-      - end is the instruction index of the last use
+      - end is the exclusive upper bound (last_use index)
       
     Instructions are indexed globally across all blocks in order.
+    The end value represents the point where the variable is no longer
+    needed, so the interval is [start, end).
     """
     intervals = {}
     global_index = 0

@@ -44,14 +44,14 @@ When working correctly, the system should:
 4. The maximum variable degree in the interference graph should be 11
 5. Variable v0 should have live interval [0, 8]
 6. Variables v7 and v8 have adjacent live ranges — v7 should have degree 4 and v8 should have degree 6
-7. Variable v19 (in a depth-2 loop) should have spill cost approximately 66.6667
+7. Variable v19 (in a depth-2 loop) should have spill cost approximately 13.3333
 8. Apply Chaitin-Briggs simplification to identify spill candidates
 9. Exactly 6 variables should be spilled: v2, v6, v9, v12, v13, v17
 10. Exactly 14 variables should be allocated to registers
 11. All 4 registers (R0, R1, R2, R3) must be used
-12. Variable v3 must be allocated to register R2 (not spilled despite high degree)
-13. Variable v5 must be allocated to register R3
-14. Register R0 should be assigned to at least 3 variables
+12. Variable v3 must be allocated to register R1
+13. Variable v5 must be allocated to register R2
+14. Register R0 should be assigned to at least 4 variables
 15. Produce a valid allocation using all 4 available registers
 
 The allocation must satisfy the interference constraint: no two variables assigned to the same register may have overlapping live intervals.

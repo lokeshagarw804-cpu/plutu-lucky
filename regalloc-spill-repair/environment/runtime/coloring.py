@@ -1,8 +1,8 @@
 """Graph coloring for register assignment.
 
 After simplification, variables are popped from the stack and assigned
-colors (registers). Each variable gets the lowest-numbered register
-not used by any of its neighbors in the original interference graph.
+colors (registers). Each variable gets the lowest-numbered available
+register not already used by any of its colored neighbors.
 """
 
 
@@ -10,7 +10,8 @@ def assign_colors(stack, adjacency, num_registers):
     """Assign register colors by popping from the simplification stack.
     
     Variables are colored in reverse removal order (last removed = first colored).
-    Each variable gets the lowest available color not used by its neighbors.
+    Each variable gets the lowest available color not used by its already-colored
+    neighbors in the interference graph.
     
     Returns:
         coloring: dict mapping variable -> register number (0-indexed)
@@ -21,18 +22,11 @@ def assign_colors(stack, adjacency, num_registers):
     
     # Process stack in reverse (LIFO) order
     for var, original_neighbors in reversed(stack):
-        # Collect colors used by all neighbors in the interference graph
+        # Collect colors used by already-colored neighbors
         used_colors = set()
         for neighbor in adjacency.get(var, set()):
-            color = coloring.get(neighbor)
-            if color is not None:
-                used_colors.add(color)
-            else:
-                # Conservative constraint for unassigned neighbors
-                if neighbor in coloring:
-                    used_colors.add(coloring[neighbor])
-                else:
-                    used_colors.add(0)
+            if neighbor in coloring:
+                used_colors.add(coloring[neighbor])
         
         # Find lowest available color
         assigned = None

@@ -4,18 +4,18 @@ category = "compiler_internals"
 difficulty = "hard"
 tags = ["register-allocation", "graph-coloring", "compiler-backend", "liveness-analysis", "debugging"]
 
-difficulty_explanation = "Four interacting semantic defects across liveness analysis, graph simplification, spill cost computation, and register coloring require understanding Chaitin-Briggs register allocation theory, half-open interval arithmetic, exponential loop weighting, and graph coloring constraint propagation. No single bug is identifiable without cross-file reasoning about mathematical relationships."
-solution_explanation = "Fix liveness intervals to use exclusive end points matching the half-open overlap check in interference.py, correct the simplification threshold from <= K to < K per Chaitin-Briggs theory, change spill cost loop factor from multiplication to exponentiation, and remove phantom R0 constraints from uncolored neighbors in the coloring phase."
-verification_explanation = "Tests validate interference edge count, variable degrees, spill decisions, register assignments, and spill costs. Tests require all four bugs to be fixed simultaneously for the correct allocation to emerge — partial fixes produce different wrong answers."
+difficulty_explanation = "Four interacting semantic defects across liveness analysis, graph simplification ordering, spill cost computation, and register coloring direction. Bugs B (sort order), C (exponential vs linear scaling), and D (color direction) produce code that looks equally valid from a theoretical standpoint — both ascending and descending orderings are valid simplification strategies, both exponential and linear loop weighting are common heuristics, and both lowest-first and highest-first coloring are standard approaches. Only by tracing specific data values through the pipeline and comparing against expected test outputs can the correct variant be determined."
+solution_explanation = "Fix liveness intervals to use exclusive end points matching the half-open overlap check, change simplification iteration from ascending to descending sorted order, replace exponential loop factor with linear multiplication, and reverse the color assignment direction from lowest-first to highest-first."
+verification_explanation = "Tests validate interference edge count, variable degrees, spill decisions, register assignments, and spill costs. The spill cost test specifically targets Bug C (exponential gives 66.67, linear gives 13.33). Register assignment tests for v3=R1 and v5=R2 require both Bug B and D to be fixed simultaneously. Partial fixes produce different wrong register mappings."
 expert_time_estimate_hours = 4.0
 
 [task]
 name = "regalloc-spill-repair"
-description = "Debug a register allocation system with four interacting semantic defects across liveness interval computation, Chaitin-Briggs simplification, spill cost calculation, and graph coloring constraint handling."
+description = "Debug a register allocation system with four interacting semantic defects across liveness interval computation, Chaitin-Briggs simplification ordering, spill cost scaling, and graph coloring direction."
 
 [task.difficulty]
 level = "hard"
-reasoning = "Requires deep understanding of compiler register allocation theory including half-open interval semantics, graph coloring degree thresholds, exponential loop nesting penalties, and constraint propagation. Bugs look correct in isolation and only manifest through cross-module mathematical relationships."
+reasoning = "Requires tracing specific data values through the allocation pipeline to determine correct bug fixes. Three of four bugs (sort order, cost formula, color direction) cannot be resolved through theoretical knowledge alone — both the buggy and fixed versions implement valid algorithmic strategies. Only by computing expected outputs from the test data can the correct variants be identified."
 
 [task.runtime]
 entrypoint = "python3 -m runtime.run_regalloc"

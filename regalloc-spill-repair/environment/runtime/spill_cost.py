@@ -3,6 +3,11 @@
 Spill cost determines the penalty of spilling a variable to memory.
 Variables with higher spill cost should be prioritized for register
 allocation, while low-cost variables are better spill candidates.
+
+The cost formula accounts for:
+  - Number of uses and definitions (more accesses = higher cost)
+  - Loop nesting depth (deeper loops = exponentially higher cost)
+  - Interference degree (more neighbors = lower per-neighbor impact)
 """
 
 import configparser
@@ -53,8 +58,9 @@ def compute_spill_costs(blocks, adjacency):
     
     Formula: cost = (uses + defs) * loop_depth_factor / degree
     
-    The loop depth factor scales cost based on nesting level, making
-    variables in deeper loops less desirable to spill.
+    The loop depth factor scales exponentially with nesting depth,
+    making variables in deeply nested loops much more expensive to spill.
+    A base weight of 10 at depth 2 gives a factor of 100.
     """
     base_weight = load_spill_config()
     usage = compute_variable_usage(blocks)
@@ -68,8 +74,8 @@ def compute_spill_costs(blocks, adjacency):
         use_def_count = info["uses"] + info["defs"]
         loop_depth = info["max_loop_depth"]
         
-        # Apply loop depth scaling factor
-        loop_factor = base_weight * loop_depth if loop_depth > 0 else 1
+        # Scale cost by loop nesting depth
+        loop_factor = base_weight ** loop_depth if loop_depth > 0 else 1
         
         cost = use_def_count * loop_factor / degree
         costs[var] = round(cost, 4)

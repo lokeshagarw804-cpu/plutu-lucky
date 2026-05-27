@@ -127,34 +127,34 @@ class TestSpillDecisions:
     def test_v19_spill_cost(self, report):
         """Variable v19 must have correct spill cost."""
         v19_cost = report["variables"]["v19"]["spill_cost"]
-        assert abs(v19_cost - 66.6667) < 0.01, (
-            f"v19 spill cost: expected ~66.6667, got {v19_cost}"
-        )
-
-    def test_v5_register_assignment(self, report):
-        """Variable v5 must be assigned to R3."""
-        v5_info = report["variables"]["v5"]
-        assert not v5_info["spilled"], "v5 should not be spilled"
-        assert v5_info["register"] == "R3", (
-            f"v5: expected R3, got {v5_info['register']}"
+        assert abs(v19_cost - 13.3333) < 0.01, (
+            f"v19 spill cost: expected ~13.3333, got {v19_cost}"
         )
 
     def test_v3_register_assignment(self, report):
-        """Variable v3 must be assigned to R2."""
+        """Variable v3 must be assigned to R1."""
         v3_info = report["variables"]["v3"]
         assert not v3_info["spilled"], "v3 should not be spilled"
-        assert v3_info["register"] == "R2", (
-            f"v3: expected R2, got {v3_info['register']}"
+        assert v3_info["register"] == "R1", (
+            f"v3: expected R1, got {v3_info['register']}"
+        )
+
+    def test_v5_register_assignment(self, report):
+        """Variable v5 must be assigned to R2."""
+        v5_info = report["variables"]["v5"]
+        assert not v5_info["spilled"], "v5 should not be spilled"
+        assert v5_info["register"] == "R2", (
+            f"v5: expected R2, got {v5_info['register']}"
         )
 
     def test_register_zero_usage(self, report):
-        """Register R0 must be assigned to at least 3 variables."""
+        """Register R0 must be assigned to at least 4 variables."""
         r0_vars = [
             var for var, info in report["variables"].items()
             if info.get("color") == 0 and not info["spilled"]
         ]
-        assert len(r0_vars) >= 3, (
-            f"Expected >=3 variables on R0, got {len(r0_vars)}"
+        assert len(r0_vars) >= 4, (
+            f"Expected >=4 variables on R0, got {len(r0_vars)}: {sorted(r0_vars)}"
         )
 
     def test_allocation_completeness(self, report):
