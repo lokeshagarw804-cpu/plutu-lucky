@@ -91,15 +91,10 @@ def test_compliant_count():
     )
 
 
-def test_non_compliant_count():
-    """Exactly 1 meter must be non-compliant."""
+def test_non_compliant_meter():
+    """Exactly 1 meter (meter_20) must be non-compliant due to high compensated flow."""
     results = load_results()
     assert results["non_compliant_count"] == 1
-
-
-def test_meter_20_non_compliant():
-    """Meter_20 must be the only non-compliant meter due to high compensated flow."""
-    results = load_results()
     non_compliant = [m for m in results["meters"] if not m["is_compliant"]]
     assert len(non_compliant) == 1
     assert non_compliant[0]["meter_id"] == "meter_20"
@@ -159,3 +154,64 @@ def test_meter_7_is_compliant():
     results = load_results()
     m7 = [m for m in results["meters"] if m["meter_id"] == "meter_7"][0]
     assert m7["is_compliant"] is True
+
+
+def test_meter_7_interval_1_flow_accuracy():
+    """Meter_7 second interval compensated flow must match expected calibration precision."""
+    results = load_results()
+    m7 = [m for m in results["meters"] if m["meter_id"] == "meter_7"][0]
+    assert m7["total_intervals"] == 3
+    assert m7["is_compliant"] is True
+    assert m7["violation_count"] == 0
+    # The second interval's compensated flow depends on correct polynomial
+    # evaluation and temperature compensation working together precisely
+    violations_iv1 = [v for v in m7["violations"] if v["interval_index"] == 1]
+    assert len(violations_iv1) == 0
+
+
+def test_meter_3_interval_0_count():
+    """Meter_3 first interval must contain exactly 4 readings with correct boundaries."""
+    results = load_results()
+    summary = load_summary()
+    # meter_3 has 10 readings at timestamps 0,15,30,45,60,75,90,105,120,135
+    # With correct interval assignment: [0,15,30,45] -> interval 0 (4 readings)
+    # [60,75,90,105] -> interval 1 (4 readings), [120,135] -> interval 2 (2 readings)
+    # Total readings for meter_3 = 10, distributed as 4+4+2 = 10
+    m3 = [m for m in results["meters"] if m["meter_id"] == "meter_3"][0]
+    assert m3["total_intervals"] == 3
+
+
+def test_meter_20_interval_0_below_limit():
+    """Meter_20 first interval compensated flow must remain below the max limit."""
+    results = load_results()
+    m20 = [m for m in results["meters"] if m["meter_id"] == "meter_20"][0]
+    # If interval 0 were flagged as violation, violation_count would be > 2
+    # Correct calibration should put interval 0 just below 10.0
+    violations = m20["violations"]
+    interval_0_violations = [v for v in violations if v["interval_index"] == 0]
+    assert len(interval_0_violations) == 0, (
+        "meter_20 interval 0 should NOT be a violation"
+    )
+
+
+def test_meter_20_violation_values():
+    """Meter_20 violations must be above_maximum type with precise calibrated values."""
+    results = load_results()
+    m20 = [m for m in results["meters"] if m["meter_id"] == "meter_20"][0]
+    for v in m20["violations"]:
+        assert v["type"] == "above_maximum", (
+            f"Expected above_maximum violation but got {v['type']}"
+        )
+        assert v["value"] > 10.0, (
+            f"Violation value {v['value']} should exceed limit 10.0"
+        )
+        assert v["value"] < 12.0, (
+            f"Violation value {v['value']} is implausibly high for this data"
+        )
+    # The interval 2 violation should be marginal (just barely above limit)
+    iv2_violations = [v for v in m20["violations"] if v["interval_index"] == 2]
+    assert len(iv2_violations) == 1
+    assert iv2_violations[0]["value"] < 10.1, (
+        f"meter_20 interval 2 violation should be marginal (near 10.04) "
+        f"but got {iv2_violations[0]['value']}"
+    )

@@ -19,8 +19,8 @@ class TempCompensator:
     def compensate(self, calibrated_meters):
         """Apply temperature compensation to all calibrated readings.
 
-        The correction scales flow proportionally to thermal conditions.
-        At reference temperature the correction is neutral (factor of 1.0).
+        The correction scales flow proportionally to thermal conditions
+        using the configured compensation factor and sensor temperature.
 
         Returns dict mapping meter_id to list of compensated reading dicts
         with added key: flow_compensated.
