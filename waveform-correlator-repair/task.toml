@@ -1,0 +1,37 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+category = "geophysics"
+difficulty = "hard"
+tags = ["seismic", "waveform-stacking", "beamforming", "frequency-analysis", "debugging"]
+
+difficulty_explanation = "Five interacting defects across a seismic waveform processing pipeline require understanding bandpass filter cascading, spectral coherence math, sliding-window overlap arithmetic, bidirectional phase detection, and natural-order station identifiers. Bugs span multiple modules and interact — fixing one changes the inputs another module operates on."
+solution_explanation = "Remove redundant bandpass application in coherence engine, replace full Pearson with dot-product-mean for pre-whitened signals, correct window advance formula by removing erroneous +1, add absolute-value comparison for anti-phase detection with polarity classification, and sort receiver IDs by numeric suffix."
+verification_explanation = "Tests validate receiver ordering, coherence magnitudes, grid symmetry, phase detection counts and polarities. Tests use range-based assertions to avoid trivially leaking the solution while requiring all defects to be corrected."
+expert_time_estimate_hours = 3.5
+
+[task]
+name = "waveform-correlator-repair"
+description = "Debug a seismic waveform processing pipeline with five interacting defects across bandpass filtering, spectral coherence computation, window stepping, phase detection, and receiver ordering. Bugs involve signal processing math subtleties and cross-module data flow dependencies."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding cascaded filter effects, the mathematical relationship between signal whitening and coherence computation, overlap-add window arithmetic, bidirectional phase significance, and lexicographic vs natural ordering. Defects interact across module boundaries."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.run_correlator"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Executes the waveform pipeline then validates output via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all five defects and re-runs the pipeline."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
