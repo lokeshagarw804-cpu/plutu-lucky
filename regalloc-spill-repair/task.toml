@@ -1,9 +1,37 @@
 author_name = "Dhruvkumar Patel"
 author_email = "dhruvpatel2284@gmail.com"
-timeout = 300
+category = "compiler_internals"
+difficulty = "hard"
+tags = ["register-allocation", "graph-coloring", "compiler-backend", "liveness-analysis", "debugging"]
+
+difficulty_explanation = "Four interacting semantic defects across liveness analysis, graph simplification, spill cost computation, and register coloring require understanding Chaitin-Briggs register allocation theory, half-open interval arithmetic, exponential loop weighting, and graph coloring constraint propagation. No single bug is identifiable without cross-file reasoning about mathematical relationships."
+solution_explanation = "Fix liveness intervals to use exclusive end points matching the half-open overlap check in interference.py, correct the simplification threshold from <= K to < K per Chaitin-Briggs theory, change spill cost loop factor from multiplication to exponentiation, and remove phantom R0 constraints from uncolored neighbors in the coloring phase."
+verification_explanation = "Tests validate interference edge count, variable degrees, spill decisions, register assignments, and spill costs. Tests require all four bugs to be fixed simultaneously for the correct allocation to emerge — partial fixes produce different wrong answers."
+expert_time_estimate_hours = 4.0
 
 [task]
 name = "regalloc-spill-repair"
-description = "Debug and repair a register allocation system that computes variable liveness, builds interference graphs, and performs graph coloring with spill decisions."
-category = "debugging"
-difficulty = "hard"
+description = "Debug a register allocation system with four interacting semantic defects across liveness interval computation, Chaitin-Briggs simplification, spill cost calculation, and graph coloring constraint handling."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires deep understanding of compiler register allocation theory including half-open interval semantics, graph coloring degree thresholds, exponential loop nesting penalties, and constraint propagation. Bugs look correct in isolation and only manifest through cross-module mathematical relationships."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.run_regalloc"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the register allocator then validates output via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all four defects and re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
