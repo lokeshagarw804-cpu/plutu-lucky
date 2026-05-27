@@ -1,40 +1,24 @@
+version = "1.0"
+
+[metadata]
 author_name = "Lokesh Agarwal"
 author_email = "lokeshagarw804@gmail.com"
 category = "data_pipeline"
 difficulty = "hard"
 tags = ["time-series", "anomaly-detection", "ewma", "data-pipeline", "debugging"]
+expert_time_estimate_min = 180
+junior_time_estimate_min = 360
 
-difficulty_explanation = "Five interacting defects across four modules require understanding EWMA mathematics (both decay weight and update ordering), window boundary semantics, weighted averaging vs simple averaging, threshold cascade logic, and output field computation. The scorer has two coupled errors in one statement block (wrong decay weight AND wrong diff computation order) that produce subtly different z-scores. Partial fixes produce plausible but numerically wrong outputs."
-solution_explanation = "Fix EWMA update in scorer: reorder diff computation to happen AFTER mean update and change alpha*old to (1-alpha)*old. Change window boundary from > to >= in aggregator. Reverse threshold cascade order in classifier. In fusion: divide by sum of weights instead of sensor count, and fix window_end from hardcoded +5 to +window_size."
-verification_explanation = "Tests validate total anomaly count, per-severity counts, specific vehicle scores with tight tolerances (0.05), window_end correctness, per-vehicle anomaly counts, and window alignment. The scorer diff-order bug and fusion window_end bug are not discoverable from docstrings alone — they require tracing data flow."
-expert_time_estimate_hours = 3.0
-
-[task]
-name = "fleet-telemetry-repair"
-description = "Debug a fleet telemetry anomaly detection pipeline with five interacting defects across EWMA scoring, window aggregation, sensor fusion, and severity classification modules."
-
-[task.difficulty]
-level = "hard"
-reasoning = "Requires understanding EWMA update math (both alpha vs 1-alpha weighting AND the order of diff vs mean computation), half-open interval boundary semantics, weighted vs unweighted averaging, threshold cascade ordering, and hardcoded vs config-driven constants. The scorer bug has two coupled errors that agents must both identify and fix simultaneously."
-
-[task.runtime]
+[environment]
+dockerfile = "environment/Dockerfile"
 entrypoint = "python3 -m runtime.main"
 language = "python"
 dependencies = "stdlib-only"
+timeout = 300
 
-[task.validator]
+[verifier]
 command = "bash tests/test.sh"
 description = "Runs the pipeline then validates output via pytest."
-
-[task.repair]
-command = "bash solution/solve.sh"
-description = "Patches all five defects and re-runs the pipeline."
-
-[task.resources]
-timeout = 300
-cpu = 2
-memory = "2GB"
-disk = "1GB"
 
 [agent]
 timeout_sec = 900
