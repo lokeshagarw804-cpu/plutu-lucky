@@ -1,0 +1,40 @@
+author_name = "Lokesh Agarwal"
+author_email = "lokeshagarw804@gmail.com"
+category = "debugging"
+difficulty = "hard"
+tags = ["telemetry", "anomaly-detection", "sliding-window", "numerical-computing", "debugging"]
+
+difficulty_explanation = "Five interacting defects across three modules require understanding sliding-window arithmetic, boundary comparison semantics, accumulator patterns, weighted-average computation, and numeric vs lexicographic sorting. Bugs cannot be identified from the instruction document alone — they require tracing data flow and understanding mathematical relationships between components."
+solution_explanation = "Fix window step off-by-one in analyzer, change speed threshold comparison from >= to >, fix fuel drop accumulator from assignment to addition, fix weight accumulation in scorer from assignment to addition, and sort vehicles by numeric suffix rather than lexicographic string comparison in reporter."
+verification_explanation = "Tests validate alert counts, severity values, per-vehicle metrics, vehicle ordering, and data integrity. Tests use specific value assertions that require all bugs to be fixed for passage while not revealing the nature of the bugs."
+expert_time_estimate_hours = 3.0
+
+[task]
+name = "fleet-telemetry-monitor"
+description = "Debug a fleet telemetry anomaly detection engine with five interacting defects across windowed analysis computation, threshold comparison semantics, fuel accumulation, severity scoring, and vehicle ordering. Bugs involve numerical computing subtleties, not simple configuration errors."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding boundary comparison semantics (>= vs >), accumulator patterns in loops, off-by-one in window step calculations, weighted-average normalization, and string vs numeric sorting. Defects interact — fixing one changes outputs that other modules depend on."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.main"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the monitoring system then validates output via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all five defects and re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
+
+[agent]
+timeout_sec = 900
