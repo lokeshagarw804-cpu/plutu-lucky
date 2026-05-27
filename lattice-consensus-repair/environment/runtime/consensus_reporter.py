@@ -13,11 +13,10 @@ class ConsensusReporter:
         """Build comprehensive consensus report.
 
         Returns two structures:
-        1. finality_map: per-transaction finality details ordered by
-           causal timestamp (timestamp, validator_id, seq)
+        1. finality_map: per-transaction finality details in provided order
         2. consensus_summary: aggregate metrics
         """
-        # Build ordered finality map
+        # Build finality map in the order transactions are provided
         finality_map = []
         for tx in all_txs:
             tx_id = tx["tx_id"]

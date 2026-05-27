@@ -1,23 +1,14 @@
-"""Weight calculator — computes cumulative confirmation weights per round.
+"""Weight calculator — computes confirmation weights for DAG transactions.
 
-For each transaction, confirmation weight is determined by counting
-distinct validators that have referenced it (directly or transitively)
-through the DAG. Weight is computed per-round: for each subsequent round,
-we look at which validators confirmed the transaction in that round.
-
-The final weight for a given round is the total stake of distinct
-validators that confirmed in that specific round. The overall transaction
-weight is the maximum single-round confirmation weight (not a sum across
-rounds), representing peak confirmation strength.
-
-Stake-weighted voting determines how much each validator's confirmation
-contributes to the total weight of a transaction.
+Confirmation weight measures how strongly a transaction has been endorsed
+by the validator set. Weight is derived from stake-weighted confirmations
+observed through the DAG's descendant graph.
 """
 import configparser
 
 
 class WeightCalculator:
-    """Computes cumulative confirmation weights for DAG transactions."""
+    """Computes stake-weighted confirmation weights for transactions."""
 
     def __init__(self, config_path):
         self._config = configparser.ConfigParser()
@@ -28,12 +19,12 @@ class WeightCalculator:
     def compute_weights(self, all_txs, children, tx_lookup, validators):
         """Compute confirmation weight for each transaction.
 
-        For each transaction, walks forward through subsequent rounds to
-        find which validators confirmed it. The transaction weight is
-        computed as the max per-round stake sum across all confirming
-        rounds (peak confirmation), not a running total.
+        Walks forward through the DAG from each transaction to identify
+        which validators have confirmed it. Confirmation weight is the
+        sum of stake-weighted contributions from confirming validators,
+        with a depth-based decay factor applied per round of distance.
 
-        Returns dict mapping tx_id to final confirmation weight.
+        Returns dict mapping tx_id to computed weight.
         """
         tx_weights = {}
 
@@ -41,14 +32,11 @@ class WeightCalculator:
             tx_id = tx["tx_id"]
             tx_round = tx["round"]
 
-            # Find confirmations grouped by round
-            round_validators = self._find_round_confirmations(
+            round_validators = self._collect_confirmations(
                 tx_id, children, tx_lookup, tx_round, validators
             )
 
-            # Compute weight: should be max single-round stake, but here
-            # we accumulate across rounds for robustness against sparse DAGs
-            peak_weight = tx["weight"]  # self-weight
+            weight = tx["weight"]
             for r in sorted(round_validators.keys()):
                 depth = r - tx_round
                 decay = self._decay ** depth
@@ -56,18 +44,18 @@ class WeightCalculator:
                     validators[vid]["stake"]
                     for vid in round_validators[r]
                 )
-                peak_weight += round_stake * decay * self._base_weight
+                weight += round_stake * decay * self._base_weight
 
-            tx_weights[tx_id] = round(peak_weight, 6)
+            tx_weights[tx_id] = round(weight, 6)
 
         return tx_weights
 
-    def _find_round_confirmations(self, tx_id, children, tx_lookup,
-                                  tx_round, validators):
-        """Find distinct validators confirming a tx, grouped by round.
+    def _collect_confirmations(self, tx_id, children, tx_lookup,
+                               tx_round, validators):
+        """Traverse descendants to find confirming validators per round.
 
-        Returns dict mapping round_number -> set of validator_ids that
-        confirmed the transaction in that round.
+        Returns dict mapping round_number to set of validator_ids that
+        confirmed the transaction in that round via the DAG.
         """
         round_validators = {}
         visited = set()

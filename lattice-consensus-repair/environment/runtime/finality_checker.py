@@ -1,33 +1,34 @@
 """Finality checker — determines which transactions have reached finality.
 
 A transaction achieves finality when its cumulative confirmation weight
-from distinct validators exceeds the quorum threshold. The threshold
-should be read from the consensus.finality section which defines the
-strict finality parameters for production use.
+from distinct validators exceeds the configured quorum threshold and
+has been confirmed to sufficient depth in the DAG.
 """
 import configparser
 
 
 class FinalityChecker:
-    """Checks transaction finality against quorum threshold."""
+    """Checks transaction finality against quorum parameters."""
 
     def __init__(self, config_path):
         self._config = configparser.ConfigParser()
         self._config.read(config_path)
-        # Read quorum parameters for finality decisions
-        self._threshold = self._config.getfloat("consensus", "quorum_threshold")
-        self._depth = self._config.getint("consensus", "confirmation_depth")
+        self._threshold = self._config.getfloat(
+            "consensus.preconfirm", "quorum_threshold"
+        )
+        self._depth = self._config.getint(
+            "consensus.preconfirm", "confirmation_depth"
+        )
 
     def check_finality(self, all_txs, tx_weights, children, tx_lookup,
                        validators):
         """Determine finality status for each transaction.
 
         A transaction is final if:
-        1. Its confirmation weight exceeds quorum_threshold
-        2. It has been confirmed by transactions at least confirmation_depth
-           rounds ahead
+        1. Its normalized confirmation weight exceeds quorum_threshold
+        2. It has been confirmed at least confirmation_depth rounds deep
 
-        Returns dict mapping tx_id to finality info dict.
+        Returns dict mapping tx_id to finality status dict.
         """
         finality = {}
         total_stake = sum(v["stake"] for v in validators.values())
@@ -37,13 +38,11 @@ class FinalityChecker:
             weight = tx_weights.get(tx_id, 0.0)
             tx_round = tx["round"]
 
-            # Check depth: find max round of any descendant
             max_desc_round = self._max_descendant_round(
                 tx_id, children, tx_lookup
             )
             depth_reached = max_desc_round - tx_round
 
-            # Normalize weight relative to total possible stake
             normalized_weight = weight / total_stake if total_stake > 0 else 0.0
 
             is_final = (

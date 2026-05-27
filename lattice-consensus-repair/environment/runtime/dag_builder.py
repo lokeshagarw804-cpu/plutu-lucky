@@ -3,8 +3,6 @@
 Merges transactions from all validators into a unified directed acyclic
 graph. Each transaction references parent transactions forming the lattice.
 Transactions are ordered by causal timestamp for consistent traversal.
-
-Note: seq numbers are local to each validator and not globally unique.
 """
 
 
@@ -15,11 +13,10 @@ class DagBuilder:
         """Merge all validator transactions into a single DAG structure.
 
         Transactions from different validators are combined and sorted
-        by timestamp for deterministic processing. The DAG preserves
+        by timestamp for deterministic processing order. The DAG preserves
         parent-child relationships across validator boundaries.
 
-        Returns a list of transaction nodes in causal order and an
-        adjacency dict mapping tx_id to list of child tx_ids.
+        Returns a tuple of (sorted_transactions, children_map, tx_lookup).
         """
         all_txs = []
         tx_lookup = {}
@@ -38,11 +35,10 @@ class DagBuilder:
                 all_txs.append(node)
                 tx_lookup[tx["tx_id"]] = node
 
-        # Sort by causal order for deterministic traversal
-        # Note: seq is local to each validator
+        # Sort transactions into causal processing order
         all_txs.sort(key=lambda t: (t["timestamp"], t["seq"]))
 
-        # Build adjacency (children) mapping
+        # Build parent -> children adjacency mapping
         children = {tx["tx_id"]: [] for tx in all_txs}
         for tx in all_txs:
             for parent_id in tx["parents"]:

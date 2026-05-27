@@ -37,10 +37,13 @@ def main():
         all_txs, tx_weights, children, tx_lookup, validators
     )
 
+    # Prepare transaction list for reporting in canonical order
+    report_txs = sorted(all_txs, key=lambda t: t["tx_id"])
+
     # Generate reports
     reporter = ConsensusReporter()
     finality_map, summary = reporter.generate_report(
-        all_txs, finality, validators, tx_weights
+        report_txs, finality, validators, tx_weights
     )
 
     # Write outputs
