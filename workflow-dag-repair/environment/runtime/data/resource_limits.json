@@ -1,0 +1,23 @@
+{
+  "resource_pool": {
+    "total_capacity": 12,
+    "reserved": 2
+  },
+  "node_resources": {
+    "build_frontend": 3,
+    "build_backend": 4,
+    "build_worker": 2,
+    "lint_check": 1,
+    "unit_tests_fe": 2,
+    "unit_tests_be": 3,
+    "unit_tests_wk": 2,
+    "integration_tests": 4,
+    "security_scan": 3,
+    "package_artifacts": 2,
+    "deploy_staging": 3,
+    "smoke_tests": 2,
+    "deploy_production": 4,
+    "notify_team": 1,
+    "update_docs": 1
+  }
+}

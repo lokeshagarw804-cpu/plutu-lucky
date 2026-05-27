@@ -1,0 +1,7 @@
+{
+  "overrides": [
+    {"node_id": "security_scan", "boost_factor": 1.5, "reason": "compliance requirement"},
+    {"node_id": "deploy_production", "boost_factor": 2.0, "reason": "release deadline"}
+  ],
+  "decay_per_depth": 0.1
+}

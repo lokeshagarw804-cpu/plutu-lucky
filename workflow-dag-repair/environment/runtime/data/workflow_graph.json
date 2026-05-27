@@ -1,0 +1,21 @@
+{
+  "workflow_id": "wf_production_deploy",
+  "version": "2.1",
+  "nodes": [
+    {"node_id": "build_frontend", "priority": "high", "cost": 3, "dependencies": []},
+    {"node_id": "build_backend", "priority": "high", "cost": 4, "dependencies": []},
+    {"node_id": "build_worker", "priority": "medium", "cost": 2, "dependencies": []},
+    {"node_id": "lint_check", "priority": "low", "cost": 1, "dependencies": []},
+    {"node_id": "unit_tests_fe", "priority": "high", "cost": 3, "dependencies": ["build_frontend"]},
+    {"node_id": "unit_tests_be", "priority": "high", "cost": 5, "dependencies": ["build_backend"]},
+    {"node_id": "unit_tests_wk", "priority": "medium", "cost": 2, "dependencies": ["build_worker"]},
+    {"node_id": "integration_tests", "priority": "critical", "cost": 6, "dependencies": ["unit_tests_fe", "unit_tests_be"]},
+    {"node_id": "security_scan", "priority": "critical", "cost": 4, "dependencies": ["build_frontend", "build_backend", "build_worker"]},
+    {"node_id": "package_artifacts", "priority": "high", "cost": 2, "dependencies": ["integration_tests", "security_scan"]},
+    {"node_id": "deploy_staging", "priority": "critical", "cost": 3, "dependencies": ["package_artifacts"]},
+    {"node_id": "smoke_tests", "priority": "high", "cost": 2, "dependencies": ["deploy_staging"]},
+    {"node_id": "deploy_production", "priority": "critical", "cost": 4, "dependencies": ["smoke_tests", "unit_tests_wk"]},
+    {"node_id": "notify_team", "priority": "low", "cost": 1, "dependencies": ["deploy_production"]},
+    {"node_id": "update_docs", "priority": "low", "cost": 1, "dependencies": ["deploy_production"]}
+  ]
+}

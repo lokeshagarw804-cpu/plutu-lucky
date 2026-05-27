@@ -1,0 +1,37 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+category = "task_scheduling"
+difficulty = "hard"
+tags = ["dag-scheduling", "dependency-resolution", "critical-path", "workflow-orchestration", "debugging"]
+
+difficulty_explanation = "Five interacting defects span four modules with cross-module masking effects. Bug E (state mismatch in resolver) is masked by Bug B (wrong parallelism) since the high parallelism fits all roots in one slot. Fixing B without E causes the system to stall. Bug C (sum vs max in critical path) inflates priorities that Bug D sorts by. Bug A changes which nodes get critical weight, cascading into C and D. All five must be fixed simultaneously for correct output."
+solution_explanation = "Fix loader to strip whitespace from priority level names, change scheduler to read from constrained section, replace sum with max in critical path computation, add depth to sort tiebreaker, and fix resolver to check completed status matching what mark_completed actually sets."
+verification_explanation = "Tests validate schedule completeness (all 15 nodes), parallelism constraint (max 3 per slot), critical priority effective weights, critical path cost values for specific nodes, and topological ordering across slots. Tests use exact numeric assertions that require all bugs fixed together."
+expert_time_estimate_hours = 3.5
+
+[task]
+name = "workflow-dag-repair"
+description = "Debug a DAG-based workflow execution engine with five interacting defects across dependency resolution, priority computation, parallelism configuration, and state management. Bugs mask each other — fixing one exposes another."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding DAG scheduling semantics, critical path analysis, dependency state machines, and configuration layering. Five bugs interact across four modules with masking effects that make incremental debugging misleading."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.run_scheduler"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the scheduler then validates output via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all five defects and re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
