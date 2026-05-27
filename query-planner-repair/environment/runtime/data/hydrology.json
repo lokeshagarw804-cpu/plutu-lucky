@@ -1,0 +1,20 @@
+{
+  "source_id": "hydrology",
+  "features": [
+    {"feature_id": "H001", "lat": 45.01, "lon": -93.02, "category": "stream"},
+    {"feature_id": "H002", "lat": 45.04, "lon": -92.97, "category": "lake"},
+    {"feature_id": "H003", "lat": 44.96, "lon": -93.05, "category": "stream"},
+    {"feature_id": "H004", "lat": 45.09, "lon": -93.01, "category": "wetland"},
+    {"feature_id": "H005", "lat": 44.98, "lon": -92.99, "category": "lake"},
+    {"feature_id": "H006", "lat": 45.03, "lon": -93.08, "category": "stream"},
+    {"feature_id": "H007", "lat": 44.91, "lon": -93.03, "category": "wetland"},
+    {"feature_id": "H008", "lat": 45.06, "lon": -92.94, "category": "lake"},
+    {"feature_id": "H009", "lat": 44.99, "lon": -93.11, "category": "stream"},
+    {"feature_id": "H010", "lat": 45.02, "lon": -93.06, "category": "wetland"},
+    {"feature_id": "H011", "lat": 45.11, "lon": -92.96, "category": "lake"},
+    {"feature_id": "H012", "lat": 44.87, "lon": -93.09, "category": "stream"},
+    {"feature_id": "H013", "lat": 45.05, "lon": -93.14, "category": "wetland"},
+    {"feature_id": "H014", "lat": 44.94, "lon": -92.91, "category": "lake"},
+    {"feature_id": "H015", "lat": 45.00, "lon": -93.00, "category": "stream"}
+  ]
+}

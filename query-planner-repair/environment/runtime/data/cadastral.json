@@ -1,0 +1,20 @@
+{
+  "source_id": "cadastral",
+  "features": [
+    {"feature_id": "C001", "lat": 45.01, "lon": -93.01, "category": "parcel"},
+    {"feature_id": "C002", "lat": 45.00, "lon": -93.00, "category": "boundary"},
+    {"feature_id": "C003", "lat": 44.99, "lon": -93.02, "category": "parcel"},
+    {"feature_id": "C004", "lat": 45.03, "lon": -92.99, "category": "easement"},
+    {"feature_id": "C005", "lat": 44.98, "lon": -93.04, "category": "parcel"},
+    {"feature_id": "C006", "lat": 45.02, "lon": -93.03, "category": "boundary"},
+    {"feature_id": "C007", "lat": 44.97, "lon": -92.97, "category": "easement"},
+    {"feature_id": "X901", "lat": 45.04, "lon": -93.01, "category": "parcel"},
+    {"feature_id": "C009", "lat": 44.96, "lon": -93.05, "category": "boundary"},
+    {"feature_id": "C010", "lat": 45.05, "lon": -92.98, "category": "easement"},
+    {"feature_id": "C011", "lat": 45.01, "lon": -93.06, "category": "parcel"},
+    {"feature_id": "C012", "lat": 44.95, "lon": -93.00, "category": "boundary"},
+    {"feature_id": "C013", "lat": 45.06, "lon": -93.02, "category": "easement"},
+    {"feature_id": "C014", "lat": 44.94, "lon": -93.03, "category": "parcel"},
+    {"feature_id": "C015", "lat": 45.07, "lon": -92.97, "category": "boundary"}
+  ]
+}
