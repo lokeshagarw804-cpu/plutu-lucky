@@ -2,7 +2,7 @@
 
 ## Overview
 
-A seismic waveform coherence pipeline processes raw vertical-component recordings from a network of broadband seismometers. It computes pairwise windowed coherence between all receiver pairs, assembles a coherence grid, and detects sustained coherence phases that indicate significant waveform coupling.
+A seismic waveform coherence system processes raw vertical-component recordings from a network of broadband seismometers. It computes pairwise windowed coherence between all receiver pairs, assembles a coherence grid, and detects sustained coherence phases that indicate significant waveform coupling.
 
 ## System Environment
 
@@ -13,7 +13,7 @@ A seismic waveform coherence pipeline processes raw vertical-component recording
 
 ## Architecture
 
-The pipeline processes seismic waveforms through four stages:
+The system processes seismic waveforms through four stages:
 
 1. *Trace Loading* (`/app/runtime/trace_loader.py`) — Reads receiver JSON files from `/app/runtime/data/`, applies instrument response correction, and prepares traces for analysis
 
@@ -25,12 +25,12 @@ The pipeline processes seismic waveforms through four stages:
 
 Supporting modules:
 - `/app/runtime/bandpass.py` — Frequency isolation filter implementation
-- `/app/runtime/config.ini` — Pipeline parameters
+- `/app/runtime/config.ini` — System parameters
 - `/app/runtime/run_correlator.py` — Main entry point
 
 ## Problem
 
-The pipeline produces output but with several anomalies:
+The system produces output but with several anomalies:
 - Coherence values for known correlated receiver pairs differ from reference values
 - The coherence grid receiver ordering does not match the expected numeric identifier sequence
 - Known anti-phase receiver pairs are not reported as coherence phases despite exceeding the strength threshold
@@ -75,7 +75,7 @@ When all defects are resolved:
 
 | File | Purpose |
 |------|---------|
-| /app/runtime/config.ini | Pipeline parameters and thresholds |
+| /app/runtime/config.ini | System parameters and thresholds |
 | /app/runtime/trace_loader.py | Receiver trace loading and preparation |
 | /app/runtime/bandpass.py | Frequency isolation filter |
 | /app/runtime/coherence_engine.py | Windowed coherence computation |
@@ -85,4 +85,4 @@ When all defects are resolved:
 
 ## Your Task
 
-Identify and fix defects in the runtime source files under /app/runtime/ so that the pipeline produces correct output matching the expected behavior described above. Multiple modules contain interacting defects that collectively produce incorrect results.
+Identify and fix defects in the runtime source files under /app/runtime/ so that the system produces correct output matching the expected behavior described above. Multiple modules contain interacting defects that collectively produce incorrect results.
