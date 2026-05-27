@@ -1,6 +1,7 @@
 version = "1.0"
 
 [metadata]
+name = "fleet-telemetry-repair"
 author_name = "Lokesh Agarwal"
 author_email = "lokeshagarw804@gmail.com"
 category = "data_pipeline"
@@ -11,14 +12,9 @@ junior_time_estimate_min = 360
 
 [environment]
 dockerfile = "environment/Dockerfile"
-entrypoint = "python3 -m runtime.main"
-language = "python"
-dependencies = "stdlib-only"
-timeout = 300
 
 [verifier]
 command = "bash tests/test.sh"
-description = "Runs the pipeline then validates output via pytest."
 
 [agent]
 timeout_sec = 900
