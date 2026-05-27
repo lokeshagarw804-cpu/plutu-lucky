@@ -1,8 +1,9 @@
 """Merge scorer — computes aggregate conflict scores per file region.
 
 Processes classified hunks in batches (grouped by overlapping line ranges)
-and produces a region-level conflict score. Each batch of hunks covering
-a region produces a single score representing the final conflict severity.
+and produces a region-level conflict score. The scoring approach aggregates
+severity values from all hunks within an overlapping region to capture
+the cumulative complexity of that file section.
 """
 
 
@@ -12,9 +13,9 @@ class MergeScorer:
     def score_regions(self, classified_hunks):
         """Group hunks into overlapping regions and score each region.
 
-        Hunks are grouped by overlapping line ranges. For each region,
-        the conflict score should reflect the final hunk's severity
-        (most recent assessment supersedes earlier ones within a region).
+        Hunks are grouped by overlapping line ranges. Adjacent or overlapping
+        hunks are merged into a single region. Each region receives a
+        conflict score derived from the severity of its constituent hunks.
 
         Returns list of scored region records.
         """
@@ -39,7 +40,7 @@ class MergeScorer:
 
         regions.append(current_region)
 
-        # Score each region
+        # Score each region using aggregate severity computation
         scored = []
         for region_hunks in regions:
             score = self._compute_region_score(region_hunks)
@@ -59,9 +60,10 @@ class MergeScorer:
     def _compute_region_score(self, region_hunks):
         """Compute conflict score for a region from its constituent hunks.
 
-        When multiple hunks cover a region, each subsequent hunk's score
-        represents a refined assessment. The final score should be the
-        last hunk's similarity inversion (100 - similarity).
+        Iterates through all hunks in the region. Each hunk contributes
+        its severity (100 - similarity_score) to the region score.
+        The iteration processes hunks in order, updating the running
+        score with each hunk's contribution.
         """
         score = 0
         for hunk in region_hunks:

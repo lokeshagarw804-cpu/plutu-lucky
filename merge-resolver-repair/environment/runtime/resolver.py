@@ -1,8 +1,11 @@
 """Merge resolver — produces final merge output with conflict annotations.
 
 Assembles the final merge report by ordering conflict regions deterministically
-and computing resolution metadata. Regions are ordered by line number with
-deterministic tiebreaking for regions that start at the same line.
+and computing resolution metadata. The ordering algorithm uses a composite key
+derived from position and identifier fields for platform-independent stable output.
+
+The resolution.ordering config section documents the intended key structure,
+though the implementation applies it directly in the sort lambda below.
 """
 
 
@@ -12,9 +15,8 @@ class MergeResolver:
     def resolve(self, scored_regions, classified_hunks):
         """Produce final merge report with ordered conflict regions.
 
-        Regions starting at the same line must be ordered deterministically.
-        The sort order is: (line_start, hunk_id, branch_id) to ensure
-        reproducible output across runs. Note: hunk_id is local to each branch.
+        Conflicts sharing a line position are disambiguated using their
+        hunk_id field as a secondary sort key to produce consistent ordering.
         """
         # Build conflict entries from scored regions
         conflicts = []
@@ -22,7 +24,7 @@ class MergeResolver:
             if not region["has_conflict"]:
                 continue
 
-            # Find the hunks belonging to this region
+            # Collect hunks that fall within this region's boundaries
             region_hunks = [
                 h for h in classified_hunks
                 if h["line_start"] >= region["line_start"]
@@ -41,8 +43,7 @@ class MergeResolver:
                     "content_preview": hunk["content"][:80],
                 })
 
-        # Sort conflicts for deterministic output
-        # Note: hunk_id is local to each branch
+        # Deterministic ordering: primary by position, secondary by identifier
         conflicts.sort(key=lambda c: (c["line_start"], c["hunk_id"]))
 
         # Compute summary statistics

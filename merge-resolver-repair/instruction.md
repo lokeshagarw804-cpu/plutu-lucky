@@ -17,31 +17,33 @@ The system processes branch data through six stages:
 
 1. *Loading* (`/app/runtime/loader.py`) — Reads branch history JSON files from `/app/runtime/data/`
 
-2. *Diffing* (`/app/runtime/differ.py`) — Computes line-level diffs between each branch and the common base, producing hunk records with similarity scores. The strategy for each hunk is read from the edit metadata and validated against the configured strategy list in `/app/runtime/config.ini` under `[strategies]`.
+2. *Diffing* (`/app/runtime/differ.py`) — Computes line-level diffs between each branch and the common base, producing hunk records with similarity scores. Each hunk carries a strategy annotation from the edit metadata, validated against the configured strategy list.
 
-3. *Classification* (`/app/runtime/classifier.py`) — Categorizes hunks as conflicts or auto-resolvable based on the strict conflict threshold. The `[merge.strict]` section in `/app/runtime/config.ini` defines `conflict_threshold=15` for production accuracy. Hunks scoring below this threshold are conflicts.
+3. *Classification* (`/app/runtime/classifier.py`) — Categorizes hunks as conflicts or auto-resolvable using the configured conflict threshold. Hunks scoring below the threshold are conflicts; those at or above are auto-resolved.
 
-4. *Scoring* (`/app/runtime/scorer.py`) — Groups hunks into overlapping line regions and computes a single conflict score per region. When multiple hunks cover the same region, the final hunk's severity assessment supersedes earlier ones within that region (last assessment wins).
+4. *Scoring* (`/app/runtime/scorer.py`) — Groups hunks into overlapping line regions and computes a single conflict score per region representing severity.
 
-5. *Resolution* (`/app/runtime/resolver.py`) — Orders conflict entries deterministically for reproducible output. Conflicts at the same line are sorted by `(line_start, branch_id, hunk_id)` to ensure stable ordering since hunk_id is local to each branch.
+5. *Resolution* (`/app/runtime/resolver.py`) — Orders conflict entries deterministically for reproducible output across environments.
 
 6. *Reporting* (`/app/runtime/reporter.py`) — Writes merge_report.json and region_summary.json to `/app/runtime/output/`
 
 ## Problem
 
 The system runs without errors but produces incorrect results:
-- Some hunks that should use the "minimal" strategy fall back to the default strategy
-- The conflict/auto-resolved classification counts appear wrong — too many hunks marked as conflicts
-- Region-level conflict scores seem inflated compared to expected values
-- The ordering of conflicts at the same line number is inconsistent across different environments
+- The number of recognized merge strategies does not match the configured count
+- Conflict classification counts differ from expected values for the given data
+- Region-level conflict scores appear inconsistent with individual hunk severities
+- The ordering of conflicts sharing a line number varies between runs on different platforms
+- Some hunks from a specific branch fail to appear in the conflict report despite low similarity
 
 ## Expected Correct Output
 
 When all defects are resolved:
-- The system should recognize all 4 configured merge strategies: recursive, patience, histogram, minimal
-- With strict threshold classification, exactly 6 hunks should be conflicts and 4 should be auto-resolved
-- Region scores should reflect final hunk severity (not accumulated), with values around 80-88
-- Conflicts at the same line should be ordered by branch_id then hunk_id for deterministic output
+- All configured merge strategies should be recognized and appear in the output
+- Conflict and auto-resolved counts should correctly reflect the threshold classification
+- Region scores should represent single-hunk severity magnitudes (not multi-hunk aggregates)
+- Conflict ordering must be fully deterministic regardless of platform or run order
+- All qualifying hunks from both branches must appear in the final conflict list
 
 ## Output Schema
 
