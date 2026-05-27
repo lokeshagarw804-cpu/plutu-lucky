@@ -1,40 +1,20 @@
+version = "1.0"
+
+[metadata]
 author_name = "Lokesh Agarwal"
 author_email = "lokeshagarw804@gmail.com"
 category = "distributed_systems"
 difficulty = "hard"
 tags = ["distributed-systems", "metrics", "performance-monitoring", "percentile-ranking", "debugging"]
+expert_time_estimate_min = 180
+junior_time_estimate_min = 480
 
-difficulty_explanation = "Four interacting defects across three modules require understanding weighted scoring math, percentile ranking with node exclusion semantics, window boundary arithmetic, and threshold comparison behavior. The exclude_node configuration appears intentional but is actually the root cause of missing incidents — agents consistently misjudge it as correct design."
-solution_explanation = "Fix window boundary off-by-one in aggregator (< to <=), fix weight accumulator overwrite in ranker (= to +=), remove the exclude_node filter from ranking (all nodes must participate for correct percentile calculation), and fix threshold comparison in detector (> to >=)."
-verification_explanation = "Tests validate exact incident counts, affected nodes, severity values, duration windows, and node detail ordering. Tests require all four bugs to be fixed simultaneously for passage — partial fixes still produce wrong counts."
-expert_time_estimate_hours = 3.0
-
-[task]
-name = "metric-aggregator"
-description = "Debug a distributed metrics aggregation engine with four interacting defects across windowed aggregation, weighted percentile ranking, node filtering, and threshold detection. One bug appears to be intentional configuration but is actually the key defect causing missed incidents."
-
-[task.difficulty]
-level = "hard"
-reasoning = "Requires understanding weighted scoring with multiple normalized metrics, percentile rank computation across node pools, the semantic difference between config-driven exclusion and correct behavior, and window boundary arithmetic. Defects interact — fixing one changes rankings that other modules depend on."
-
-[task.runtime]
-entrypoint = "python3 -m runtime.main"
-language = "python"
-dependencies = "stdlib-only"
-
-[task.validator]
+[verifier]
 command = "bash tests/test.sh"
 description = "Runs the aggregation engine then validates output via pytest."
 
-[task.repair]
-command = "bash solution/solve.sh"
-description = "Patches all four defects and re-runs the system."
-
-[task.resources]
-timeout = 300
-cpu = 2
-memory = "2GB"
-disk = "1GB"
+[environment]
+Dockerfile = "environment/Dockerfile"
 
 [agent]
 timeout = 900
