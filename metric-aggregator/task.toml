@@ -11,6 +11,7 @@ expert_time_estimate_min = 180
 junior_time_estimate_min = 480
 
 [verifier]
+command = "bash /tests/test.sh"
 timeout_sec = 240.0
 
 [agent]
