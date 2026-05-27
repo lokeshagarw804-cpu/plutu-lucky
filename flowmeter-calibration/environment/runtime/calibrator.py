@@ -14,15 +14,16 @@ class FlowCalibrator:
         self._config = configparser.ConfigParser()
         self._config.read(config_path)
         coeff_str = self._config.get("calibration", "coefficients")
-        # coefficients in config are listed low-order to high-order: a0,a1,a2,a3
-        # so polynomial is: a0 + a1*x + a2*x^2 + a3*x^3
         self._coefficients = [float(c) for c in coeff_str.split(",")]
+        self._ref_voltage = self._config.getfloat("calibration", "reference_voltage")
 
     def calibrate_readings(self, meters):
         """Apply calibration to all meter readings.
 
-        For each reading, computes flow = sum(coeff[i] * voltage^i)
-        using the polynomial coefficients.
+        For each reading, computes flow using the polynomial calibration
+        curve. Input voltages are normalized against the reference voltage
+        before evaluation to maintain calibration accuracy across different
+        sensor ranges.
 
         Returns dict mapping meter_id to list of calibrated reading dicts
         with keys: timestamp, voltage, temperature, flow_raw.
@@ -32,7 +33,9 @@ class FlowCalibrator:
             readings = []
             for r in meter_data["readings"]:
                 voltage = r["voltage"]
-                flow = self._evaluate_polynomial(voltage)
+                # Normalize voltage against reference for calibration stability
+                normalized_v = voltage / self._ref_voltage
+                flow = self._evaluate_polynomial(normalized_v)
                 readings.append({
                     "timestamp": r["timestamp"],
                     "voltage": voltage,
@@ -43,15 +46,11 @@ class FlowCalibrator:
         return calibrated
 
     def _evaluate_polynomial(self, x):
-        """Evaluate calibration polynomial at voltage x.
+        """Evaluate calibration polynomial at voltage x using Horner's method.
 
-        Polynomial: a0 + a1*x + a2*x^2 + a3*x^3
-        Coefficients stored as [a0, a1, a2, a3].
+        Horner's method provides numerically stable evaluation with minimal
+        multiplications: result = (...((c[0]*x + c[1])*x + c[2])*x + ... + c[n])
         """
-        # BUG: evaluates in reversed coefficient order (high-to-low)
-        # treating coefficients as [a3, a2, a1, a0] via Horner's method
-        # This computes: ((a0*x + a1)*x + a2)*x + a3
-        # instead of: a0 + a1*x + a2*x^2 + a3*x^3
         result = 0.0
         for coeff in self._coefficients:
             result = result * x + coeff

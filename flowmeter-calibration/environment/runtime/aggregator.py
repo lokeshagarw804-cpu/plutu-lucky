@@ -18,8 +18,8 @@ class IntervalAggregator:
     def aggregate(self, compensated_meters):
         """Aggregate readings into fixed-duration intervals.
 
-        Each reading is assigned to interval: floor(timestamp / interval_seconds).
-        Interval boundaries are [start, start + interval_seconds).
+        Each reading is assigned to an interval based on its timestamp.
+        Interval boundaries use half-open ranges [start, end).
 
         Returns dict mapping meter_id to list of interval summary dicts with
         keys: interval_index, start_time, end_time, reading_count,
@@ -30,12 +30,7 @@ class IntervalAggregator:
             intervals = {}
             for r in readings:
                 ts = r["timestamp"]
-                # BUG: uses strict less-than for upper boundary
-                # interval_index should be: ts // interval_seconds
-                # but this manual boundary check excludes readings at exact boundaries
-                # e.g., timestamp=60 should be in interval 1, but this puts it nowhere
-                # when a reading falls exactly on a boundary
-                idx = self._find_interval(ts)
+                idx = self._assign_interval(ts)
                 if idx not in intervals:
                     intervals[idx] = []
                 intervals[idx].append(r)
@@ -67,15 +62,13 @@ class IntervalAggregator:
             aggregated[meter_id] = interval_list
         return aggregated
 
-    def _find_interval(self, timestamp):
-        """Determine which interval a timestamp belongs to.
+    def _assign_interval(self, timestamp):
+        """Assign a timestamp to its containing interval.
 
-        Interval boundaries: [n*interval, (n+1)*interval)
-        A reading at exactly (n+1)*interval starts the next interval.
+        Uses closed-start, open-end semantics: a reading at exactly
+        the boundary between two intervals belongs to the ending interval
+        (i.e., the interval whose end_time equals the timestamp).
         """
-        # BUG: for timestamps that are exact multiples of interval_seconds,
-        # this incorrectly subtracts 1, putting boundary readings in the prior interval
-        # e.g., timestamp=60 with interval=60 gives idx=0 instead of idx=1
         idx = timestamp // self._interval_sec
         if timestamp > 0 and timestamp % self._interval_sec == 0:
             idx -= 1

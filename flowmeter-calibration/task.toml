@@ -4,18 +4,18 @@ category = "data_processing"
 difficulty = "hard"
 tags = ["calibration", "polynomial", "temperature-compensation", "data-pipeline", "debugging"]
 
-difficulty_explanation = "Four interacting bugs across four modules require understanding polynomial evaluation order (Horner's method), temperature offset vs absolute value in compensation, interval boundary semantics, and the distinction between raw vs compensated flow in compliance checks. Partial fixes produce plausible but incorrect output."
-solution_explanation = "Fix Horner iteration to use reversed coefficients, change temperature compensation to use offset from reference, remove boundary subtraction in aggregator, and switch compliance check from raw to compensated flow while fixing meter sort order."
-verification_explanation = "Tests verify meter ordering, compliance counts, specific violation intervals, reading counts, and interval totals. Values are deterministically derived from input data and correct algorithm but not directly stated in instructions."
-expert_time_estimate_hours = 2.5
+difficulty_explanation = "Five interacting bugs across four modules require understanding polynomial evaluation coefficient ordering (Horner's method), spurious voltage normalization that looks intentional, temperature offset-vs-absolute semantics, interval boundary inclusion rules, and the distinction between raw vs compensated flow in compliance checks plus lexicographic vs numeric sorting. Partial fixes produce plausible but incorrect output because bugs interact nonlinearly."
+solution_explanation = "Fix Horner iteration to use reversed coefficients, remove spurious voltage normalization, change temperature compensation to use offset from reference, remove boundary subtraction in aggregator, and switch compliance check from raw to compensated flow while fixing meter sort order."
+verification_explanation = "Tests verify meter ordering, compliance counts, specific violation intervals for meter_20, reading counts, and interval totals. Values are deterministically derived from input data and correct algorithm but require all five fixes to produce the expected combination of results."
+expert_time_estimate_hours = 3.0
 
 [task]
 name = "flowmeter-calibration"
-description = "Debug a flow meter calibration pipeline with four interacting defects across polynomial evaluation, temperature compensation, interval aggregation, and compliance reporting."
+description = "Debug a flow meter calibration pipeline with five interacting defects across polynomial evaluation, voltage normalization, temperature compensation, interval aggregation, and compliance reporting."
 
 [task.difficulty]
 level = "hard"
-reasoning = "Requires understanding Horner's method coefficient ordering, the difference between absolute temperature and offset-from-reference in compensation formulas, interval boundary inclusion semantics, and which flow value (raw vs compensated) should be used for compliance. Bugs interact so partial fixes still produce wrong output."
+reasoning = "Requires understanding Horner's method coefficient ordering, recognizing that voltage normalization is spurious despite looking intentional, distinguishing absolute temperature from offset-from-reference in compensation, understanding interval boundary half-open semantics, and knowing which flow value (raw vs compensated) is appropriate for compliance. Bugs interact so any partial fix still produces wrong output."
 
 [task.runtime]
 entrypoint = "python3 -m runtime.main"
@@ -28,7 +28,7 @@ description = "Runs the calibration pipeline then validates output via pytest."
 
 [task.repair]
 command = "bash solution/solve.sh"
-description = "Patches all four defects and re-runs the system."
+description = "Patches all five defects and re-runs the system."
 
 [task.resources]
 timeout = 300

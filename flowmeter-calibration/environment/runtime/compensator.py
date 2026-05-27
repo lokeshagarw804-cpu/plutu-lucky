@@ -1,8 +1,8 @@
 """Temperature compensation — adjusts flow readings for thermal effects.
 
-Applies linear temperature correction to raw flow values based on the
-deviation from a reference temperature. The correction factor scales
-flow proportionally to temperature offset.
+Applies linear temperature correction to raw flow values based on
+temperature-dependent fluid viscosity changes. Higher temperatures
+reduce viscosity and increase effective flow rate.
 """
 import configparser
 
@@ -19,8 +19,8 @@ class TempCompensator:
     def compensate(self, calibrated_meters):
         """Apply temperature compensation to all calibrated readings.
 
-        Formula: flow_compensated = flow_raw * (1 + factor * (temp - reference_temp))
-        The correction accounts for fluid viscosity changes with temperature.
+        The correction scales flow proportionally to thermal conditions.
+        At reference temperature the correction is neutral (factor of 1.0).
 
         Returns dict mapping meter_id to list of compensated reading dicts
         with added key: flow_compensated.
@@ -31,8 +31,7 @@ class TempCompensator:
             for r in readings:
                 temp = r["temperature"]
                 flow_raw = r["flow_raw"]
-                # BUG: uses absolute temperature instead of offset from reference
-                # should be: (temp - self._ref_temp) but uses just temp
+                # Linear thermal correction based on operating temperature
                 correction = 1.0 + self._factor * temp
                 flow_comp = flow_raw * correction
                 comp_readings.append({

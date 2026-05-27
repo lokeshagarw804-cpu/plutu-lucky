@@ -1,33 +1,34 @@
 # Flow Meter Calibration — Debugging Task
 
-## What This Is
+## Overview
 
-A calibration pipeline reads voltage/temperature data from 5 industrial flow meters, converts voltages to flow rates via a cubic polynomial, applies temperature compensation, groups readings into 60-second intervals, and checks compliance against flow limits.
+A calibration pipeline reads voltage/temperature data from industrial flow meters, converts voltages to flow rates via a cubic polynomial, applies temperature compensation, groups readings into time intervals, and checks compliance against operational flow limits. The system currently produces incorrect output.
 
 ## Environment
 
 - Python 3.11, runtime at `/app/runtime/`
 - Config: `/app/runtime/config.ini`
-- Run with: `python3 -m runtime.main`
-- Tools available: uv, pytest
+- Entry point: `python3 -m runtime.main`
+- Tools: uv, pytest available system-wide
 
 ## Pipeline Stages
 
 1. **loader.py** — reads meter JSON files from `data/`
-2. **calibrator.py** — polynomial voltage-to-flow: coefficients are `a0,a1,a2,a3` (low-to-high order), so `flow = a0 + a1*V + a2*V^2 + a3*V^3`
-3. **compensator.py** — temperature correction: `flow * (1 + factor * (temp - ref_temp))`
-4. **aggregator.py** — groups by interval index `floor(timestamp / 60)`
-5. **reporter.py** — checks compensated flow against min/max limits, orders meters numerically
+2. **calibrator.py** — polynomial voltage-to-flow conversion
+3. **compensator.py** — temperature correction
+4. **aggregator.py** — groups readings into time intervals
+5. **reporter.py** — compliance checking against limits
 
 ## Symptoms
 
-- Flow values are way too high for meters with voltage > 2.0
-- meter_20 should have 2 compliance violations but doesn't show the right count
-- Meter ordering in output doesn't match expected numeric order
-- Interval reading counts are off by one for some meters
+- Overall compliance results are wrong
+- Some meters flagged incorrectly as non-compliant
+- Violation intervals don't match expected values
+- Meter ordering in output doesn't follow expected convention
 
-## Expected Correct Output
+## Expected Output
 
+When all defects are fixed:
 - Meter order: meter_1, meter_3, meter_7, meter_12, meter_20
 - 4 compliant meters, 1 non-compliant (meter_20)
 - meter_20 has violations at intervals 1 and 2
@@ -35,9 +36,9 @@ A calibration pipeline reads voltage/temperature data from 5 industrial flow met
 
 ## Output Files
 
-- `/app/runtime/output/calibration_results.json`
-- `/app/runtime/output/summary.json`
+- `/app/runtime/output/calibration_results.json` — full compliance report with meter_order, total_meters, compliant_count, non_compliant_count, meters array
+- `/app/runtime/output/summary.json` — summary with total_meters, compliant_count, meter_order, total_readings_processed, total_intervals
 
 ## Your Task
 
-Find and fix all bugs in the runtime source files so the pipeline produces correct output.
+Identify and fix defects in the runtime source files so the pipeline produces correct output. Multiple modules contain interacting defects.

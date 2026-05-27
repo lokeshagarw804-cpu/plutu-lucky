@@ -4,52 +4,65 @@ import sys
 
 
 def patch_calibrator():
-    """Fix polynomial evaluation order in calibrator."""
+    """Fix polynomial evaluation in calibrator.
+
+    Two issues:
+    1. Horner's method iterates coefficients in storage order [a0,a1,a2,a3]
+       but Horner's requires highest-degree first, so must use reversed().
+    2. Voltage is incorrectly normalized by reference_voltage before evaluation.
+       The polynomial coefficients are calibrated for raw voltage input.
+    """
     path = "/app/runtime/calibrator.py"
     with open(path, "r") as f:
         content = f.read()
 
-    # The bug: Horner's method iterates coefficients in storage order [a0,a1,a2,a3]
-    # which computes ((a0*x + a1)*x + a2)*x + a3
-    # Correct: iterate reversed so Horner gives a3*x^3 + a2*x^2 + a1*x + a0
-    old = """        result = 0.0
-        for coeff in self._coefficients:
-            result = result * x + coeff
-        return result"""
+    # Fix 1: Remove spurious voltage normalization
+    content = content.replace(
+        "                # Normalize voltage against reference for calibration stability\n"
+        "                normalized_v = voltage / self._ref_voltage\n"
+        "                flow = self._evaluate_polynomial(normalized_v)",
+        "                flow = self._evaluate_polynomial(voltage)"
+    )
 
-    new = """        result = 0.0
-        for coeff in reversed(self._coefficients):
-            result = result * x + coeff
-        return result"""
+    # Fix 2: Reverse coefficient iteration for correct Horner's evaluation
+    content = content.replace(
+        "        for coeff in self._coefficients:",
+        "        for coeff in reversed(self._coefficients):"
+    )
 
-    content = content.replace(old, new)
     with open(path, "w") as f:
         f.write(content)
 
 
 def patch_compensator():
-    """Fix temperature offset calculation in compensator."""
+    """Fix temperature offset calculation in compensator.
+
+    Uses absolute temperature instead of offset from reference.
+    Should be: (temp - ref_temp) not just temp.
+    """
     path = "/app/runtime/compensator.py"
     with open(path, "r") as f:
         content = f.read()
 
-    # Bug: uses raw temperature instead of (temp - reference)
-    old = "correction = 1.0 + self._factor * temp"
-    new = "correction = 1.0 + self._factor * (temp - self._ref_temp)"
+    content = content.replace(
+        "correction = 1.0 + self._factor * temp",
+        "correction = 1.0 + self._factor * (temp - self._ref_temp)"
+    )
 
-    content = content.replace(old, new)
     with open(path, "w") as f:
         f.write(content)
 
 
 def patch_aggregator():
-    """Fix interval boundary assignment in aggregator."""
+    """Fix interval boundary assignment in aggregator.
+
+    Boundary timestamps are incorrectly assigned to the prior interval.
+    Timestamp 60 should be in interval 1, not interval 0.
+    """
     path = "/app/runtime/aggregator.py"
     with open(path, "r") as f:
         content = f.read()
 
-    # Bug: subtracts 1 from index for exact boundary timestamps
-    # This incorrectly pushes boundary readings into prior interval
     old = """        idx = timestamp // self._interval_sec
         if timestamp > 0 and timestamp % self._interval_sec == 0:
             idx -= 1
@@ -59,25 +72,32 @@ def patch_aggregator():
         return idx"""
 
     content = content.replace(old, new)
+
     with open(path, "w") as f:
         f.write(content)
 
 
 def patch_reporter():
-    """Fix compliance check to use compensated flow and numeric sort."""
+    """Fix compliance check and meter ordering in reporter.
+
+    1. Sorts meter IDs lexicographically instead of by numeric suffix.
+    2. Checks mean_flow_raw instead of mean_flow_compensated for limits.
+    """
     path = "/app/runtime/reporter.py"
     with open(path, "r") as f:
         content = f.read()
 
-    # Bug 1: string sort instead of numeric
-    old = "meter_ids = sorted(aggregated_meters.keys())"
-    new = "meter_ids = sorted(aggregated_meters.keys(), key=lambda s: int(s.split('_')[1]))"
-    content = content.replace(old, new)
+    # Fix sort order
+    content = content.replace(
+        "meter_ids = sorted(aggregated_meters.keys())",
+        "meter_ids = sorted(aggregated_meters.keys(), key=lambda s: int(s.split('_')[1]))"
+    )
 
-    # Bug 2: checks raw flow instead of compensated
-    old = '                mean_flow = interval["mean_flow_raw"]'
-    new = '                mean_flow = interval["mean_flow_compensated"]'
-    content = content.replace(old, new)
+    # Fix compliance check to use compensated flow
+    content = content.replace(
+        'mean_flow = interval["mean_flow_raw"]',
+        'mean_flow = interval["mean_flow_compensated"]'
+    )
 
     with open(path, "w") as f:
         f.write(content)

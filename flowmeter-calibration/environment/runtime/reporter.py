@@ -19,16 +19,13 @@ class ComplianceReporter:
     def generate_report(self, aggregated_meters):
         """Generate compliance report for all meters.
 
-        Checks each interval's mean compensated flow against limits.
+        Checks each interval's mean flow against operational limits.
         Also checks deviation (max - min) of compensated readings within
-        each interval.
+        each interval for measurement consistency.
 
         Returns dict with keys: meter_order, total_meters, compliant_count,
         non_compliant_count, meters (list of per-meter results).
         """
-        # BUG: sorts meter IDs by string instead of numeric suffix
-        # "meter_12" < "meter_20" < "meter_3" < "meter_7" in string sort
-        # should be: meter_1, meter_3, meter_7, meter_12, meter_20
         meter_ids = sorted(aggregated_meters.keys())
 
         meters_report = []
@@ -40,7 +37,6 @@ class ComplianceReporter:
             total_intervals = len(intervals)
 
             for interval in intervals:
-                # BUG: checks raw flow instead of compensated flow for limits
                 mean_flow = interval["mean_flow_raw"]
                 readings = interval["readings"]
 
