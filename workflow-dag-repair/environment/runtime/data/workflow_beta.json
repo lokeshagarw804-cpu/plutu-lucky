@@ -1,0 +1,24 @@
+{
+  "workflow_id": "beta",
+  "submit_time": 1000,
+  "jobs": [
+    {"job_id": "b_fetch_1", "priority": "critical", "duration": 2, "resources": {"cpu": 12, "memory": 40, "network": 300}, "depends_on": []},
+    {"job_id": "b_fetch_2", "priority": "critical", "duration": 2, "resources": {"cpu": 12, "memory": 40, "network": 300}, "depends_on": []},
+    {"job_id": "b_parse", "priority": "high", "duration": 3, "resources": {"cpu": 25, "memory": 80}, "depends_on": ["b_fetch_1", "b_fetch_2"]},
+    {"job_id": "b_deduplicate", "priority": "high", "duration": 4, "resources": {"cpu": 30, "memory": 96}, "depends_on": ["b_parse"]},
+    {"job_id": "b_enrich", "priority": "medium", "duration": 3, "resources": {"cpu": 18, "memory": 64, "network": 200}, "depends_on": ["b_deduplicate"]},
+    {"job_id": "b_index", "priority": "medium", "duration": 5, "resources": {"cpu": 35, "memory": 128}, "depends_on": ["b_enrich"]},
+    {"job_id": "b_score", "priority": "high", "duration": 2, "resources": {"cpu": 20, "memory": 48}, "depends_on": ["b_index"]},
+    {"job_id": "b_rank", "priority": "high", "duration": 2, "resources": {"cpu": 15, "memory": 32}, "depends_on": ["b_score"]},
+    {"job_id": "b_filter", "priority": "medium", "duration": 1, "resources": {"cpu": 8, "memory": 24}, "depends_on": ["b_rank"]},
+    {"job_id": "b_output", "priority": "low", "duration": 2, "resources": {"cpu": 5, "memory": 16}, "depends_on": ["b_filter"]},
+    {"job_id": "b_gpu_classify", "priority": "critical", "duration": 4, "resources": {"cpu": 20, "memory": 64, "gpu": 3}, "depends_on": ["b_parse"]},
+    {"job_id": "b_gpu_embed", "priority": "high", "duration": 3, "resources": {"cpu": 15, "memory": 48, "gpu": 2}, "depends_on": ["b_gpu_classify"]},
+    {"job_id": "b_aggregate", "priority": "medium", "duration": 2, "resources": {"cpu": 10, "memory": 32}, "depends_on": ["b_gpu_embed", "b_enrich"]},
+    {"job_id": "b_cache_warm", "priority": "low", "duration": 2, "resources": {"cpu": 6, "memory": 20}, "depends_on": ["b_aggregate"]},
+    {"job_id": "b_metrics", "priority": "low", "duration": 1, "resources": {"cpu": 3, "memory": 8}, "depends_on": ["b_output", "b_cache_warm"]},
+    {"job_id": "b_snapshot", "priority": "medium", "duration": 2, "resources": {"cpu": 8, "memory": 24}, "depends_on": ["b_deduplicate"]},
+    {"job_id": "b_validate", "priority": "high", "duration": 1, "resources": {"cpu": 5, "memory": 12}, "depends_on": ["b_snapshot", "b_index"]},
+    {"job_id": "b_alert", "priority": "critical", "duration": 1, "resources": {"cpu": 2, "memory": 4, "network": 100}, "depends_on": ["b_validate"]}
+  ]
+}

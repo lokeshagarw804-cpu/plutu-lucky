@@ -1,0 +1,24 @@
+{
+  "workflow_id": "alpha",
+  "submit_time": 1000,
+  "jobs": [
+    {"job_id": "a_ingest_1", "priority": "high", "duration": 2, "resources": {"cpu": 10, "memory": 32}, "depends_on": []},
+    {"job_id": "a_ingest_2", "priority": "high", "duration": 3, "resources": {"cpu": 10, "memory": 32}, "depends_on": []},
+    {"job_id": "a_transform_1", "priority": "medium", "duration": 4, "resources": {"cpu": 20, "memory": 64}, "depends_on": ["a_ingest_1"]},
+    {"job_id": "a_transform_2", "priority": "medium", "duration": 3, "resources": {"cpu": 20, "memory": 64}, "depends_on": ["a_ingest_2"]},
+    {"job_id": "a_merge", "priority": "medium", "duration": 2, "resources": {"cpu": 30, "memory": 128}, "depends_on": ["a_transform_1", "a_transform_2"]},
+    {"job_id": "a_validate", "priority": "high", "duration": 1, "resources": {"cpu": 5, "memory": 16}, "depends_on": ["a_merge"]},
+    {"job_id": "a_export_1", "priority": "low", "duration": 2, "resources": {"cpu": 8, "memory": 24}, "depends_on": ["a_validate"]},
+    {"job_id": "a_export_2", "priority": "low", "duration": 2, "resources": {"cpu": 8, "memory": 24}, "depends_on": ["a_validate"]},
+    {"job_id": "a_notify", "priority": "low", "duration": 1, "resources": {"cpu": 2, "memory": 8}, "depends_on": ["a_export_1", "a_export_2"]},
+    {"job_id": "a_archive", "priority": "low", "duration": 3, "resources": {"cpu": 5, "memory": 16}, "depends_on": ["a_notify"]},
+    {"job_id": "a_cleanup", "priority": "low", "duration": 1, "resources": {"cpu": 2, "memory": 8}, "depends_on": ["a_archive"]},
+    {"job_id": "a_gpu_render", "priority": "critical", "duration": 5, "resources": {"cpu": 15, "memory": 48, "gpu": 2}, "depends_on": ["a_transform_1"]},
+    {"job_id": "a_gpu_post", "priority": "high", "duration": 2, "resources": {"cpu": 10, "memory": 32, "gpu": 1}, "depends_on": ["a_gpu_render"]},
+    {"job_id": "a_network_sync", "priority": "medium", "duration": 3, "resources": {"cpu": 5, "memory": 16, "network": 500}, "depends_on": ["a_merge"]},
+    {"job_id": "a_final_report", "priority": "high", "duration": 1, "resources": {"cpu": 4, "memory": 12}, "depends_on": ["a_gpu_post", "a_network_sync"]},
+    {"job_id": "a_checkpoint_1", "priority": "medium", "duration": 1, "resources": {"cpu": 3, "memory": 8}, "depends_on": ["a_ingest_1", "a_ingest_2"]},
+    {"job_id": "a_checkpoint_2", "priority": "medium", "duration": 1, "resources": {"cpu": 3, "memory": 8}, "depends_on": ["a_merge"]},
+    {"job_id": "a_audit_log", "priority": "low", "duration": 2, "resources": {"cpu": 2, "memory": 4}, "depends_on": ["a_final_report", "a_notify"]}
+  ]
+}

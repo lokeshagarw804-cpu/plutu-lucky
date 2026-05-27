@@ -1,0 +1,25 @@
+{
+  "workflow_id": "gamma",
+  "submit_time": 1002,
+  "jobs": [
+    {"job_id": "g_scan_1", "priority": "high", "duration": 3, "resources": {"cpu": 14, "memory": 36}, "depends_on": []},
+    {"job_id": "g_scan_2", "priority": "high", "duration": 2, "resources": {"cpu": 14, "memory": 36}, "depends_on": []},
+    {"job_id": "g_scan_3", "priority": "medium", "duration": 4, "resources": {"cpu": 10, "memory": 28}, "depends_on": []},
+    {"job_id": "g_correlate", "priority": "high", "duration": 3, "resources": {"cpu": 28, "memory": 96}, "depends_on": ["g_scan_1", "g_scan_2", "g_scan_3"]},
+    {"job_id": "g_pattern_match", "priority": "critical", "duration": 4, "resources": {"cpu": 30, "memory": 88, "gpu": 2}, "depends_on": ["g_correlate"]},
+    {"job_id": "g_anomaly_detect", "priority": "high", "duration": 3, "resources": {"cpu": 22, "memory": 64}, "depends_on": ["g_correlate"]},
+    {"job_id": "g_classify", "priority": "medium", "duration": 2, "resources": {"cpu": 18, "memory": 48}, "depends_on": ["g_pattern_match", "g_anomaly_detect"]},
+    {"job_id": "g_report", "priority": "medium", "duration": 2, "resources": {"cpu": 8, "memory": 20}, "depends_on": ["g_classify"]},
+    {"job_id": "g_store", "priority": "low", "duration": 3, "resources": {"cpu": 6, "memory": 16, "network": 200}, "depends_on": ["g_report"]},
+    {"job_id": "g_network_push", "priority": "medium", "duration": 2, "resources": {"cpu": 4, "memory": 12, "network": 400}, "depends_on": ["g_classify"]},
+    {"job_id": "g_backup", "priority": "low", "duration": 2, "resources": {"cpu": 5, "memory": 10}, "depends_on": ["g_store"]},
+    {"job_id": "g_verify", "priority": "high", "duration": 1, "resources": {"cpu": 4, "memory": 8}, "depends_on": ["g_backup", "g_network_push"]},
+    {"job_id": "g_finalize", "priority": "low", "duration": 1, "resources": {"cpu": 2, "memory": 4}, "depends_on": ["g_verify"]},
+    {"job_id": "g_gpu_train", "priority": "high", "duration": 6, "resources": {"cpu": 18, "memory": 60, "gpu": 1}, "depends_on": ["g_correlate"]},
+    {"job_id": "g_model_eval", "priority": "medium", "duration": 2, "resources": {"cpu": 12, "memory": 40, "gpu": 1}, "depends_on": ["g_gpu_train"]},
+    {"job_id": "g_deploy", "priority": "high", "duration": 2, "resources": {"cpu": 8, "memory": 24}, "depends_on": ["g_model_eval", "g_classify"]},
+    {"job_id": "g_health_check", "priority": "critical", "duration": 1, "resources": {"cpu": 3, "memory": 6}, "depends_on": ["g_deploy"]},
+    {"job_id": "g_audit", "priority": "low", "duration": 2, "resources": {"cpu": 2, "memory": 4}, "depends_on": ["g_finalize", "g_health_check"]},
+    {"job_id": "g_archive", "priority": "low", "duration": 3, "resources": {"cpu": 4, "memory": 12}, "depends_on": ["g_audit"]}
+  ]
+}
