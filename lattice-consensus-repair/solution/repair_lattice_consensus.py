@@ -1,20 +1,11 @@
 #!/usr/bin/env python3
-"""Repair script for lattice consensus analyzer.
-
-Patches four interacting defects across the loader, DAG builder,
-weight calculator, and finality checker modules, then re-runs.
-"""
+"""Repair script for lattice consensus analyzer."""
 import os
 import sys
 
 
 def patch_loader():
-    """Fix Bug A: strip whitespace from comma-separated validator list.
-
-    The config has a trailing space before validator_4 in the
-    active_validators value. Without strip(), ' validator_4' never
-    matches 'validator_4' from the data files.
-    """
+    """Fix validator list parsing to handle whitespace."""
     path = "/app/runtime/loader.py"
     with open(path, "r") as f:
         content = f.read()
@@ -29,23 +20,18 @@ def patch_loader():
 
 
 def patch_finality_checker():
-    """Fix Bug B: read from consensus.finality section, not consensus.
-
-    The consensus section has quorum_threshold=0.80 (a less strict value
-    used for pre-confirmation). The consensus.finality section has the
-    correct strict threshold of 0.67 and confirmation_depth of 2.
-    """
+    """Fix config section used for finality parameters."""
     path = "/app/runtime/finality_checker.py"
     with open(path, "r") as f:
         content = f.read()
 
     content = content.replace(
-        'self._threshold = self._config.getfloat("consensus", "quorum_threshold")',
-        'self._threshold = self._config.getfloat("consensus.finality", "quorum_threshold")'
+        '"consensus.preconfirm", "quorum_threshold"',
+        '"consensus.final", "quorum_threshold"'
     )
     content = content.replace(
-        'self._depth = self._config.getint("consensus", "confirmation_depth")',
-        'self._depth = self._config.getint("consensus.finality", "confirmation_depth")'
+        '"consensus.preconfirm", "confirmation_depth"',
+        '"consensus.final", "confirmation_depth"'
     )
 
     with open(path, "w") as f:
@@ -53,23 +39,17 @@ def patch_finality_checker():
 
 
 def patch_weight_calculator():
-    """Fix Bug C: count each validator only at earliest confirming round.
-
-    The buggy code adds a validator's stake in every round they appear
-    (via transitive BFS), causing double-counting. The fix tracks which
-    round each validator FIRST confirms and only counts stake there.
-    """
+    """Fix weight calculation to count each validator only once."""
     path = "/app/runtime/weight_calculator.py"
     with open(path, "r") as f:
         content = f.read()
 
-    # Replace the _find_round_confirmations method to track earliest only
-    old_method = '''    def _find_round_confirmations(self, tx_id, children, tx_lookup,
-                                  tx_round, validators):
-        """Find distinct validators confirming a tx, grouped by round.
+    old_method = '''    def _collect_confirmations(self, tx_id, children, tx_lookup,
+                               tx_round, validators):
+        """Traverse descendants to find confirming validators per round.
 
-        Returns dict mapping round_number -> set of validator_ids that
-        confirmed the transaction in that round.
+        Returns dict mapping round_number to set of validator_ids that
+        confirmed the transaction in that round via the DAG.
         """
         round_validators = {}
         visited = set()
@@ -103,14 +83,14 @@ def patch_weight_calculator():
 
         return round_validators'''
 
-    new_method = '''    def _find_round_confirmations(self, tx_id, children, tx_lookup,
-                                  tx_round, validators):
-        """Find distinct validators confirming a tx, grouped by round.
+    new_method = '''    def _collect_confirmations(self, tx_id, children, tx_lookup,
+                               tx_round, validators):
+        """Traverse descendants to find confirming validators per round.
 
-        Each validator is counted only in the earliest round where they
-        first confirm the transaction, preventing stake double-counting.
+        Each validator is counted only at the earliest round in which
+        they first confirm the transaction, preventing double-counting.
 
-        Returns dict mapping round_number -> set of validator_ids.
+        Returns dict mapping round_number to set of validator_ids.
         """
         earliest_round_per_validator = {}
         visited = set()
@@ -141,7 +121,6 @@ def patch_weight_calculator():
                 if grandchild not in visited:
                     queue.append(grandchild)
 
-        # Rebuild round_validators from earliest assignments
         round_validators = {}
         for vid, er in earliest_round_per_validator.items():
             if er not in round_validators:
@@ -157,13 +136,7 @@ def patch_weight_calculator():
 
 
 def patch_dag_builder():
-    """Fix Bug D: add validator_id to sort key for deterministic ordering.
-
-    When multiple validators issue transactions at the same timestamp,
-    sorting by (timestamp, seq) alone is non-deterministic because seq
-    is local to each validator. The correct key is
-    (timestamp, validator_id, seq).
-    """
+    """Fix sort key for deterministic causal ordering."""
     path = "/app/runtime/dag_builder.py"
     with open(path, "r") as f:
         content = f.read()
@@ -177,11 +150,38 @@ def patch_dag_builder():
         f.write(content)
 
 
+def patch_run_consensus():
+    """Fix report ordering to use causal order from DAG builder."""
+    path = "/app/runtime/run_consensus.py"
+    with open(path, "r") as f:
+        content = f.read()
+
+    content = content.replace(
+        '    # Prepare transaction list for reporting in canonical order\n'
+        '    report_txs = sorted(all_txs, key=lambda t: t["tx_id"])\n'
+        '\n'
+        '    # Generate reports\n'
+        '    reporter = ConsensusReporter()\n'
+        '    finality_map, summary = reporter.generate_report(\n'
+        '        report_txs, finality, validators, tx_weights\n'
+        '    )',
+        '    # Generate reports\n'
+        '    reporter = ConsensusReporter()\n'
+        '    finality_map, summary = reporter.generate_report(\n'
+        '        all_txs, finality, validators, tx_weights\n'
+        '    )'
+    )
+
+    with open(path, "w") as f:
+        f.write(content)
+
+
 def main():
     patch_loader()
     patch_finality_checker()
     patch_weight_calculator()
     patch_dag_builder()
+    patch_run_consensus()
 
     # Re-run with fixed code
     sys.path.insert(0, "/app")
