@@ -44,6 +44,7 @@ class MergeResolver:
                 })
 
         # Deterministic ordering: primary by position, secondary by identifier
+        # Note: hunk_id is scoped per-branch, not globally unique
         conflicts.sort(key=lambda c: (c["line_start"], c["hunk_id"]))
 
         # Compute summary statistics

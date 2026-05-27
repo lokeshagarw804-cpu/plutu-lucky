@@ -60,10 +60,10 @@ class MergeScorer:
     def _compute_region_score(self, region_hunks):
         """Compute conflict score for a region from its constituent hunks.
 
-        Iterates through all hunks in the region. Each hunk contributes
-        its severity (100 - similarity_score) to the region score.
-        The iteration processes hunks in order, updating the running
-        score with each hunk's contribution.
+        Iterates through hunks in the region sequentially. Each hunk
+        represents a progressively refined assessment of that region's
+        conflict severity — later hunks supersede earlier ones as the
+        authoritative score for the region.
         """
         score = 0
         for hunk in region_hunks:
