@@ -1,0 +1,40 @@
+author_name = "Lokesh Agarwal"
+author_email = "lokeshagarw804@gmail.com"
+category = "data_pipeline"
+difficulty = "hard"
+tags = ["time-series", "anomaly-detection", "ewma", "data-pipeline", "debugging"]
+
+difficulty_explanation = "Four interacting defects across four modules require understanding EWMA mathematics, window boundary semantics, weighted averaging, and threshold cascade logic. Fixing one bug changes intermediate values that propagate through downstream stages, making partial fixes produce different but still wrong outputs."
+solution_explanation = "Fix EWMA decay weight from alpha*old to (1-alpha)*old in scorer, change window boundary from > to >= in aggregator, reverse threshold cascade order in classifier (check emergency first), and divide by sum of weights instead of sensor count in fusion."
+verification_explanation = "Tests validate total anomaly count, per-severity counts, specific vehicle scores, and window alignment. Tests use tolerance ranges for floating point values while requiring exact integer counts, preventing trivial solutions without revealing the specific bugs."
+expert_time_estimate_hours = 3.0
+
+[task]
+name = "fleet-telemetry-repair"
+description = "Debug a fleet telemetry anomaly detection pipeline with four interacting defects across EWMA scoring, window aggregation, sensor fusion, and severity classification modules."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding EWMA update math (alpha vs 1-alpha weighting), half-open interval boundary semantics, weighted vs unweighted averaging, and threshold cascade ordering. Defects interact — fixing the scorer changes all downstream z-scores which affect fusion and classification."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.main"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the pipeline then validates output via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all four defects and re-runs the pipeline."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
+
+[agent]
+timeout_sec = 900
