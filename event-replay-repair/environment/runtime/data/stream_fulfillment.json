@@ -1,0 +1,15 @@
+{
+  "stream_id": "stream_fulfillment",
+  "version": "1.0",
+  "events": [
+    {"event_id": "ful_001", "timestamp": 2250, "sequence": 1, "type": "shipment_dispatched", "entity_id": "ent_101", "payload": {"fulfillment_status": "dispatched", "carrier": "fedex", "tracking": "FX001"}},
+    {"event_id": "ful_002", "timestamp": 2550, "sequence": 2, "type": "shipment_dispatched", "entity_id": "ent_102", "payload": {"fulfillment_status": "dispatched", "carrier": "ups", "tracking": "UP002"}},
+    {"event_id": "ful_003", "timestamp": 2650, "sequence": 3, "type": "shipment_dispatched", "entity_id": "ent_103", "payload": {"fulfillment_status": "dispatched", "carrier": "fedex", "tracking": "FX003"}},
+    {"event_id": "ful_004", "timestamp": 2850, "sequence": 4, "type": "shipment_dispatched", "entity_id": "ent_104", "payload": {"fulfillment_status": "dispatched", "carrier": "dhl", "tracking": "DH004"}},
+    {"event_id": "ful_005", "timestamp": 3150, "sequence": 5, "type": "shipment_dispatched", "entity_id": "ent_105", "payload": {"fulfillment_status": "dispatched", "carrier": "fedex", "tracking": "FX005"}},
+    {"event_id": "ful_006", "timestamp": 3250, "sequence": 6, "type": "shipment_dispatched", "entity_id": "ent_106", "payload": {"fulfillment_status": "dispatched", "carrier": "ups", "tracking": "UP006"}},
+    {"event_id": "ful_007", "timestamp": 3400, "sequence": 7, "type": "shipment_dispatched", "entity_id": "ent_107", "payload": {"fulfillment_status": "dispatched", "carrier": "fedex", "tracking": "FX007"}},
+    {"event_id": "ful_008", "timestamp": 3550, "sequence": 8, "type": "shipment_dispatched", "entity_id": "ent_108", "payload": {"fulfillment_status": "dispatched", "carrier": "dhl", "tracking": "DH008"}},
+    {"event_id": "ful_009", "timestamp": 3650, "sequence": 9, "type": "shipment_dispatched", "entity_id": "ent_109", "payload": {"fulfillment_status": "dispatched", "carrier": "ups", "tracking": "UP009"}}
+  ]
+}

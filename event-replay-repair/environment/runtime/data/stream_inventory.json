@@ -1,0 +1,24 @@
+{
+  "stream_id": "stream_inventory",
+  "version": "1.0",
+  "events": [
+    {"event_id": "inv_001", "timestamp": 1000, "sequence": 1, "type": "stock_adjusted", "entity_id": "ent_101", "payload": {"quantity": -3, "warehouse": "east", "fulfillment_status": "allocated"}},
+    {"event_id": "inv_002", "timestamp": 1200, "sequence": 2, "type": "stock_adjusted", "entity_id": "ent_102", "payload": {"quantity": -1, "warehouse": "west", "fulfillment_status": "allocated"}},
+    {"event_id": "inv_003", "timestamp": 1500, "sequence": 3, "type": "stock_adjusted", "entity_id": "ent_103", "payload": {"quantity": -5, "warehouse": "east", "fulfillment_status": "allocated"}},
+    {"event_id": "inv_004", "timestamp": 1800, "sequence": 4, "type": "stock_adjusted", "entity_id": "ent_104", "payload": {"quantity": -1, "warehouse": "central", "fulfillment_status": "allocated"}},
+    {"event_id": "inv_005", "timestamp": 2100, "sequence": 5, "type": "stock_adjusted", "entity_id": "ent_105", "payload": {"quantity": -7, "warehouse": "east", "fulfillment_status": "allocated"}},
+    {"event_id": "inv_006", "timestamp": 2200, "sequence": 6, "type": "fulfillment_update", "entity_id": "ent_101", "payload": {"quantity": 0, "warehouse": "east", "fulfillment_status": "shipped"}},
+    {"event_id": "inv_007", "timestamp": 2400, "sequence": 7, "type": "stock_adjusted", "entity_id": "ent_106", "payload": {"quantity": -1, "warehouse": "west", "fulfillment_status": "allocated"}},
+    {"event_id": "inv_008", "timestamp": 2500, "sequence": 8, "type": "fulfillment_update", "entity_id": "ent_102", "payload": {"quantity": 0, "warehouse": "west", "fulfillment_status": "shipped"}},
+    {"event_id": "inv_009", "timestamp": 2600, "sequence": 9, "type": "fulfillment_update", "entity_id": "ent_103", "payload": {"quantity": 0, "warehouse": "east", "fulfillment_status": "shipped"}},
+    {"event_id": "inv_010", "timestamp": 2700, "sequence": 10, "type": "stock_adjusted", "entity_id": "ent_107", "payload": {"quantity": -3, "warehouse": "central", "fulfillment_status": "allocated"}},
+    {"event_id": "inv_011", "timestamp": 2800, "sequence": 11, "type": "fulfillment_update", "entity_id": "ent_104", "payload": {"quantity": 0, "warehouse": "central", "fulfillment_status": "shipped"}},
+    {"event_id": "inv_012", "timestamp": 3000, "sequence": 12, "type": "stock_adjusted", "entity_id": "ent_108", "payload": {"quantity": -2, "warehouse": "east", "fulfillment_status": "allocated"}},
+    {"event_id": "inv_013", "timestamp": 3100, "sequence": 13, "type": "fulfillment_update", "entity_id": "ent_105", "payload": {"quantity": 0, "warehouse": "east", "fulfillment_status": "shipped"}},
+    {"event_id": "inv_014", "timestamp": 3200, "sequence": 14, "type": "fulfillment_update", "entity_id": "ent_106", "payload": {"quantity": 0, "warehouse": "west", "fulfillment_status": "shipped"}},
+    {"event_id": "inv_015", "timestamp": 3250, "sequence": 15, "type": "stock_adjusted", "entity_id": "ent_109", "payload": {"quantity": -4, "warehouse": "central", "fulfillment_status": "allocated"}},
+    {"event_id": "inv_016", "timestamp": 3350, "sequence": 16, "type": "fulfillment_update", "entity_id": "ent_107", "payload": {"quantity": 0, "warehouse": "central", "fulfillment_status": "shipped"}},
+    {"event_id": "inv_017", "timestamp": 3500, "sequence": 17, "type": "fulfillment_update", "entity_id": "ent_108", "payload": {"quantity": 0, "warehouse": "east", "fulfillment_status": "shipped"}},
+    {"event_id": "inv_018", "timestamp": 3600, "sequence": 18, "type": "fulfillment_update", "entity_id": "ent_109", "payload": {"quantity": 0, "warehouse": "central", "fulfillment_status": "shipped"}}
+  ]
+}

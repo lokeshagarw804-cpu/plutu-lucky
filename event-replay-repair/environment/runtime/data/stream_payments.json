@@ -1,0 +1,18 @@
+{
+  "stream_id": "stream_payments",
+  "version": "1.0",
+  "events": [
+    {"event_id": "pay_001", "timestamp": 1100, "sequence": 1, "type": "payment_received", "entity_id": "ent_101", "payload": {"payment_amount": 175.00, "method": "credit_card", "status": "completed"}},
+    {"event_id": "pay_002", "timestamp": 1350, "sequence": 2, "type": "payment_received", "entity_id": "ent_102", "payload": {"payment_amount": 89.99, "method": "debit_card", "status": "completed"}},
+    {"event_id": "pay_003", "timestamp": 1700, "sequence": 3, "type": "payment_received", "entity_id": "ent_103", "payload": {"payment_amount": 245.00, "method": "credit_card", "status": "completed"}},
+    {"event_id": "pay_004", "timestamp": 1950, "sequence": 4, "type": "payment_received", "entity_id": "ent_104", "payload": {"payment_amount": 55.00, "method": "paypal", "status": "completed"}},
+    {"event_id": "pay_005", "timestamp": 2300, "sequence": 5, "type": "payment_received", "entity_id": "ent_105", "payload": {"payment_amount": 310.00, "method": "credit_card", "status": "completed"}},
+    {"event_id": "pay_006", "timestamp": 2550, "sequence": 6, "type": "payment_received", "entity_id": "ent_106", "payload": {"payment_amount": 42.75, "method": "debit_card", "status": "completed"}},
+    {"event_id": "pay_007", "timestamp": 2900, "sequence": 7, "type": "payment_received", "entity_id": "ent_107", "payload": {"payment_amount": 128.00, "method": "credit_card", "status": "completed"}},
+    {"event_id": "pay_008", "timestamp": 3100, "sequence": 8, "type": "payment_received", "entity_id": "ent_108", "payload": {"payment_amount": 67.50, "method": "paypal", "status": "completed"}},
+    {"event_id": "pay_009", "timestamp": 3450, "sequence": 9, "type": "payment_received", "entity_id": "ent_109", "payload": {"payment_amount": 195.00, "method": "credit_card", "status": "completed"}},
+    {"event_id": "pay_010", "timestamp": 3600, "sequence": 10, "type": "refund_issued", "entity_id": "ent_101", "payload": {"payment_amount": -50.00, "method": "credit_card", "status": "refunded"}},
+    {"event_id": "pay_011", "timestamp": 3750, "sequence": 11, "type": "payment_received", "entity_id": "ent_110", "payload": {"payment_amount": 88.00, "method": "debit_card", "status": "completed"}},
+    {"event_id": "pay_012", "timestamp": 3900, "sequence": 12, "type": "payment_received", "entity_id": "ent_111", "payload": {"payment_amount": 156.25, "method": "credit_card", "status": "completed"}}
+  ]
+}

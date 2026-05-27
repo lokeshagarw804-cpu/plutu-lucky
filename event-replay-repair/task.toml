@@ -1,0 +1,37 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+category = "event_sourcing"
+difficulty = "hard"
+tags = ["event-sourcing", "cqrs", "stream-processing", "aggregate-state", "debugging"]
+
+difficulty_explanation = "Four interacting defects span three modules and require understanding event sourcing semantics, configuration parsing subtleties, gauge vs counter aggregation logic, and multi-stream merge ordering. Bugs cannot be identified from instruction alone — they require tracing data flow through sequencing, projection, and aggregation stages while considering batch boundaries and timestamp collisions."
+solution_explanation = "Fix comma-split whitespace in loader to include fulfillment stream, change config section from replay to replay.incremental for correct batch size, replace gauge field accumulation with last-write-wins assignment in aggregator, and add stream_id to sort key in sequencer for deterministic cross-stream ordering."
+verification_explanation = "Tests validate stream loading counts, batch configuration, gauge field semantics with specific expected values, fulfillment status from the fourth stream, entity event counts, and deterministic ordering at timestamp collisions. Tests use exact value assertions for gauge fields and count checks that require all bugs to be fixed simultaneously."
+expert_time_estimate_hours = 3.0
+
+[task]
+name = "event-replay-repair"
+description = "Debug an event replay engine with four interacting defects across stream loading, event sequencing, payload projection, and entity aggregation. Bugs involve configuration parsing, merge ordering, and aggregate state semantics that require cross-module reasoning."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding event sourcing patterns including last-write-wins gauge semantics, deterministic multi-stream merge ordering, incremental batch processing, and configuration section hierarchy. Defects interact — fixing one changes batch boundaries and aggregate values that other modules depend on."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.run_replay"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the event replay engine then validates output via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all four defects and re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
