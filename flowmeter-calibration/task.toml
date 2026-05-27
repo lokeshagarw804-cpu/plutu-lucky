@@ -10,7 +10,7 @@ expert_time_estimate_min = 180
 junior_time_estimate_min = 360
 
 [task]
-name = "flowmeter-calibration"
+name = "dzuokumor/flowmeter-calibration"
 description = "Debug a flow meter calibration pipeline with five interacting defects across polynomial evaluation, voltage normalization, temperature compensation, interval aggregation, and compliance reporting."
 
 [verifier]
