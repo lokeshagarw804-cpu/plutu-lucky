@@ -19,7 +19,7 @@ def main():
     workflows = loader.load_workflows()
 
     # Resolve dependencies and ordering
-    resolver = DependencyResolver()
+    resolver = DependencyResolver(config_path)
     ordered_jobs = resolver.resolve(workflows)
 
     # Schedule into time slots

@@ -1,9 +1,8 @@
 """Job scheduler — assigns time slots based on parallelism constraints.
 
 Schedules jobs into discrete time slots, respecting the configured
-maximum parallel job limit and dependency ordering. The strict
-scheduling mode should be used for production workloads to prevent
-resource contention.
+maximum parallel job limit and dependency ordering. Uses the active
+scheduling mode to determine concurrency bounds.
 """
 import configparser
 
@@ -14,7 +13,6 @@ class TimeSlotScheduler:
     def __init__(self, config_path):
         self._config = configparser.ConfigParser()
         self._config.read(config_path)
-        # Production systems should use the strict parallelism limit
         self._max_parallel = self._config.getint("scheduling", "max_parallel_jobs")
         self._slot_duration = self._config.getint("scheduling", "time_slot_duration")
 

@@ -2,20 +2,20 @@ author_name = "Dhruvkumar Patel"
 author_email = "dhruvpatel2284@gmail.com"
 category = "task_scheduling"
 difficulty = "hard"
-tags = ["dag-scheduling", "resource-tracking", "dependency-resolution", "priority-queue", "debugging"]
+tags = ["dag-scheduling", "resource-tracking", "dependency-resolution", "config-parsing", "debugging"]
 
-difficulty_explanation = "Four interacting defects across three modules require understanding DAG scheduling algorithms, config parsing subtleties, resource tracking semantics, and sort stability. Bugs span whitespace-sensitive string parsing, wrong config section selection, cumulative vs peak aggregation, and missing sort tiebreaker — none are obvious from surface inspection."
-solution_explanation = "Fix tracker pool name parsing to strip whitespace, change scheduler to read from scheduling.strict config section, fix resource peak calculation from sum-across-slots to max-per-slot, and add workflow_id as third sort key in resolver for deterministic ordering."
-verification_explanation = "Tests validate parallelism constraints, resource utilization bounds, network pool tracking, and deterministic job ordering. Tests use range assertions and structural checks that require all bugs to be fixed together for full passage."
-expert_time_estimate_hours = 3.0
+difficulty_explanation = "Five interacting defects across four modules require understanding DAG scheduling algorithms, config parsing subtleties with whitespace, resource tracking aggregation semantics, sort stability across multiple tiebreaker fields, and off-by-one boundary conditions in completion time computation. Bugs span whitespace-sensitive string parsing, wrong config section selection, cumulative vs peak aggregation, missing sort tiebreaker, and inclusive-to-exclusive index conversion — none are obvious from surface inspection and several only manifest in combination."
+solution_explanation = "Fix tracker pool name parsing to strip whitespace (two locations), change scheduler to read from scheduling.production config section, fix resource peak calculation from sum-across-slots to max-per-slot, strip priority level names in resolver, add workflow_id as third sort key in resolver for deterministic ordering, and fix reporter makespan to use end_slot + 1."
+verification_explanation = "Tests validate concurrency constraints, resource utilization bounds, network pool tracking, workflow makespan computation, and deterministic job ordering. Tests use range assertions and structural checks that require all bugs to be fixed together for full passage."
+expert_time_estimate_hours = 3.5
 
 [task]
 name = "workflow-dag-repair"
-description = "Debug a workflow DAG execution engine with four interacting defects across dependency resolution, job scheduling, and resource tracking. Bugs involve config parsing subtleties, aggregation semantics, and sort stability — not simple typos."
+description = "Debug a workflow DAG execution engine with five interacting defects across dependency resolution, job scheduling, resource tracking, and report generation. Bugs involve config parsing subtleties, aggregation semantics, sort stability, and off-by-one boundary conditions."
 
 [task.difficulty]
 level = "hard"
-reasoning = "Requires tracing data flow across multiple modules, understanding the difference between peak and cumulative resource tracking, recognizing whitespace issues in config parsing, and identifying that sort stability depends on a third tiebreaker field. Defects interact — fixing one changes outputs that downstream modules consume."
+reasoning = "Requires tracing data flow across multiple modules, understanding the difference between peak and cumulative resource tracking, recognizing whitespace issues in two separate config value parsers, identifying that sort stability depends on a third tiebreaker field, and catching an off-by-one in makespan computation. Defects interact — fixing one changes outputs that downstream modules consume."
 
 [task.runtime]
 entrypoint = "python3 -m runtime.run_workflow"
@@ -28,7 +28,7 @@ description = "Runs the workflow engine then validates output via pytest."
 
 [task.repair]
 command = "bash solution/solve.sh"
-description = "Patches all four defects and re-runs the system."
+description = "Patches all five defects and re-runs the system."
 
 [task.resources]
 timeout = 300

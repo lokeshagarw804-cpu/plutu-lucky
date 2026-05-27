@@ -38,10 +38,10 @@ def patch_scheduler():
     with open(path, "r") as f:
         content = f.read()
 
-    # Fix Bug B: read from scheduling.strict instead of scheduling
+    # Fix Bug B: read from scheduling.production instead of scheduling
     content = content.replace(
         'self._max_parallel = self._config.getint("scheduling", "max_parallel_jobs")',
-        'self._max_parallel = self._config.getint("scheduling.strict", "max_parallel_jobs")'
+        'self._max_parallel = self._config.getint("scheduling.production", "max_parallel_jobs")'
     )
 
     with open(path, "w") as f:
@@ -68,10 +68,27 @@ def patch_resolver():
         f.write(content)
 
 
+def patch_reporter():
+    """Fix makespan calculation in reporter."""
+    path = "/app/runtime/reporter.py"
+    with open(path, "r") as f:
+        content = f.read()
+
+    # Fix Bug E: makespan should be end_slot + 1 (completion slot)
+    content = content.replace(
+        'completion = job["end_slot"]',
+        'completion = job["end_slot"] + 1'
+    )
+
+    with open(path, "w") as f:
+        f.write(content)
+
+
 def main():
     patch_tracker()
     patch_scheduler()
     patch_resolver()
+    patch_reporter()
 
     # Re-run with fixed code
     sys.path.insert(0, "/app")

@@ -1,7 +1,8 @@
 """Report generator — produces execution timeline and resource reports.
 
 Assembles the final output JSON files from scheduled jobs and resource
-utilization data.
+utilization data. Workflow completion is measured as the slot index
+following the last job's end slot.
 """
 import json
 import os
@@ -31,11 +32,13 @@ class ReportGenerator:
         for job in scheduled_jobs:
             wf = job["workflow_id"]
             if wf not in workflows:
-                workflows[wf] = {"jobs": [], "total_slots": 0}
+                workflows[wf] = {"jobs": [], "makespan": 0}
             workflows[wf]["jobs"].append(job)
-            end = job["end_slot"]
-            if end + 1 > workflows[wf]["total_slots"]:
-                workflows[wf]["total_slots"] = end + 1
+            # Track latest completion: end_slot is inclusive, so completion
+            # is end_slot + 1 (the next available slot after this job finishes)
+            completion = job["end_slot"]
+            if completion > workflows[wf]["makespan"]:
+                workflows[wf]["makespan"] = completion
 
         # Sort workflows alphabetically for deterministic output
         workflow_summaries = []
@@ -44,7 +47,7 @@ class ReportGenerator:
             workflow_summaries.append({
                 "workflow_id": wf_id,
                 "job_count": len(wf_data["jobs"]),
-                "total_slots": wf_data["total_slots"],
+                "makespan": wf_data["makespan"],
             })
 
         return {

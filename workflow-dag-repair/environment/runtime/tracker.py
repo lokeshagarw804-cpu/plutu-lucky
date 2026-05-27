@@ -1,9 +1,8 @@
 """Resource tracker — monitors per-slot resource utilization.
 
 Computes resource consumption for each time slot by tracking which
-jobs are active. The tracking mode (configured in resources section)
-determines whether to report peak or cumulative usage per resource
-pool across the scheduling window.
+jobs are active. Reports usage statistics based on the configured
+tracking mode for each resource pool.
 """
 import configparser
 
@@ -20,6 +19,7 @@ class ResourceTracker:
         limit_values = [int(x.strip()) for x in raw_limits.split(",")]
         pool_names = list(raw_pools.split(","))
         self._limits = dict(zip(pool_names, limit_values))
+        self._mode = self._config.get("resources", "tracking_mode")
 
     def compute_utilization(self, scheduled_jobs):
         """Compute per-slot resource usage from the scheduled job timeline.
