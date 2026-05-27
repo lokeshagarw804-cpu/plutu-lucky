@@ -1,11 +1,8 @@
 """Merge resolver — produces final merge output with conflict annotations.
 
 Assembles the final merge report by ordering conflict regions deterministically
-and computing resolution metadata. The ordering algorithm uses a composite key
-derived from position and identifier fields for platform-independent stable output.
-
-The resolution.ordering config section documents the intended key structure,
-though the implementation applies it directly in the sort lambda below.
+and computing resolution metadata. Conflicts are ordered by line position,
+then by branch identifier, then by hunk identifier for stable output.
 """
 
 
@@ -43,9 +40,8 @@ class MergeResolver:
                     "content_preview": hunk["content"][:80],
                 })
 
-        # Deterministic ordering: primary by position, secondary by identifier
-        # Note: hunk_id is scoped per-branch, not globally unique
-        conflicts.sort(key=lambda c: (c["line_start"], c["hunk_id"]))
+        # Deterministic ordering: primary by position, then branch, then hunk
+        conflicts.sort(key=lambda c: (c["line_start"], c["branch_id"], c["hunk_id"]))
 
         # Compute summary statistics
         total_conflicts = len(conflicts)

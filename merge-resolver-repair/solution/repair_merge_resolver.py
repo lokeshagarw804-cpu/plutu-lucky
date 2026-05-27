@@ -58,26 +58,10 @@ def patch_scorer():
         f.write(content)
 
 
-def patch_resolver():
-    """Fix conflict ordering for deterministic output."""
-    path = "/app/runtime/resolver.py"
-    with open(path, "r") as f:
-        content = f.read()
-
-    content = content.replace(
-        'conflicts.sort(key=lambda c: (c["line_start"], c["hunk_id"]))',
-        'conflicts.sort(key=lambda c: (c["line_start"], c["branch_id"], c["hunk_id"]))'
-    )
-
-    with open(path, "w") as f:
-        f.write(content)
-
-
 def main():
     patch_differ()
     patch_classifier()
     patch_scorer()
-    patch_resolver()
 
     # Re-run with fixed code
     sys.path.insert(0, "/app")
