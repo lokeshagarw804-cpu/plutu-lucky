@@ -38,16 +38,45 @@ Output is written to `/app/runtime/output/`:
 
 When working correctly, the system should:
 
-1. Process 3 IR blocks containing 20 variables total
-2. Compute correct live intervals using half-open interval representation
-3. Build an interference graph with the proper number of conflict edges
-4. Calculate spill costs that properly account for loop nesting depth
-5. Apply Chaitin-Briggs simplification with correct degree thresholds
-6. Assign the minimum colors needed without false constraints
-7. Produce a valid allocation using all 4 available registers
-8. Report the correct number of spilled variables
+1. Process 3 IR blocks containing 20 variables (v0 through v19) total
+2. Compute correct live intervals using half-open interval representation [start, end)
+3. Build an interference graph with exactly 64 conflict edges
+4. The maximum variable degree in the interference graph should be 11
+5. Variable v0 should have live interval [0, 8]
+6. Variables v7 and v8 have adjacent live ranges — v7 should have degree 4 and v8 should have degree 6
+7. Calculate spill costs using exponential loop nesting factor — variable v19 (in a depth-2 loop) should have spill cost approximately 66.6667
+8. Apply Chaitin-Briggs simplification with the strict threshold (degree < K, not degree <= K)
+9. Exactly 6 variables should be spilled: v2, v6, v9, v12, v13, v17
+10. Exactly 14 variables should be allocated to registers
+11. All 4 registers (R0, R1, R2, R3) must be used
+12. Variable v3 must be allocated to register R2 (not spilled despite high degree)
+13. Variable v5 must be allocated to register R3
+14. Register R0 should be assigned to at least 3 variables
+15. Produce a valid allocation using all 4 available registers
 
 The allocation must satisfy the interference constraint: no two variables assigned to the same register may have overlapping live intervals.
+
+## Output Schema
+
+### /app/runtime/output/allocation_report.json
+
+| Field | Type | Description |
+|-------|------|-------------|
+| variables | object | Per-variable allocation details, keyed by variable name (v0-v19) |
+| variables[].interval | array[int, int] | Live interval as [start, end) half-open pair |
+| variables[].degree | integer | Number of interfering neighbors in the graph |
+| variables[].spill_cost | float | Computed spill priority cost |
+| variables[].spilled | boolean | Whether the variable was spilled to stack |
+| variables[].register | string | Assigned register name (R0-R3) or "STACK" if spilled |
+| variables[].color | integer or null | Assigned color index (0-3) or null if spilled |
+| statistics | object | Aggregate allocation statistics |
+| statistics.allocated | integer | Number of variables assigned to registers |
+| statistics.spilled | integer | Number of variables spilled to stack |
+| statistics.registers_used | integer | Number of distinct registers utilized |
+
+### /app/runtime/output/summary.txt
+
+Plain text summary with allocation counts and per-variable assignment listing.
 
 ## Constraints
 
@@ -57,7 +86,9 @@ The allocation must satisfy the interference constraint: no two variables assign
 - The interference check uses half-open interval overlap semantics
 - Loop nesting should exponentially increase spill cost (base weight from config)
 
-## Global system-wide tooling: uv and pytest are available
+## System Environment
+
+- *Global system-wide tooling*: uv and pytest are available
 
 ## Notes
 
