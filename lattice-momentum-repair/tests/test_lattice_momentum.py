@@ -3,8 +3,7 @@ import json
 import os
 import pytest
 
-OUTPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                          '..', 'runtime', 'output')
+OUTPUT_DIR = "/app/runtime/output"
 STATE_PATH = os.path.join(OUTPUT_DIR, "lattice_state.jsonl")
 REPORT_PATH = os.path.join(OUTPUT_DIR, "flow_report.json")
 
