@@ -1,92 +1,89 @@
-# Lattice Signal Propagation Simulator
+# Particle Collision Repair
 
 ## Overview
 
-This system simulates signal propagation across a lattice of 7 sensor nodes (n0 through n6). Each node maintains a depth vector tracking accumulated signal levels from every node in the network. The pipeline reads a signal trace log, processes events through the propagation core, and produces a synthesis report with isolation classification and priority ordering.
+A lattice signal propagation simulation pipeline has three bugs causing incorrect outputs. Your task is to identify and fix all bugs so the test suite passes completely.
+
+The pipeline simulates signal propagation through a lattice of 7 sensor nodes (`n0`-`n6`). Each node maintains a depth vector tracking accumulated signal strength from every other node in the lattice.
 
 ## Architecture
 
-All source modules are located under `/app/runtime/`. The test suite is under `/tests/`.
+| File | Role |
+|------|------|
+| `/app/runtime/signal_trace.log` | Input: 45 sensor events in arrow-separated format |
+| `/app/runtime/trace_reader.py` | Parses trace log into structured event records |
+| `/app/runtime/propagation_core.py` | Signal depth tracking with PULSE, BURST, RELAY events |
+| `/app/runtime/lattice_analysis.py` | Signal isolation classification and priority ranking |
+| `/app/runtime/synthesis_output.py` | Generates final synthesis report (JSON) |
+| `/app/runtime/pipeline.py` | Orchestrates the full simulation |
+| `/app/runtime/calibration.py` | Offline calibration utilities (not used in pipeline) |
 
-| Module | Role |
-|--------|------|
-| signal_trace.log | Input data containing 45 signal events |
-| trace_reader.py | Parses the log into structured event records |
-| propagation_core.py | Maintains per-node depth vectors and processes signal events |
-| lattice_analysis.py | Computes isolation pairs and propagation priority rankings |
-| synthesis_output.py | Generates the final JSON report with digest |
-| calibration.py | Offline calibration utilities (not part of the live pipeline) |
-| pipeline.py | Orchestrates the full simulation |
+## Event Types
 
-## Signal Event Types
+- **PULSE**: Gradual signal accumulation (+1 to own depth component)
+- **BURST**: High-intensity signal spike (+2 to own depth component)
+- **RELAY**: Signal absorption from neighboring sensors via component-wise maximum, with relay attenuation correction
 
-- **PULSE**: Gradual signal accumulation from ambient lattice field (+1 to own depth component)
-- **BURST**: High-energy signal spike from resonance event (+2 to own depth component)
-- **RELAY**: Signal absorption from neighboring sensors via component-wise maximum
+## Problem Statement
 
-## Problem
+The pipeline produces incorrect propagation state and synthesis report outputs. Three bugs exist across two source files. The test suite validates correctness at multiple levels:
 
-The synthesis report does not match expected values. Investigation suggests the depth tracking and analytical modules may contain errors that affect the final output.
+1. **Structural tests** (8): Verify output files exist and have correct shape
+2. **Depth accuracy tests** (2): Verify signal depth calculations
+3. **Analysis accuracy tests** (2): Verify isolation and priority logic
+4. **Integrity tests** (2): Verify overall report consistency
 
-## Files with Potential Issues
+Currently 8 tests pass (structural) and 6 fail (depth, analysis, integrity).
 
-- `/app/runtime/propagation_core.py` (signal depth tracking logic)
-- `/app/runtime/lattice_analysis.py` (isolation classification and priority ranking)
+## Files With Potential Issues
 
-## Files Known to be Correct
+- `/app/runtime/propagation_core.py`
+- `/app/runtime/lattice_analysis.py`
+
+## Files Known Correct
 
 - `/app/runtime/trace_reader.py`
 - `/app/runtime/pipeline.py`
 - `/app/runtime/calibration.py`
 - `/app/runtime/synthesis_output.py`
 
-## Output Files
-
-The pipeline produces two output files:
-
-1. `/app/runtime/propagation_state.jsonl` — one JSON record per line, one line per sensor node
-2. `/app/runtime/synthesis_report.json` — analysis report with isolation pairs, priority ordering, and digest
-
 ## Output Schema
 
-### /app/runtime/propagation_state.jsonl
+### propagation_state.jsonl
 
-Each line is a JSON object with the following fields:
-
-| Field | Type | Description |
-|-------|------|-------------|
-| node_id | string | Sensor node identifier (n0 through n6) |
-| depth_vector | object | Maps each node_id to its integer depth value |
-| total_depth | integer | Sum of all depth vector components |
-| event_count | integer | Number of events processed by this node |
-
-### /app/runtime/synthesis_report.json
-
-| Field | Type | Description |
-|-------|------|-------------|
-| isolated_pairs | array[array[string]] | List of [node_a, node_b] pairs with isolated signal paths |
-| isolated_pair_count | integer | Number of isolated pairs found |
-| priority_order | array[string] | Node IDs sorted by propagation priority (highest first) |
-| digest | string | 16-character hex MD5 fingerprint of canonical propagation state |
-
-## Expected Correct Output
-
-When all defects are resolved:
-- Node n0 should have a self-depth (depth_vector.n0) of 15 after processing all 9 of its events
-- Node n5 should have a total_depth of 47
-- The isolation analysis should find 21 isolated pairs (all C(7,2) pairs are isolated since each node has its own peak depth component)
-- The priority order should be: n0, n5, n1, n2, n3, n4, n6 (sorted by total accumulated depth, descending)
-- The digest fingerprint should be `b60a42d61586d560`
-- Priority ordering must reflect total accumulated signal strength, not recency of activity
-
-## Running
-
+One JSON record per line, one per node:
+```json
+{"node_id": "n0", "depth_vector": {"n0": ..., "n1": ..., ...}, "total_depth": ..., "event_count": ...}
 ```
+
+### synthesis_report.json
+
+```json
+{
+  "isolated_pairs": [["n0", "n1"], ...],
+  "isolated_pair_count": 21,
+  "priority_order": ["n0", "n5", "n1", "n2", "n3", "n4", "n6"],
+  "digest": "cc29a377eead891d"
+}
+```
+
+## Expected Values
+
+When all bugs are fixed:
+- `n0` self-depth (`depth_vector.n0` for node n0) = **16**
+- `n5` total depth = **47**
+- Isolated pair count = **21**
+- Priority ordering must reflect total accumulated signal strength: `['n0', 'n5', 'n1', 'n2', 'n3', 'n4', 'n6']`
+- Digest = `cc29a377eead891d`
+
+## Running the Pipeline
+
+```bash
 python3 /app/runtime/pipeline.py
 ```
 
-## Validation
+## Running Tests
 
-```
+```bash
 uv run --with pytest pytest -v /tests/test_lattice_propagation.py
 ```

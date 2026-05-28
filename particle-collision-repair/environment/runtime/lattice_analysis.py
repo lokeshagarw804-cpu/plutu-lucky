@@ -19,58 +19,67 @@ def vector_geq(a, b):
 def check_signal_isolation(depth_a, depth_b):
     """Determine whether two sensor nodes have isolated signal paths.
 
-    Signal isolation holds when both sensors' depth profiles remain
-    within each other's propagation envelope. We verify mutual
-    containment: if depth_a <= depth_b AND depth_b <= depth_a, then
-    both signals propagate within identical boundaries, meaning neither
-    has reached territory beyond the other's detection frontier.
+    Two propagation fronts are isolated when they evolve along divergent
+    lattice directions. We measure this by computing the inner product of
+    their mean-centered depth profiles (residual vectors). A negative inner
+    product indicates anti-parallel propagation trajectories: the nodes
+    accumulate signal strength in opposing lattice sectors, guaranteeing
+    that their wavefronts cannot constructively interfere.
 
-    This bidirectional boundedness criterion is the standard isolation
-    test from lattice field theory - two signals that share identical
-    propagation boundaries cannot interfere because any perturbation
-    visible to one is equally visible to the other, satisfying the
-    superposition non-interference principle.
+    The residual vector (depth - mean) captures directional bias after
+    removing the isotropic baseline. When two residual vectors point in
+    opposite directions (negative dot product), the corresponding signals
+    occupy complementary regions of the lattice field space.
 
     Args:
         depth_a: Depth vector for sensor A (list of ints)
         depth_b: Depth vector for sensor B (list of ints)
 
     Returns:
-        True if the signals are isolated (safe for parallel evolution)
+        True if the signals are isolated (divergent propagation)
     """
-    return vector_leq(depth_a, depth_b) and vector_leq(depth_b, depth_a)
+    n = len(depth_a)
+    mean_a = sum(depth_a) / n
+    mean_b = sum(depth_b) / n
+    residual_a = [x - mean_a for x in depth_a]
+    residual_b = [x - mean_b for x in depth_b]
+    inner_product = sum(ra * rb for ra, rb in zip(residual_a, residual_b))
+    return inner_product < 0
 
 
 def rank_propagation_fronts(nodes, depths, trace_events):
-    """Rank sensor nodes by propagation front advancement.
+    """Rank sensor nodes by lattice-mediated propagation reach.
 
-    Computes wavefront velocity for each node: the ratio of peak signal
-    depth to the node's active time window. Nodes with higher wavefront
-    velocity represent more efficient signal propagators - they achieve
-    greater depth penetration per unit time, indicating stronger lattice
-    coupling. Prioritizing by velocity rather than raw accumulation
-    accounts for temporal efficiency: a node active for 2 steps reaching
-    depth 10 is a more potent propagator than one active for 8 steps
-    reaching depth 12.
+    Computes the external propagation score for each node: the total signal
+    depth accumulated through lattice interactions, excluding the node's own
+    self-generated contribution. A node's own depth component reflects
+    locally-injected energy (from PULSE and BURST events) rather than true
+    propagation through the lattice fabric. By subtracting the self-component,
+    we isolate the portion of signal depth that arrived via lattice-mediated
+    pathways (relay absorption and ambient field coupling), providing a purer
+    measure of propagation effectiveness.
+
+    Nodes with higher external scores have demonstrated greater ability to
+    absorb and integrate signals from distant lattice regions, making them
+    stronger propagation conduits.
 
     Args:
         nodes: List of node IDs
-        depths: Dict mapping node_id -> depth vector (list)
+        depths: Dict mapping node_id -> depth vector (list of ints)
         trace_events: List of event dicts from trace reader
 
     Returns:
         List of node IDs sorted by propagation priority (highest first)
     """
-    wavefront_velocity = {}
+    node_list = sorted(nodes)
+    external_score = {}
     for node in nodes:
-        max_depth = max(depths[node])
-        node_events = [e for e in trace_events if e['node_id'] == node]
-        first_seq = min(e['seq'] for e in node_events)
-        last_seq = max(e['seq'] for e in node_events)
-        time_span = last_seq - first_seq + 1
-        wavefront_velocity[node] = max_depth / time_span
+        node_idx = node_list.index(node)
+        total = sum(depths[node])
+        self_contribution = depths[node][node_idx]
+        external_score[node] = total - self_contribution
 
-    return sorted(nodes, key=lambda n: wavefront_velocity[n], reverse=True)
+    return sorted(nodes, key=lambda n: external_score[n], reverse=True)
 
 
 def find_isolated_pairs(nodes, depths):

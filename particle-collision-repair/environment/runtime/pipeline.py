@@ -17,12 +17,7 @@ from synthesis_output import generate_report
 
 
 def run_pipeline(runtime_dir=None):
-    """Execute the full simulation pipeline.
-
-    Args:
-        runtime_dir: Directory containing trace log and where outputs
-                     will be written. Defaults to the script's directory.
-    """
+    """Execute the full simulation pipeline."""
     if runtime_dir is None:
         runtime_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -30,14 +25,11 @@ def run_pipeline(runtime_dir=None):
     state_path = os.path.join(runtime_dir, 'propagation_state.jsonl')
     report_path = os.path.join(runtime_dir, 'synthesis_report.json')
 
-    # Read trace events
     events = read_trace(trace_path)
     node_ids = get_node_ids(events)
 
-    # Initialize trackers
     trackers = {nid: SignalDepthTracker(nid, node_ids) for nid in node_ids}
 
-    # Process events in sequence order
     sorted_events = sorted(events, key=lambda e: e['seq'])
     for event in sorted_events:
         node = event['node_id']
@@ -51,11 +43,6 @@ def run_pipeline(runtime_dir=None):
         elif etype == 'RELAY':
             trackers[node].apply_relay(payload['depths'])
 
-    # Finalize all trackers (batch-apply deferred computations)
-    for nid in node_ids:
-        trackers[nid].finalize_propagation()
-
-    # Write propagation state (JSONL format)
     with open(state_path, 'w') as f:
         for nid in node_ids:
             record = {
@@ -66,7 +53,6 @@ def run_pipeline(runtime_dir=None):
             }
             f.write(json.dumps(record) + '\n')
 
-    # Generate synthesis report
     depths = {nid: trackers[nid].vector_as_list for nid in node_ids}
     generate_report(node_ids, depths, events, report_path)
 

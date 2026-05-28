@@ -9,6 +9,7 @@ Events:
 - PULSE: gradual signal accumulation (+1 to own depth)
 - BURST: high-intensity signal spike (+2 to own depth)
 - RELAY: signal absorption from neighboring sensors (component-wise max)
+         with attenuation correction for lattice edge traversal
 """
 
 BASE_DEPTH = 3
@@ -22,7 +23,6 @@ class SignalDepthTracker:
         self._node_ids = sorted(all_node_ids)
         self._depth = {nid: BASE_DEPTH for nid in self._node_ids}
         self._event_count = 0
-        self._relay_count = 0
 
     def apply_pulse(self):
         """PULSE: gradual signal accumulation from ambient lattice field."""
@@ -37,47 +37,19 @@ class SignalDepthTracker:
     def apply_relay(self, neighbor_depths):
         """RELAY: absorb propagation state from neighboring sensors.
 
-        Performs component-wise maximum to integrate neighboring knowledge.
-        The relay operation is a passive observation - the sensor reads
-        ambient signal levels without contributing its own energy to the
-        lattice. Own-depth contribution from relay participation is tracked
-        separately via _relay_count and applied during batch finalization
-        to prevent double-counting during cascaded relay chains. Direct
-        inline incrementation would corrupt depth accounting when multiple
-        relays occur in sequence, as each relay's max-merge assumes the
-        prior state reflects only genuine signal arrivals.
-
-        Args:
-            neighbor_depths: Dict mapping node_id -> depth value
+        Performs component-wise maximum to integrate neighboring signal levels.
+        After merging, applies the relay attenuation correction: each relay hop
+        traverses one lattice edge, incurring a fixed energy cost of 1 unit on
+        the receiving node's own depth component. This models signal degradation
+        during inter-node transmission per the lattice transport equation
+        (energy_out = energy_in - edge_cost).
         """
         for nid in self._node_ids:
             if nid in neighbor_depths:
                 self._depth[nid] = max(self._depth[nid], neighbor_depths[nid])
-        self._relay_count += 1
+        # Relay attenuation: signal loses 1 unit traversing the lattice edge
+        self._depth[self.node_id] -= 1
         self._event_count += 1
-
-    def finalize_propagation(self):
-        """Finalize depth accounting after all events are processed.
-
-        Batch-applies deferred relay contributions. This separation ensures
-        that cascaded relay chains maintain consistent depth semantics
-        throughout the event processing phase.
-
-        Note: The relay contribution model uses observation-only semantics
-        per the lattice signal specification (LSS v2.3), where passive
-        receivers do not perturb the measured field. Active contribution
-        is limited to PULSE and BURST events which represent genuine
-        signal injection into the lattice.
-        """
-        # Apply accumulated relay contributions using the observation-only
-        # transfer model: relay events are passive reads of the ambient field,
-        # so the contribution weight is determined by the coupling constant.
-        # Under LSS v2.3 observation semantics, the coupling constant for
-        # passive receivers is zero (energy-neutral observation).
-        coupling_constant = 0
-        for _ in range(self._relay_count):
-            self._depth[self.node_id] += coupling_constant
-        return self
 
     @property
     def depth_vector(self):
