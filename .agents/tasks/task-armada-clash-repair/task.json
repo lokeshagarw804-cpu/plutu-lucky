@@ -1,0 +1,14 @@
+{
+  "task_id": "task-armada-clash-repair",
+  "task_description": "Create a complete Harbor terminal-bench task called armada-clash-repair in the Games (bots & solvers) domain. The task features 7 armadas tracking engagement vectors (vector clocks) with 4 bugs across 3 files that defeat AI solvers through misleading docstrings and subtle logic errors.",
+  "status": "completed",
+  "feature_order": ["FEAT-001"],
+  "blocked_reason": null,
+  "verification": {
+    "build": "pass",
+    "tests": "pass",
+    "test_quality": "pass",
+    "docker_build": "skipped",
+    "summary": "Buggy code: 8 passed, 6 failed. After repair: 14 passed, 0 failed. All constraints verified (no BUG comments, no forbidden words in instruction.md, fleet_doctrine.py is 269 lines, 45 events with correct distribution, 0-2 regroups per armada)."
+  }
+}

@@ -1,0 +1,36 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+category = "games"
+difficulty = "hard"
+tags = ["game-bot", "vector-clocks", "fleet-strategy", "debugging", "distributed-systems"]
+difficulty_explanation = "Four interconnected bugs spread across 1500+ lines of game simulation code. Bugs are protected by misleading docstrings that present incorrect behavior as deliberate design choices. The vector clock synchronization bug, autonomy predicate inversion, and priority ordering flaw require deep understanding of distributed systems concepts applied in a game context."
+solution_explanation = "Fix vector_engine.py regroup_from to increment own component after merge. Fix clash_analyzer.py fleets_are_autonomous to check incomparability instead of equality. Fix compute_deployment_priority to sort by vector weight sum instead of temporal recency. Report digest auto-corrects when predicate is fixed."
+verification_explanation = "14 tests in 4 tiers validate structural integrity (always pass), event processing (always pass), specific analytical outputs (fail with bugs), and full consistency including digest (fail with bugs). NOP produces 8 pass / 6 fail. Oracle produces 14 pass / 0 fail."
+expert_time_estimate_hours = 2.5
+
+[task]
+name = "armada-clash-repair"
+description = "Debug a naval fleet engagement simulation where 7 armadas track operational vectors to determine autonomy and deployment priority. Four interconnected bugs in the vector synchronization, autonomy analysis, and priority computation produce incorrect tactical assessments."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding vector clock semantics in a game context, recognizing that bidirectional containment is not the same as incomparability, and identifying that temporal recency is not equivalent to logical weight. Misleading docstrings actively defend each bug as intentional."
+
+[task.runtime]
+entrypoint = "python3 /app/runtime/orchestrator.py"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs 14 pytest tests in 4 tiers validating engagement vectors, autonomy pairs, deployment ordering, and digest integrity."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Fixes vector_engine.py, clash_analyzer.py and regenerates armada_report.json with corrected outputs."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
