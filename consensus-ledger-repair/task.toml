@@ -1,29 +1,38 @@
 # PLUTU-LUCKY-CANARY
+author_name = "Lokesh Agarwal"
+author_email = "lokeshagarw804@gmail.com"
+category = "distributed_systems"
+difficulty = "hard"
+tags = ["distributed-systems", "consensus", "merkle-tree", "byzantine-fault-tolerance", "debugging", "state-management"]
+
+difficulty_explanation = "Five bugs are hidden across eight modules (including three correct distractor modules with complex but working code). Bugs exploit shared mutable state between module calls, subtle variable naming confusion (total_stake vs round_stake), nested data structure field access errors masked by similar field names, lossy integer arithmetic disguised as precision-preservation, and deterministic ordering assumptions in fingerprint computation. Each bug produces code that reads correctly at first glance."
+solution_explanation = "Fix 1: Reset _batch_salt in _clear_batch_context() to prevent genesis batch salt from contaminating subsequent batches. Fix 2: Change threshold formula from total_stake to round_stake for per-round BFT quorum. Fix 3: Access record['vote']['proposal_hash'] instead of record['proposal_hash'] for correct nested field traversal. Fix 4: Replace int(amount*fee_rate*1000)//1000 with round(amount*fee_rate) for proper fee rounding. Fix 5: Use explicit field order list instead of sorted(tx.keys()) for canonical fingerprint computation."
+verification_explanation = "Tests validate 27 assertions covering Merkle batch roots, quorum results per round, Byzantine validator flagging, final account balances, fee totals, state hash, and reconciliation status against reference values computed with all bugs fixed."
+expert_time_estimate_hours = 6.0
+
 [task]
 name = "consensus-ledger-repair"
-version = "2.0.0"
-description = "Debug a distributed consensus ledger verification system with 5 subtle bugs across 8 modules"
-difficulty = "hard"
-category = "debugging"
-estimated_time_minutes = 45
+description = "Debug a distributed consensus ledger verification system with five subtle bugs hidden across eight modules. Three modules are correct distractors. Bugs involve shared mutable state contamination, variable naming confusion in threshold computation, nested data structure access errors, lossy integer arithmetic, and non-canonical field ordering."
 
-[task.metrics]
-total_modules = 8
-buggy_modules = 5
-distractor_modules = 3
-total_bugs = 5
-test_assertions = 25
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding stateful module interactions, distinguishing correct distractor code from buggy code, recognizing nested data structure field access patterns, analyzing integer arithmetic precision, and tracing canonical ordering through hash computations. Bugs are designed to look intentional through misleading comments and docstrings."
 
-[task.environment]
-dockerfile = "environment/Dockerfile"
-runtime_path = "/app/runtime"
-output_path = "/app/runtime/output/audit_report.json"
+[task.runtime]
+entrypoint = "python3 -m runtime.pipeline"
+language = "python"
+dependencies = "stdlib-only"
 
-[task.solution]
-script = "solution/repair_consensus.py"
-runner = "solution/solve.sh"
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the consensus verification pipeline then validates audit report via pytest."
 
-[task.validation]
-test_file = "tests/test_consensus_ledger.py"
-test_runner = "tests/test.sh"
-framework = "pytest"
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all five defects and re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
