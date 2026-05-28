@@ -1,0 +1,7 @@
+{"node_id": "n0", "depth_vector": {"n0": 13, "n1": 6, "n2": 6, "n3": 5, "n4": 5, "n5": 5, "n6": 5}, "total_depth": 45, "event_count": 9}
+{"node_id": "n1", "depth_vector": {"n0": 6, "n1": 10, "n2": 5, "n3": 5, "n4": 5, "n5": 4, "n6": 5}, "total_depth": 40, "event_count": 7}
+{"node_id": "n2", "depth_vector": {"n0": 6, "n1": 5, "n2": 10, "n3": 5, "n4": 6, "n5": 4, "n6": 4}, "total_depth": 40, "event_count": 6}
+{"node_id": "n3", "depth_vector": {"n0": 5, "n1": 6, "n2": 4, "n3": 10, "n4": 5, "n5": 5, "n6": 4}, "total_depth": 39, "event_count": 6}
+{"node_id": "n4", "depth_vector": {"n0": 5, "n1": 4, "n2": 5, "n3": 4, "n4": 10, "n5": 6, "n6": 5}, "total_depth": 39, "event_count": 6}
+{"node_id": "n5", "depth_vector": {"n0": 7, "n1": 6, "n2": 6, "n3": 6, "n4": 6, "n5": 8, "n6": 6}, "total_depth": 45, "event_count": 6}
+{"node_id": "n6", "depth_vector": {"n0": 5, "n1": 4, "n2": 4, "n3": 5, "n4": 4, "n5": 4, "n6": 9}, "total_depth": 35, "event_count": 5}

@@ -1,11 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 mkdir -p /logs/verifier
-if [ ! -f /app/runtime/simulation_state.jsonl ]; then
-    python3 /app/runtime/simulator.py
+if [ ! -f /app/runtime/propagation_state.jsonl ]; then
+    python3 /app/runtime/pipeline.py
 fi
 set +e
-uv run --with pytest pytest -v /tests/test_particle_collision.py
+uv run --with pytest pytest -v /tests/test_lattice_propagation.py
 TEST_EXIT=$?
 set -e
 if [ "$TEST_EXIT" -eq 0 ]; then echo 1 > /logs/verifier/reward.txt; else echo 0 > /logs/verifier/reward.txt; fi
