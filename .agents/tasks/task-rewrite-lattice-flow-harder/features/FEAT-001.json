@@ -1,0 +1,31 @@
+{
+  "id": "FEAT-001",
+  "type": "feat",
+  "description": "Rewrite the core runtime files (flow_analyzer.py, pressure_engine.py, flow_trace.log, orchestrator.py, report_writer.py) to implement the harder version of the task. This is the central implementation feature.",
+  "status": "completed",
+  "steps": [
+    "Step 1: Rewrite lattice-flow-repair/runtime/flow_trace.log with 52 events across 7 junctions. Scatter COUPLE events throughout the timeline (not clustered together). Add more interleaving. Make peer_state values reference intermediate states that require careful replay. Keep all 7 junctions (alpha, beta, gamma, delta, epsilon, zeta, eta). Target distribution: alpha ~9, beta ~8, gamma ~8, delta ~8, epsilon ~7, zeta ~6, eta ~6 events.",
+    "Step 2: Rewrite lattice-flow-repair/runtime/pressure_engine.py. Keep the same JunctionPressure class with apply_pump, apply_surge, apply_couple. The BUG remains: apply_couple does NOT increment self._pressure[self.node_id] += 1 after merging. ADD a red herring: after the merge loop in apply_couple, add a 'lattice stability bound' clamp that uses stability_bound = BASE_PRESSURE + len(self._nodes) * 4 (which equals 31 and never triggers since no value can reach that high). Add a misleading docstring that says the clamp is 'critical for numerical stability'. The misleading docstring about coupling NOT requiring increment stays. BASE_PRESSURE stays at 3.",
+    "Step 3: Rewrite lattice-flow-repair/runtime/flow_analyzer.py. REMOVE vector_dominates entirely - it must NOT exist in the file. Keep vector_leq(a, b). The buggy flows_are_independent uses: return vector_leq(vec_a, vec_b) and vector_leq(vec_b, vec_a) (equality check). Change compute_hydraulic_priority signature to ONLY accept (nodes, events) - NO vectors parameter. It uses last_event_time (temporal recency). ADD 3 decoy functions that ARE used but are NOT buggy: (a) compute_flow_divergence(vec_a, vec_b) returns sum of abs differences, (b) classify_coupling_strength(events, node) returns count of COUPLE events for that node, (c) vector_magnitude(v) returns sum of components. These decoys must be called from report_writer.py. The analyze_flow_pairs function signature becomes analyze_flow_pairs(nodes, vectors, events) but internally calls compute_hydraulic_priority(nodes, events) without vectors.",
+    "Step 4: Rewrite lattice-flow-repair/runtime/orchestrator.py. The orchestrator calls analyze_flow_pairs(nodes, vectors, events) as before. It passes vectors to generate_report. No other changes needed since the priority function signature change is internal to flow_analyzer.",
+    "Step 5: Rewrite lattice-flow-repair/runtime/report_writer.py. Import and USE the decoy functions from flow_analyzer: compute_flow_divergence, classify_coupling_strength, vector_magnitude. Add divergence and coupling_strength to each junction summary. Add a 'network_metrics' section to the report that uses vector_magnitude. These decoys add complexity but are NOT buggy.",
+    "Step 6: After writing all files, run a manual simulation trace through the new flow_trace.log to calculate ALL expected values. Document: (a) each junction's final pressure vector WITH the +1 per couple fix applied, (b) which pairs are independent using incomparability (not dominance in either direction), (c) priority ordering by vector sum. These values will be needed for the tests and repair script.",
+    "Step 7: Copy all runtime files to lattice-flow-repair/environment/runtime/ to keep them byte-identical with lattice-flow-repair/runtime/."
+  ],
+  "acceptance_criteria": [
+    "flow_trace.log has 52 events with COUPLE events scattered throughout the timeline",
+    "pressure_engine.py has the missing +1 bug plus the stability_bound red herring that never fires",
+    "flow_analyzer.py does NOT contain vector_dominates anywhere",
+    "flow_analyzer.py has compute_hydraulic_priority(nodes, events) signature without vectors parameter",
+    "flow_analyzer.py contains 3 decoy functions (compute_flow_divergence, classify_coupling_strength, vector_magnitude)",
+    "report_writer.py imports and calls all 3 decoy functions",
+    "orchestrator.py coordinates the pipeline correctly",
+    "runtime/ and environment/runtime/ are byte-identical"
+  ],
+  "verification": [
+    "python3 lattice-flow-repair/runtime/orchestrator.py runs without errors",
+    "diff -r lattice-flow-repair/runtime/ lattice-flow-repair/environment/runtime/ shows no differences"
+  ],
+  "blocked_reason": null,
+  "findings": "orchestrator.py was already identical to desired content (no diff). Generated output: 21 pairs all dependent (0 independent) in buggy state. Priority order: zeta, beta, alpha, gamma, delta, epsilon, eta. trace_parser.py was left unchanged as instructed."
+}

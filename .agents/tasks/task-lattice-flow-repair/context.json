@@ -1,0 +1,23 @@
+{
+  "project_type": "Terminal-Bench debugging task (Python-based lattice flow simulator)",
+  "language": "python",
+  "build_system": "none (stdlib-only Python, uses uv for pytest)",
+  "test_framework": "pytest via uv run --with pytest pytest",
+  "build_command": "python3 /app/runtime/orchestrator.py",
+  "test_command": "bash tests/test.sh",
+  "verification_instructions": "1. Run buggy orchestrator -> get 8 pass 6 fail. 2. Apply repair -> get 14 pass 0 fail.",
+  "snapshot_or_generated_files": "flow_state.jsonl and flow_report.json are generated at runtime, not checked in",
+  "setup_instructions": "No setup needed - stdlib only Python 3.11",
+  "environment_constraints": "Files must work inside Docker container with python:3.11-slim + uv. No external dependencies.",
+  "contribution_requirements": "Follow existing spatial-index-repair task structure exactly. runtime/ and environment/runtime/ must be identical.",
+  "key_patterns": "Arrow-separated log parsing, vector clock mechanics disguised as pressure propagation, class-based engines, orchestrator pattern, repair via string replacement patches",
+  "relevant_files": [
+    "spatial-index-repair/task.toml",
+    "spatial-index-repair/tests/test.sh",
+    "spatial-index-repair/solution/solve.sh",
+    "spatial-index-repair/solution/repair_spatial_index.py",
+    "spatial-index-repair/instruction.md",
+    "spatial-index-repair/environment/Dockerfile"
+  ],
+  "directory_structure": "lattice-flow-repair/ with environment/runtime/, runtime/ (duplicate), tests/, solution/, instruction.md, task.toml"
+}

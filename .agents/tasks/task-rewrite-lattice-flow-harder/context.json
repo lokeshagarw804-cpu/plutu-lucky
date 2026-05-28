@@ -1,0 +1,31 @@
+{
+  "project_type": "Harbor debugging task (lattice flow pressure simulation)",
+  "language": "python",
+  "build_system": "None (stdlib only), Dockerfile for container runtime",
+  "test_framework": "pytest via uv (14 tests in 4 tiers)",
+  "build_command": "python3 /app/runtime/orchestrator.py",
+  "test_command": "uv run --with pytest pytest -v tests/test_lattice_flow.py",
+  "verification_instructions": "1. Run orchestrator.py to generate outputs. 2. Run pytest to verify 8 pass / 6 fail (buggy). 3. Run repair script, regenerate, verify 14 pass / 0 fail (repaired).",
+  "snapshot_or_generated_files": "flow_state.jsonl and flow_report.json are generated at runtime, not checked in",
+  "setup_instructions": "Python 3.11 available. No special setup needed.",
+  "environment_constraints": "Must work within Docker container. runtime/ and environment/runtime/ must be byte-identical (both contain buggy code).",
+  "contribution_requirements": "Buggy code must produce 8 pass / 6 fail. Repaired code must produce 14 pass / 0 fail. The task must be significantly harder for AI to solve.",
+  "key_patterns": "Arrow-separated trace format. JunctionPressure class with apply_pump/apply_surge/apply_couple. Flow analysis uses vector comparison. Report includes MD5 digest.",
+  "relevant_files": [
+    "lattice-flow-repair/runtime/flow_analyzer.py",
+    "lattice-flow-repair/runtime/pressure_engine.py",
+    "lattice-flow-repair/runtime/orchestrator.py",
+    "lattice-flow-repair/runtime/report_writer.py",
+    "lattice-flow-repair/runtime/flow_trace.log",
+    "lattice-flow-repair/runtime/trace_parser.py",
+    "lattice-flow-repair/tests/test_lattice_flow.py",
+    "lattice-flow-repair/tests/test.sh",
+    "lattice-flow-repair/instruction.md",
+    "lattice-flow-repair/solution/repair_lattice_flow.py",
+    "lattice-flow-repair/solution/solve.sh",
+    "lattice-flow-repair/task.toml",
+    "lattice-flow-repair/environment/Dockerfile",
+    "lattice-flow-repair/environment/runtime/"
+  ],
+  "directory_structure": "lattice-flow-repair/ contains: runtime/ (buggy source), environment/runtime/ (byte-identical buggy source for Docker), solution/ (repair script), tests/ (pytest), instruction.md, task.toml, environment/Dockerfile"
+}

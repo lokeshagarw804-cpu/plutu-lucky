@@ -1,0 +1,14 @@
+{
+  "task_id": "task-rewrite-lattice-flow-harder",
+  "task_description": "Completely rewrite the lattice-flow-repair Harbor debugging task to make it much harder for Sonnet 4.6 to solve. Remove dead giveaways (unused vector_dominates, obvious unused param, explanatory test comments), add decoy complexity, make instruction.md vaguer, and require the solver to write new logic from scratch rather than just using pre-defined functions.",
+  "status": "completed",
+  "feature_order": ["FEAT-001", "FEAT-002"],
+  "blocked_reason": null,
+  "verification": {
+    "build": "pass",
+    "tests": "pass",
+    "test_quality": "pass",
+    "docker_build": "skipped",
+    "summary": "Buggy simulation produces 8 pass / 6 fail. Repaired simulation produces 14 pass / 0 fail. All string replacements in repair script match exact buggy code. runtime/ and environment/runtime/ are byte-identical."
+  }
+}
