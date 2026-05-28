@@ -1,6 +1,6 @@
 author_name = "Lokesh Agarwal"
 author_email = "lokeshlucky0123456789@gmail.com"
-category = "Scientific Computing"
+category = "Scientific Computing & Numerics"
 difficulty = "hard"
 tags = ["lattice-boltzmann", "fluid-dynamics", "vector-clocks", "pressure-propagation", "numerical-simulation"]
 difficulty_explanation = "Requires understanding lattice-based pressure propagation semantics where coupling operations have non-obvious increment rules, combined with a subtle confusion between vector equality and vector incomparability in the flow independence check."
