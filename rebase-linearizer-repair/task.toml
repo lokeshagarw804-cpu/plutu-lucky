@@ -1,0 +1,37 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+category = "version_control"
+difficulty = "hard"
+tags = ["rebase", "linearization", "version-control", "conflict-detection", "debugging"]
+
+difficulty_explanation = "Three interacting defects across dependency resolution, conflict detection, and priority scoring require understanding config parsing subtleties, threshold semantics, and aggregation vs replacement logic."
+solution_explanation = "Fix skip pattern parsing to strip whitespace, change conflict detector to read from detection.strict config section, and replace priority accumulation with last-write-wins in scorer."
+verification_explanation = "Tests validate skip counts, conflict counts, priority bounds, and output structure without revealing specific fixes."
+expert_time_estimate_hours = 2.5
+
+[task]
+name = "rebase-linearizer-repair"
+description = "Debug a commit rebase linearizer with three interacting defects across dependency resolution, conflict detection, and priority scoring."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding config section hierarchy, string whitespace handling, and replacement vs accumulation semantics across multiple modules."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.run_rebase"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the rebase engine then validates output via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all three defects and re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"

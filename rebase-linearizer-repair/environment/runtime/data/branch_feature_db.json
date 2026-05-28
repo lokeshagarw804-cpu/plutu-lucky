@@ -1,0 +1,175 @@
+{
+  "branch": "feature/db",
+  "commits": [
+    {
+      "commit_id": "c1d2e3f",
+      "branch": "feature/db",
+      "timestamp": 1700000120,
+      "files_modified": ["src/db/connection.py", "src/db/pool.py"],
+      "parent": "0000000",
+      "message": "Database connection pool",
+      "patch_type": "feature",
+      "weight": 83
+    },
+    {
+      "commit_id": "c2d3e4g",
+      "branch": "feature/db",
+      "timestamp": 1700000220,
+      "files_modified": ["src/db/models.py", "src/db/schema.py", "src/shared/config.py", "src/shared/cache.py"],
+      "parent": "c1d2e3f",
+      "message": "ORM models and schema",
+      "patch_type": "feature",
+      "weight": 76
+    },
+    {
+      "commit_id": "c3d4e5h",
+      "branch": "feature/db",
+      "timestamp": 1700000320,
+      "files_modified": ["setup/db_config.py", "setup/migrations.py"],
+      "parent": "c2d3e4g",
+      "message": "Setup database config",
+      "patch_type": "setup_",
+      "weight": 27
+    },
+    {
+      "commit_id": "c4d5e6i",
+      "branch": "feature/db",
+      "timestamp": 1700000420,
+      "files_modified": ["src/db/queries.py", "src/db/connection.py"],
+      "parent": "c3d4e5h",
+      "message": "Query builder",
+      "patch_type": "feature",
+      "weight": 79
+    },
+    {
+      "commit_id": "c5d6e7j",
+      "branch": "feature/db",
+      "timestamp": 1700000520,
+      "files_modified": ["tests/test_connection.py", "tests/test_pool.py"],
+      "parent": "c4d5e6i",
+      "message": "Connection pool tests",
+      "patch_type": "test_",
+      "weight": 33
+    },
+    {
+      "commit_id": "c6d7e8k",
+      "branch": "feature/db",
+      "timestamp": 1700000620,
+      "files_modified": ["src/db/transactions.py", "src/db/connection.py", "src/shared/http.py", "src/shared/config.py"],
+      "parent": "c5d6e7j",
+      "message": "Transaction management",
+      "patch_type": "feature",
+      "weight": 86
+    },
+    {
+      "commit_id": "c7d8e9l",
+      "branch": "feature/db",
+      "timestamp": 1700000720,
+      "files_modified": ["mocks/mock_db.py", "mocks/mock_connection.py"],
+      "parent": "c6d7e8k",
+      "message": "Database mocks",
+      "patch_type": "mock_",
+      "weight": 19
+    },
+    {
+      "commit_id": "c8d9e0m",
+      "branch": "feature/db",
+      "timestamp": 1700000820,
+      "files_modified": ["src/db/cache.py", "src/db/queries.py"],
+      "parent": "c7d8e9l",
+      "message": "Query result caching",
+      "patch_type": "feature",
+      "weight": 74
+    },
+    {
+      "commit_id": "c9d0e1n",
+      "branch": "feature/db",
+      "timestamp": 1700000920,
+      "files_modified": ["fixtures/db_fixtures.py", "fixtures/seed_data.py"],
+      "parent": "c8d9e0m",
+      "message": "Database fixtures",
+      "patch_type": "fixture_",
+      "weight": 17
+    },
+    {
+      "commit_id": "ca1d2e3",
+      "branch": "feature/db",
+      "timestamp": 1700001020,
+      "files_modified": ["src/db/migrations.py", "src/db/schema.py"],
+      "parent": "c9d0e1n",
+      "message": "Migration engine",
+      "patch_type": "feature",
+      "weight": 81
+    },
+    {
+      "commit_id": "cb2d3e4",
+      "branch": "feature/db",
+      "timestamp": 1700001120,
+      "files_modified": ["src/db/pool.py", "src/db/monitoring.py"],
+      "parent": "ca1d2e3",
+      "message": "Pool monitoring",
+      "patch_type": "refactor",
+      "weight": 58
+    },
+    {
+      "commit_id": "cc3d4e5",
+      "branch": "feature/db",
+      "timestamp": 1700001220,
+      "files_modified": ["src/db/replication.py", "src/db/connection.py", "src/shared/http.py", "src/shared/config.py"],
+      "parent": "cb2d3e4",
+      "message": "Read replicas",
+      "patch_type": "feature",
+      "weight": 89
+    },
+    {
+      "commit_id": "cd4d5e6",
+      "branch": "feature/db",
+      "timestamp": 1700001320,
+      "files_modified": ["setup/db_seed.py", "setup/migrations.py", "setup/db_config.py"],
+      "parent": "cc3d4e5",
+      "message": "Setup seed data",
+      "patch_type": "setup_",
+      "weight": 23
+    },
+    {
+      "commit_id": "ce5d6e7",
+      "branch": "feature/db",
+      "timestamp": 1700001420,
+      "files_modified": ["tests/test_queries.py", "tests/test_transactions.py"],
+      "parent": "cd4d5e6",
+      "message": "Query builder tests",
+      "patch_type": "test_",
+      "weight": 31
+    },
+    {
+      "commit_id": "cf6d7e8",
+      "branch": "feature/db",
+      "timestamp": 1700001520,
+      "files_modified": ["src/db/backup.py", "src/db/connection.py"],
+      "parent": "ce5d6e7",
+      "message": "Automated backups",
+      "patch_type": "feature",
+      "weight": 84
+    },
+    {
+      "commit_id": "cg7d8e9",
+      "branch": "feature/db",
+      "timestamp": 1700001620,
+      "files_modified": ["src/db/sharding.py", "src/db/pool.py", "src/db/queries.py"],
+      "parent": "cf6d7e8",
+      "message": "Database sharding",
+      "patch_type": "feature",
+      "weight": 91
+    },
+    {
+      "commit_id": "ch8d9e0",
+      "branch": "feature/db",
+      "timestamp": 1700001720,
+      "files_modified": ["setup/shard_config.py", "setup/db_config.py"],
+      "parent": "cg7d8e9",
+      "message": "Setup shard configuration",
+      "patch_type": "setup_",
+      "weight": 21
+    }
+  ]
+}
