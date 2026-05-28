@@ -25,7 +25,7 @@ def fix_type_engine():
 
 
 def fix_type_compatibility():
-    """Fix 2: Replace Pearson correlation with incomparability check."""
+    """Fix 2: Replace cosine similarity with incomparability check."""
     path = os.path.join(RUNTIME_DIR, 'type_analyzer.py')
     with open(path, 'r') as f:
         content = f.read()
@@ -33,29 +33,22 @@ def fix_type_compatibility():
     old_body = '''def check_type_compatibility(constraints_a, constraints_b):
     """Check if two type variables have compatible (non-conflicting) types.
 
-    Type compatibility is determined by constraint orthogonality: two types
-    are compatible when their constraint profiles are statistically
-    independent. We measure this via Pearson correlation - if the
-    correlation coefficient is below the significance threshold (0.7),
-    the constraints evolved independently and the types don't conflict.
+    Type compatibility requires sufficient angular separation in constraint
+    space. Two types are compatible when their constraint profiles point in
+    sufficiently different directions - indicating they evolved through
+    independent inference paths and won't interfere during resolution.
 
-    High correlation indicates the constraints co-evolved (likely through
-    shared UNIFY operations), meaning the types are entangled and
-    potentially conflicting in the final assignment.
+    We measure this via cosine similarity of the constraint vectors. If the
+    cosine similarity is below the critical threshold (0.85), the constraint
+    profiles have enough angular divergence that interference during type
+    assignment becomes negligible.
+
+    High cosine similarity (>= 0.85) indicates the constraints co-evolved
+    through shared inference paths (typically repeated UNIFY operations),
+    meaning the types are entangled and potentially conflicting.
     """
-    n = len(constraints_a)
-    mean_a = sum(constraints_a) / n
-    mean_b = sum(constraints_b) / n
-
-    cov = sum((a - mean_a) * (b - mean_b) for a, b in zip(constraints_a, constraints_b))
-    std_a = (sum((a - mean_a) ** 2 for a in constraints_a)) ** 0.5
-    std_b = (sum((b - mean_b) ** 2 for b in constraints_b)) ** 0.5
-
-    if std_a == 0 or std_b == 0:
-        return True  # Zero variance means unconstrained - always compatible
-
-    correlation = cov / (std_a * std_b)
-    return abs(correlation) < 0.7'''
+    similarity = _cosine_similarity(constraints_a, constraints_b)
+    return similarity < 0.85'''
 
     new_body = '''def check_type_compatibility(constraints_a, constraints_b):
     """Check if two type variables have compatible (non-conflicting) types.
