@@ -74,7 +74,6 @@ class ParticleMomentum:
         for pid in self._particle_ids:
             if pid in neighbor_state:
                 self._momentum[pid] = max(self._momentum[pid], neighbor_state[pid])
-        self._momentum[self.particle_id] += 1
         self._event_count += 1
 
     @property
