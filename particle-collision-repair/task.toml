@@ -3,8 +3,8 @@ author_email = "lokeshlucky0123456789@gmail.com"
 category = "Compilers, Parsers & Language Internals"
 difficulty = "hard"
 tags = ["type-inference", "debugging", "constraint-solving", "compiler-internals"]
-difficulty_explanation = "Requires understanding partial order incomparability vs Pearson correlation, recognizing that unification should accumulate (not decay) constraints, and identifying that Shannon entropy incorrectly prioritizes types with distributed but smaller total constraints."
-solution_explanation = "Fix 1: Change -= 1 to += 1 in apply_unify (unification accumulates, not narrows). Fix 2: Replace Pearson correlation with incomparability check (not vector_leq in both directions). Fix 3: Sort by sum(constraints[t]) instead of Shannon entropy."
+difficulty_explanation = "Requires understanding partial order incomparability vs cosine similarity, recognizing that unification should accumulate (not decay) constraints, and identifying that Shannon entropy incorrectly prioritizes types with distributed but smaller total constraints."
+solution_explanation = "Fix 1: Change -= 1 to += 1 in apply_unify (unification accumulates, not narrows). Fix 2: Replace cosine similarity with incomparability check (not vector_leq in both directions). Fix 3: Sort by sum(constraints[t]) instead of Shannon entropy."
 verification_explanation = "14 tests in 4 tiers verify structural output, constraint calculations, compatibility classification, and full-system digest consistency."
 expert_time_estimate_hours = 2.5
 
@@ -14,7 +14,7 @@ description = "Debug a type inference constraint solver with subtle algorithmic 
 
 [task.difficulty]
 level = "hard"
-reasoning = "Three interacting bugs span the constraint engine and analysis modules. Bug 1 is decay disguised as narrowing. Bug 2 uses a plausible but wrong statistical metric instead of partial order incomparability. Bug 3 uses Shannon entropy under a convincing information-theoretic rationale instead of simple total constraints."
+reasoning = "Three interacting bugs span the constraint engine and analysis modules. Bug 1 is decay disguised as narrowing. Bug 2 uses cosine similarity instead of partial order incomparability. Bug 3 uses Shannon entropy under a convincing information-theoretic rationale instead of simple total constraints."
 
 [task.runtime]
 entrypoint = "python3 /app/runtime/orchestrator.py"
