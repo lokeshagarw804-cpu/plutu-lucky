@@ -1,82 +1,85 @@
-# Lattice Boltzmann Momentum Propagation Simulator
+# Lattice Momentum Propagation Simulator
 
-## Overview
+## System Overview
 
-This system simulates momentum propagation across a 7-cell hexagonal lattice using the Lattice Boltzmann method. Each cell maintains a momentum vector that evolves through streaming, drift, and collision events recorded in a propagation log.
+This system implements a lattice Boltzmann momentum propagation simulator for a 7-cell
+two-dimensional lattice topology. The simulator reads a propagation event log, applies
+streaming, drift, and collision operations to evolve per-cell momentum vectors, then
+produces diagnostic reports including regime classification and relaxation scheduling.
 
-The simulator reads events from a structured log file, applies them to each cell's momentum state, analyzes flow relationships between cells, and produces a comprehensive report.
+## Architecture
 
-## System Architecture
+The codebase consists of the following modules:
 
-The pipeline consists of the following modules located in `/app/runtime/`:
+- **parser.py** - Parses the propagation log file (`propagation_log.dat`) into structured
+  event records. Handles validation, normalization, and event registry bookkeeping.
 
-### Correct Modules (no issues observed)
+- **momentum_engine.py** - Core simulation engine. Maintains per-cell momentum state and
+  applies streaming, drift, and collision operations according to the propagation log events.
 
-- **`parser.py`** - Reads and parses the arrow-separated propagation log file (`propagation_log.dat`). Extracts sequence numbers, cell identifiers, event types, and event details into structured records.
+- **regime_classifier.py** - Analyzes the evolved momentum state to classify pairwise
+  interaction regimes between cells and compute relaxation scheduling priorities.
 
-- **`orchestrator.py`** - Coordinates the full simulation pipeline. Invokes the parser, builds lattice state, generates reports, and computes the simulation integrity digest.
+- **report_writer.py** - Generates output artifacts: per-cell state dumps and flow analysis
+  reports with digests for validation.
 
-### Modules Under Investigation
+- **orchestrator.py** - Coordinates the pipeline: parse, simulate, classify, report. Manages
+  configuration, caching, and diagnostic output channels.
 
-- **`momentum_engine.py`** - Manages per-cell momentum vectors. Each cell starts with a base momentum value of 3 for all 7 components. Streaming and drift events increment the cell's own component. Collision events synchronize momentum knowledge with neighboring cells.
-
-- **`flow_analyzer.py`** - Provides flow coupling predicates and dissipation priority computation. Determines whether cell pairs have coupled or decoupled flow states, and computes the order in which cells should be processed for dissipation.
-
-- **`report_writer.py`** - Generates the flow analysis report by classifying all cell pairs and computing dissipation scheduling priorities.
-
-## Observed Symptoms
-
-1. **Momentum values appear lower than expected after collision events.** Cells that participate in collisions should reflect their active participation in the momentum exchange, but the final momentum components seem to only account for passive information absorption.
-
-2. **The dissipation priority ordering does not reflect actual momentum magnitudes.** The priority list should place high-momentum cells first for dissipation processing, but the current ordering appears disconnected from the cells' total momentum values.
-
-3. **Some cell pairs that should be flagged as decoupled are not.** The decoupled pair count is unexpectedly low. Cells with independent momentum evolution patterns are being classified as coupled when their flow states do not actually interfere with each other.
+- **calibration.py** - Computes thermal equilibrium constants, lattice parameters, and
+  Reynolds number estimates used for diagnostic annotations.
 
 ## Data Format
 
 ### Input: `propagation_log.dat`
 
-Arrow-separated format with comment lines starting with `;`:
+Each line represents one propagation event in the format:
 
 ```
-SEQ -> CELL_ID -> EVENT_TYPE -> DETAIL
+<seq_id> -> <cell_id> -> <event_type> -> <payload>
 ```
 
 Event types:
-- `STREAM` - detail: `delta=N` (streaming increment)
-- `DRIFT` - detail: `delta=N` (drift increment)
-- `COLLISION` - detail: `neighbor_state=cell_alpha:V;cell_beta:V;...;cell_eta:V`
+- `STREAM`: Direct momentum injection. Payload: `delta=<int>`
+- `DRIFT`: Thermal drift correction. Payload: `delta=<int>`
+- `COLLISION`: Inter-cell momentum exchange. Payload: `neighbor=<cell_id>;state=<key:val,...>`
 
-### Output: `/app/runtime/output/lattice_state.jsonl`
+### Output
 
-One JSON record per line (sorted by cell_id):
+Two output files are produced in `/app/runtime/output/`:
 
-```json
-{"cell_id": "cell_alpha", "momentum_vector": {"cell_alpha": N, ...}, "total_events": N}
-```
+1. **lattice_state.jsonl** - One JSON object per cell containing:
+   - `cell_id`: Lattice coordinate identifier
+   - `momentum_vector`: Dict mapping all cell IDs to integer momentum components
+   - `total_events`: Count of events processed for this cell
+   - `last_event_step`: Sequence number of last event affecting this cell
 
-### Output: `/app/runtime/output/flow_report.json`
+2. **flow_report.json** - Analysis results containing:
+   - `decoupled_pairs`: List of cell pairs classified as decoupled
+   - `decoupled_count`: Number of decoupled pairs
+   - `relaxation_priority`: Ordered list of cells for relaxation sweep
+   - `magnitude_map`: Per-cell total momentum magnitudes
+   - `digest`: SHA-256 hex digest of canonical simulation state
 
-```json
-{
-  "total_pairs": 21,
-  "decoupled_pairs": [["cell_a", "cell_b"], ...],
-  "decoupled_count": N,
-  "coupled_pairs": [["cell_a", "cell_b"], ...],
-  "coupled_count": N,
-  "dissipation_priority": ["cell_x", "cell_y", ...],
-  "priority_magnitudes": {"cell_x": N, ...},
-  "simulation_digest": "hex_string"
-}
-```
+## Observed Issues
 
-## Running the Simulation
+The simulation is producing incorrect results across multiple validation dimensions:
 
-```bash
-cd /app
-python3 -c "import sys; sys.path.insert(0, '/app/runtime'); from orchestrator import main; main()"
-```
+1. **Digest Inconsistency**: The simulation produces inconsistent digest values across
+   validation runs when compared against reference calibration benchmarks. The aggregate
+   momentum state does not match expected steady-state values for this lattice configuration.
 
-## Validation
+2. **Relaxation Scheduling**: The relaxation scheduling algorithm produces suboptimal cell
+   visitation patterns that do not correlate with physical intuition about energy distribution
+   across the lattice nodes.
 
-The test suite checks structural integrity, momentum computation accuracy, flow analysis correctness, and overall simulation consistency. All 14 tests should pass when the system is operating correctly.
+3. **Regime Classification**: Inter-cell regime classification metrics deviate from
+   theoretical expectations for systems with this topology. The number of classified
+   interaction regimes does not match the expected count for a well-evolved lattice state.
+
+## Constraints
+
+- Python 3.11, standard library only
+- No external dependencies permitted
+- All modules may contain issues; systematic analysis is required
+- The propagation log is authoritative and correctly formatted

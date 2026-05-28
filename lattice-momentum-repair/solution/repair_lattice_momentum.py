@@ -1,79 +1,94 @@
-#!/usr/bin/env python3
-"""Repair script for lattice Boltzmann momentum simulation.
-
-Corrects momentum propagation calculations and flow analysis
-logic to produce accurate simulation results.
 """
+Repair script for the lattice momentum propagation simulator.
+Applies patches to fix identified defects and re-runs the simulation.
+"""
+
 import sys
 import os
+import re
+
+RUNTIME_DIR = "/app/runtime"
 
 
 def patch_momentum_engine():
-    """Fix collision handling in momentum engine.
-
-    The collision phase must account for the cell's participation
-    in the momentum exchange - each collision event contributes
-    a unit increment to the cell's own momentum component.
-    """
-    path = "/app/runtime/momentum_engine.py"
-    with open(path, 'r') as f:
+    """Fix the collision self-increment in momentum_engine.py."""
+    filepath = os.path.join(RUNTIME_DIR, "momentum_engine.py")
+    with open(filepath, "r") as f:
         content = f.read()
 
-    content = content.replace(
-        "        # The collision synchronizes knowledge only - no self-increment occurs\n"
-        "        # because the cell is not actively streaming during a collision phase.\n"
-        "        self._event_count += 1\n"
-        "        self._last_event_step = step",
-        "        # The collision synchronizes knowledge only - no self-increment occurs\n"
-        "        # because the cell is not actively streaming during a collision phase.\n"
-        "        self._momentum[self.cell_id] += 1\n"
-        "        self._event_count += 1\n"
-        "        self._last_event_step = step"
-    )
+    old = "        self._event_count += 1\n        self._last_step = seq_id\n        self._collision_count += 1\n        self._record_thermal_snapshot()"
+    new = "        self._momentum[self.cell_id] += 1\n        self._event_count += 1\n        self._last_step = seq_id\n        self._collision_count += 1\n        self._record_thermal_snapshot()"
 
-    with open(path, 'w') as f:
+    content = content.replace(old, new, 1)
+
+    with open(filepath, "w") as f:
         f.write(content)
 
 
-def patch_flow_analyzer():
-    """Fix flow decoupling predicate and dissipation priority.
-
-    The decoupling check must use incomparability (neither dominates
-    the other) rather than equality. The priority must reflect
-    actual momentum magnitudes rather than temporal ordering.
-    """
-    path = "/app/runtime/flow_analyzer.py"
-    with open(path, 'r') as f:
+def patch_regime_classifier_metric():
+    """Fix the symmetric envelope metric in regime_classifier.py."""
+    filepath = os.path.join(RUNTIME_DIR, "regime_classifier.py")
+    with open(filepath, "r") as f:
         content = f.read()
 
     content = content.replace(
-        "    return vector_leq(vec_a, vec_b) and vector_leq(vec_b, vec_a)",
-        "    return not vector_dominates(vec_a, vec_b) and not vector_dominates(vec_b, vec_a)"
+        "    return forward and reverse",
+        "    return not forward and not reverse",
+        1
     )
 
-    content = content.replace(
-        "    priority = sorted(cells.keys(), key=lambda x: last_event_step[x], reverse=True)",
-        "    priority = sorted(cells.keys(), key=lambda x: sum(vectors[x].values()), reverse=True)"
-    )
-
-    with open(path, 'w') as f:
+    with open(filepath, "w") as f:
         f.write(content)
 
 
-def main():
-    patch_momentum_engine()
-    patch_flow_analyzer()
+def patch_regime_classifier_priority():
+    """Fix the relaxation sweep priority in regime_classifier.py."""
+    filepath = os.path.join(RUNTIME_DIR, "regime_classifier.py")
+    with open(filepath, "r") as f:
+        content = f.read()
 
-    # Re-run simulation with corrected code
-    sys.path.insert(0, '/app/runtime')
-    # Clear cached modules to pick up patched files
-    for key in list(sys.modules.keys()):
-        if key in ('parser', 'momentum_engine', 'flow_analyzer',
-                   'report_writer', 'orchestrator'):
-            del sys.modules[key]
-    from orchestrator import main as run_main
-    run_main()
+    old_sort = """    priority = sorted(
+        cells.keys(),
+        key=lambda x: activity_scores[x] * len(vectors[x]) / (1 + collision_counts[x]),
+        reverse=True,
+    )"""
+
+    new_sort = """    priority = sorted(
+        cells.keys(),
+        key=lambda x: sum(vectors[x].values()),
+        reverse=True,
+    )"""
+
+    content = content.replace(old_sort, new_sort, 1)
+
+    with open(filepath, "w") as f:
+        f.write(content)
 
 
-if __name__ == '__main__':
+def rerun_simulation():
+    """Re-run the simulation with patched code."""
+    output_dir = os.path.join(RUNTIME_DIR, "output")
+    if os.path.exists(output_dir):
+        import shutil
+        shutil.rmtree(output_dir)
+
+    sys.path.insert(0, RUNTIME_DIR)
+
+    # Clear cached modules
+    mods_to_remove = [
+        m for m in sys.modules
+        if m in ("orchestrator", "parser", "momentum_engine",
+                 "regime_classifier", "report_writer", "calibration")
+    ]
+    for m in mods_to_remove:
+        del sys.modules[m]
+
+    from orchestrator import main
     main()
+
+
+if __name__ == "__main__":
+    patch_momentum_engine()
+    patch_regime_classifier_metric()
+    patch_regime_classifier_priority()
+    rerun_simulation()
