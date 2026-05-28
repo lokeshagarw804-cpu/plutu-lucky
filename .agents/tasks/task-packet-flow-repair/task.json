@@ -1,0 +1,7 @@
+{
+  "task_id": "task-packet-flow-repair",
+  "task_description": "Create a Harbor Terminal-Bench debugging task in the Cybersecurity domain: packet-flow-repair. Replicate the exact approved lattice-flow-repair hardened pattern with cybersecurity/IDS terminology (observation vectors, sensor nodes, threat propagation, synchronization events).",
+  "status": "in_progress",
+  "feature_order": ["FEAT-001"],
+  "blocked_reason": null
+}

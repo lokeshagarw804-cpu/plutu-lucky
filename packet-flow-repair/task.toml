@@ -1,0 +1,36 @@
+author_name = "Lokesh Agarwal"
+author_email = "lokeshlucky0123456789@gmail.com"
+category = "Cybersecurity"
+difficulty = "hard"
+tags = ["intrusion-detection", "network-security", "distributed-sensors", "threat-intelligence", "packet-analysis"]
+difficulty_explanation = "Requires understanding distributed observation semantics where synchronization operations have non-obvious increment rules, combined with recognizing the distinction between vector equality and vector incomparability, plus identifying that priority computation uses wrong inputs and needs a signature change."
+solution_explanation = "Fix three bugs: (1) add own-component increment after SYNC merge in observation_engine.py, (2) replace bidirectional-leq equality check with incomparability check in flows_are_independent (must write from scratch), (3) change priority computation from temporal recency to vector-sum ordering by modifying function signature and call site."
+verification_explanation = "14 tests in 4 tiers verify structural output, observation state correctness, flow pair classification, and full digest consistency."
+expert_time_estimate_hours = 3.0
+
+[task]
+name = "packet-flow-repair"
+description = "Debug a distributed intrusion detection system that tracks observation vectors across sensor nodes, fixing issues in the observation engine and flow classifier that produce incorrect detection states, wrong pair classifications, and incorrect priority ordering."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Multiple interacting bugs span two files with misleading comments suggesting buggy behavior is intentional. The independence predicate bug requires understanding partial order theory and writing a new predicate from scratch. The priority bug requires both changing a function signature and updating its call site."
+
+[task.runtime]
+entrypoint = "python3 /app/runtime/orchestrator.py"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs 14 pytest tests across 4 tiers checking structure, state values, pair classification, and digest consistency."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Applies fixes to observation_engine.py and flow_classifier.py, then regenerates outputs."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"

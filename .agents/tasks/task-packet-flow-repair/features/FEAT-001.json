@@ -1,0 +1,44 @@
+{
+  "id": "FEAT-001",
+  "type": "feat",
+  "description": "Create the complete packet-flow-repair task directory structure with all source files, replicating the exact approved lattice-flow-repair pattern but with cybersecurity/IDS terminology.",
+  "status": "in_progress",
+  "steps": [
+    "Step 1: Create /projects/sandbox/plutu-lucky/packet-flow-repair/environment/runtime/ directory and /projects/sandbox/plutu-lucky/packet-flow-repair/runtime/ directory",
+    "Step 2: Create capture_log.dat with ~52 events across 7 sensors (sensor_north, sensor_south, sensor_east, sensor_west, sensor_core, sensor_edge, sensor_gate) using arrow-separated format with SCAN (+1), PROBE (+2), SYNC (merge) event types. Use BASE_LEVEL=3. Scatter SYNCs throughout. Design data so correct code yields exactly 1 dependent pair and 20 independent pairs.",
+    "Step 3: Create log_parser.py (CORRECT - no bugs) that parses the arrow-separated format returning list of event dicts with keys: seq, sensor_id, event_type, detail. Include parse_sync_state helper.",
+    "Step 4: Create observation_engine.py with Bug 1: Class SensorObservation with BASE_LEVEL=3, apply_scan (+1), apply_probe (+2), apply_sync that does component-wise max but MISSING self._observations[self.sensor_id] += 1. Include misleading docstring about passive intelligence sharing. Include red herring saturation_threshold = BASE_LEVEL + len(self._sensors) * 4 that clamps but never fires.",
+    "Step 5: Create flow_classifier.py with Bug 2 (flows_are_independent returns vector_leq both ways = equality check with misleading docstring about bidirectional boundedness) and Bug 3 (compute_detection_priority takes only (nodes, events) using temporal recency). Include 3 DECOY functions: compute_flow_divergence, classify_sync_strength, vector_magnitude. Include analyze_flow_pairs that calls compute_detection_priority(nodes, events) without vectors.",
+    "Step 6: Create report_generator.py that imports flows_are_independent and all 3 decoy functions from flow_classifier, generates report with cross-validation and MD5 digest[:16].",
+    "Step 7: Create orchestrator.py (CORRECT - no bugs) coordinating the pipeline: parse log, replay events through engines, collect vectors, analyze pairs, generate report, write flow_state.jsonl and flow_report.json.",
+    "Step 8: Copy all runtime files to environment/runtime/ (must be byte-identical).",
+    "Step 9: Create environment/Dockerfile: FROM python:3.11-slim, RUN pip install uv, COPY runtime/ /app/runtime/, WORKDIR /app",
+    "Step 10: Create tests/test.sh matching the approved pattern.",
+    "Step 11: Create tests/test_packet_flow.py with 14 tests in 4 tiers with BARE assertions (no math explanations). Use placeholder values for now - will be computed after running code.",
+    "Step 12: Create solution/solve.sh and solution/repair_packet_flow.py that patches observation_engine.py (add self._observations[self.sensor_id] += 1 before saturation check) and flow_classifier.py (fix independence check + fix priority signature/body/call-site).",
+    "Step 13: Create instruction.md that is maximally vague - describes architecture neutrally, says results are incorrect, does NOT identify buggy files, does NOT define independence mathematically, does NOT use 'incomparable' or 'partial order'.",
+    "Step 14: Create task.toml with cybersecurity metadata.",
+    "Step 15: Run the buggy orchestrator to generate output, then run the repair script to generate correct output. Extract correct values (vector sums, own components, priority order, independent count, digest) and update test_packet_flow.py with hardcoded correct values.",
+    "Step 16: Verify: run buggy code -> Tier 1 passes, Tiers 2-4 fail. Run repair -> all 14 pass.",
+    "Step 17: Ensure runtime/ and environment/runtime/ are byte-identical."
+  ],
+  "acceptance_criteria": [
+    "All 14 tests pass after running the repair script",
+    "Tier 1 (6 structural tests) passes with buggy code",
+    "Tiers 2-4 (8 tests) fail with buggy code",
+    "No vector_dominates function defined anywhere",
+    "Priority function signature does NOT accept vectors in buggy version",
+    "3 decoy functions exist and are used but not buggy",
+    "Saturation threshold red herring never fires",
+    "All comments reinforce buggy behavior as correct",
+    "Test assertions have no explanatory math",
+    "instruction.md is maximally vague",
+    "runtime/ and environment/runtime/ are byte-identical"
+  ],
+  "verification": [
+    "cd /projects/sandbox/plutu-lucky/packet-flow-repair && python3 runtime/orchestrator.py && python3 -m pytest tests/test_packet_flow.py -v 2>&1 | grep -E '(PASSED|FAILED|ERROR)' | wc -l",
+    "cd /projects/sandbox/plutu-lucky/packet-flow-repair && python3 solution/repair_packet_flow.py && python3 -m pytest tests/test_packet_flow.py -v"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}
