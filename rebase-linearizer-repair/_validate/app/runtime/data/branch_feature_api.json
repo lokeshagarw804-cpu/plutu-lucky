@@ -1,0 +1,165 @@
+{
+  "branch": "feature/api",
+  "commits": [
+    {
+      "commit_id": "b1c2d3e",
+      "branch": "feature/api",
+      "timestamp": 1700000150,
+      "files_modified": ["src/api/routes.py", "src/api/handlers.py"],
+      "parent": "0000000",
+      "message": "API route definitions",
+      "patch_type": "feature",
+      "weight": 75
+    },
+    {
+      "commit_id": "b2c3d4f",
+      "branch": "feature/api",
+      "timestamp": 1700000250,
+      "files_modified": ["src/api/handlers.py", "src/api/serializers.py", "src/shared/http.py", "src/shared/config.py"],
+      "parent": "b1c2d3e",
+      "message": "Request serialization",
+      "patch_type": "feature",
+      "weight": 68
+    },
+    {
+      "commit_id": "b3c4d5g",
+      "branch": "feature/api",
+      "timestamp": 1700000350,
+      "files_modified": ["tests/test_routes.py", "tests/test_handlers.py"],
+      "parent": "b2c3d4f",
+      "message": "API route tests",
+      "patch_type": "test_",
+      "weight": 32
+    },
+    {
+      "commit_id": "b4c5d6h",
+      "branch": "feature/api",
+      "timestamp": 1700000450,
+      "files_modified": ["src/api/middleware.py", "src/api/cors.py"],
+      "parent": "b3c4d5g",
+      "message": "CORS middleware",
+      "patch_type": "feature",
+      "weight": 82
+    },
+    {
+      "commit_id": "b5c6d7i",
+      "branch": "feature/api",
+      "timestamp": 1700000550,
+      "files_modified": ["setup/api_config.py", "setup/endpoints.py"],
+      "parent": "b4c5d6h",
+      "message": "Setup API endpoints",
+      "patch_type": "setup_",
+      "weight": 26
+    },
+    {
+      "commit_id": "b6c7d8j",
+      "branch": "feature/api",
+      "timestamp": 1700000650,
+      "files_modified": ["src/api/pagination.py", "src/api/handlers.py"],
+      "parent": "b5c6d7i",
+      "message": "Pagination support",
+      "patch_type": "feature",
+      "weight": 71
+    },
+    {
+      "commit_id": "b7c8d9k",
+      "branch": "feature/api",
+      "timestamp": 1700000750,
+      "files_modified": ["mocks/mock_api.py", "mocks/mock_handlers.py"],
+      "parent": "b6c7d8j",
+      "message": "API test mocks",
+      "patch_type": "mock_",
+      "weight": 18
+    },
+    {
+      "commit_id": "b8c9d0l",
+      "branch": "feature/api",
+      "timestamp": 1700000850,
+      "files_modified": ["src/api/versioning.py", "src/api/routes.py", "src/shared/http.py"],
+      "parent": "b7c8d9k",
+      "message": "API versioning",
+      "patch_type": "feature",
+      "weight": 85
+    },
+    {
+      "commit_id": "b9c0d1m",
+      "branch": "feature/api",
+      "timestamp": 1700000950,
+      "files_modified": ["src/api/rate_limit.py", "src/shared/cache.py", "src/shared/config.py"],
+      "parent": "b8c9d0l",
+      "message": "Shared rate limiting",
+      "patch_type": "feature",
+      "weight": 77
+    },
+    {
+      "commit_id": "ba1c2d3",
+      "branch": "feature/api",
+      "timestamp": 1700001050,
+      "files_modified": ["fixtures/api_fixtures.py", "fixtures/data_fixtures.py"],
+      "parent": "b9c0d1m",
+      "message": "API test fixtures",
+      "patch_type": "fixture_",
+      "weight": 16
+    },
+    {
+      "commit_id": "bb2c3d4",
+      "branch": "feature/api",
+      "timestamp": 1700001150,
+      "files_modified": ["src/api/websocket.py", "src/api/handlers.py"],
+      "parent": "ba1c2d3",
+      "message": "WebSocket support",
+      "patch_type": "feature",
+      "weight": 90
+    },
+    {
+      "commit_id": "bc3c4d5",
+      "branch": "feature/api",
+      "timestamp": 1700001250,
+      "files_modified": ["src/api/graphql.py", "src/api/schema.py"],
+      "parent": "bb2c3d4",
+      "message": "GraphQL endpoint",
+      "patch_type": "feature",
+      "weight": 87
+    },
+    {
+      "commit_id": "bd4c5d6",
+      "branch": "feature/api",
+      "timestamp": 1700001350,
+      "files_modified": ["tests/test_pagination.py", "tests/test_versioning.py"],
+      "parent": "bc3c4d5",
+      "message": "Pagination tests",
+      "patch_type": "test_",
+      "weight": 30
+    },
+    {
+      "commit_id": "be5c6d7",
+      "branch": "feature/api",
+      "timestamp": 1700001450,
+      "files_modified": ["setup/api_migrations.py", "setup/endpoints.py", "setup/api_config.py"],
+      "parent": "bd4c5d6",
+      "message": "Setup API migrations",
+      "patch_type": "setup_",
+      "weight": 24
+    },
+    {
+      "commit_id": "bf6c7d8",
+      "branch": "feature/api",
+      "timestamp": 1700001550,
+      "files_modified": ["src/api/caching.py", "src/api/handlers.py"],
+      "parent": "be5c6d7",
+      "message": "Response caching layer",
+      "patch_type": "refactor",
+      "weight": 62
+    },
+    {
+      "commit_id": "bg7c8d9",
+      "branch": "feature/api",
+      "timestamp": 1700001650,
+      "files_modified": ["src/api/monitoring.py", "src/api/health.py"],
+      "parent": "bf6c7d8",
+      "message": "Health monitoring endpoints",
+      "patch_type": "feature",
+      "weight": 73
+    }
+  ]
+}
