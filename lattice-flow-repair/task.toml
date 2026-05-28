@@ -6,6 +6,7 @@ tags = ["lattice-boltzmann", "fluid-dynamics", "vector-clocks", "pressure-propag
 difficulty_explanation = "Requires understanding lattice-based pressure propagation semantics where coupling operations have non-obvious increment rules, combined with a subtle confusion between vector equality and vector incomparability in the flow independence check."
 solution_explanation = "Fix three bugs: (1) add own-component increment after COUPLE sync in pressure_engine.py, (2) replace equality check with incomparability check in flows_are_independent, (3) fix priority ordering to use vector sum instead of event timestamp."
 verification_explanation = "14 tests in 4 tiers verify structural output, pressure state correctness, flow pair classification, and full digest consistency."
+expert_time_estimate_hours = 2.5
 
 [task]
 name = "lattice-flow-repair"
