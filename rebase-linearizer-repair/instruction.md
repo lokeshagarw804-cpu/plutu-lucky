@@ -19,7 +19,7 @@ The system processes branch commit data through six stages:
 
 2. *Dependency Resolution* (`/app/runtime/dependency_resolver.py`) -- Groups commits by shared file paths and determines dependency chains for topological ordering. Commits matching configured skip patterns are excluded before grouping. The skip pattern list is loaded from the [patches] section.
 
-3. *Conflict Detection* (`/app/runtime/conflict_detector.py`) -- Identifies commit pairs from different branches whose modified files overlap by at least the configured threshold. The configuration provides both a base threshold and a strict threshold under `[detection.strict]` for production accuracy.
+3. *Conflict Detection* (`/app/runtime/conflict_detector.py`) -- Identifies commit pairs from different branches whose modified files overlap by at least the configured threshold.
 
 4. *Priority Scoring* (`/app/runtime/priority_scorer.py`) -- Assigns each dependency group a priority score based on its constituent patch weights, determining the linearization order.
 

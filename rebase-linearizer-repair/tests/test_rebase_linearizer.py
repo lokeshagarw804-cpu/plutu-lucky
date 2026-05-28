@@ -58,8 +58,7 @@ class TestCommitFiltering:
         """Plan should contain only non-skipped commits."""
         assert plan_data["total_commits"] == 29, (
             f"Expected 29 commits in plan but got {plan_data['total_commits']}. "
-            "A configured skip pattern is not being applied. "
-            "Investigate how patterns are parsed."
+            "Commit filtering is not working correctly."
         )
 
     def test_no_skipped_patch_types_in_plan(self, plan_data):
@@ -68,7 +67,7 @@ class TestCommitFiltering:
         for commit in plan_data["commits"]:
             assert commit["patch_type"] not in disallowed, (
                 "A commit with a skippable patch type appears in the plan. "
-                "Verify that all configured skip patterns are being matched."
+                "Commit filtering is not working correctly."
             )
 
     def test_setup_commits_excluded(self, plan_data):
@@ -78,8 +77,7 @@ class TestCommitFiltering:
         )
         assert setup_count == 0, (
             f"Found {setup_count} setup-type commits in plan. "
-            "A configured skip pattern is not being applied. "
-            "Investigate how patterns are parsed."
+            "Commit filtering is not working correctly."
         )
 
 
@@ -89,15 +87,15 @@ class TestConflictDetection:
     def test_conflicts_detected(self, report_data):
         """System must detect at least one conflict for the given data."""
         assert report_data["total_conflicts"] > 0, (
-            "No conflicts detected. The detection sensitivity may not "
-            "reflect production settings."
+            "No conflicts detected. "
+            "Conflict detection sensitivity does not match expected behavior."
         )
 
     def test_conflict_count(self, report_data):
         """Conflict count must match expected value for production threshold."""
         assert report_data["total_conflicts"] == 8, (
             f"Expected 8 conflicts but got {report_data['total_conflicts']}. "
-            "The detection sensitivity may not reflect production settings."
+            "Conflict detection sensitivity does not match expected behavior."
         )
 
     def test_conflict_entry_structure(self, report_data):
@@ -133,8 +131,8 @@ class TestGroupScoring:
             priority = group["priority"]
             assert priority <= 100, (
                 f"Group priority {priority} exceeds maximum possible "
-                f"single-patch weight of 100. Verify the scoring "
-                f"aggregation logic."
+                f"single-patch weight of 100. "
+                "Group priority values are outside expected bounds."
             )
 
     def test_group_priorities_in_expected_range(self, plan_data):
@@ -143,7 +141,7 @@ class TestGroupScoring:
             priority = group["priority"]
             assert 40 <= priority <= 100, (
                 f"Group priority {priority} outside expected range [40, 100]. "
-                "Verify the scoring aggregation logic."
+                "Group priority values are outside expected bounds."
             )
 
     def test_group_has_required_fields(self, plan_data):

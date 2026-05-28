@@ -5,7 +5,7 @@ Processes commit records to identify which commits modify overlapping files,
 forming dependency groups. Commits matching configured skip patterns are
 excluded from the dependency graph before grouping occurs.
 
-The skip pattern list is loaded from the [patches] section at initialization
+The skip pattern list is loaded from the configuration at initialization
 time. Patterns are matched as prefixes against each commit's patch_type field.
 """
 import configparser

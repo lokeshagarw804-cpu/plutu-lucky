@@ -2,8 +2,10 @@
 
 Processes dependency groups and assigns each group a priority score
 based on the weights of its constituent patches. The scoring logic
-iterates through patches sequentially within each group to determine
-the group's authoritative priority value.
+iterates through patches sequentially within each group, combining
+weight contributions into a composite group priority value.
+
+The [scoring] configuration section controls the aggregation method.
 """
 
 
@@ -35,10 +37,10 @@ class PriorityScorer:
     def _score_group(self, group):
         """Compute priority score for a single dependency group.
 
-        Iterates through patches in the group sequentially. Later patches
-        in the group supersede earlier ones as the authoritative priority
-        for the group.
+        Iterates through patches in the group and combines their weight
+        values to produce the final group priority score.
         """
+        # Aggregate weights from all patches in the group
         priority = 0
         for patch in group:
             priority += patch["weight"]

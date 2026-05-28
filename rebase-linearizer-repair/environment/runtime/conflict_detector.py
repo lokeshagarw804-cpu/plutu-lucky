@@ -4,8 +4,8 @@ Analyzes pairs of commits from different branches to detect potential rebase
 conflicts. A conflict occurs when two commits from different branches modify
 a number of shared files that meets or exceeds the configured overlap threshold.
 
-The strict detection profile (detection.strict) should be used for production
-accuracy as it catches narrower overlaps.
+Multiple detection profiles exist in the configuration for different operational
+contexts. The detector loads the appropriate threshold at initialization time.
 """
 import configparser
 
@@ -16,6 +16,7 @@ class ConflictDetector:
     def __init__(self, config_path):
         self._config = configparser.ConfigParser()
         self._config.read(config_path)
+        # Use the base detection profile for broad conflict identification
         self._threshold = self._config.getint("detection", "overlap_threshold")
         self._max_distance = self._config.getint("detection", "max_file_distance")
 
