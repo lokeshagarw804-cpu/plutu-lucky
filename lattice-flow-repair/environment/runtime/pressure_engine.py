@@ -63,6 +63,12 @@ class JunctionPressure:
         for node in self._nodes:
             if node in neighbor_pressures:
                 self._pressure[node] = max(self._pressure[node], neighbor_pressures[node])
+        # Apply lattice stability bound - pressure cannot exceed theoretical
+        # maximum for the network diameter at this propagation stage. This
+        # prevents numerical divergence in deeply-coupled lattice topologies.
+        stability_bound = BASE_PRESSURE + len(self._nodes) * 4
+        for node in self._nodes:
+            self._pressure[node] = min(self._pressure[node], stability_bound)
 
     def get_vector(self):
         """Return pressure vector as list in sorted node order.
