@@ -8,7 +8,9 @@ import json
 import os
 import sys
 
-RUNTIME_DIR = os.path.join(os.path.dirname(__file__), '..', 'runtime')
+RUNTIME_DIR = '/app/runtime'
+if not os.path.isdir(RUNTIME_DIR):
+    RUNTIME_DIR = os.path.join(os.path.dirname(__file__), '..', 'runtime')
 sys.path.insert(0, RUNTIME_DIR)
 
 STATE_PATH = os.path.join(RUNTIME_DIR, 'propagation_state.jsonl')
