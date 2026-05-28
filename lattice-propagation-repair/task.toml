@@ -1,0 +1,17 @@
+# PLUTU-LUCKY-CANARY
+[task]
+name = "lattice-propagation-repair"
+description = "Fix anomalies in a lattice signal propagation simulator that computes multi-path attenuation, interference, and temporal alignment across a 7-node directed graph."
+difficulty = "hard"
+category = "debugging"
+tags = ["signal-processing", "graph-algorithms", "numerical-methods", "dsp"]
+
+[environment]
+dockerfile = "environment/Dockerfile"
+runtime_dir = "environment/runtime"
+
+[solution]
+solve_script = "solution/solve.sh"
+
+[tests]
+test_script = "tests/test.sh"
