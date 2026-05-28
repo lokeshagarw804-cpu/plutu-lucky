@@ -10,9 +10,8 @@ def patch_pressure_engine():
     with open(path, "r") as f:
         content = f.read()
 
-    # Fix: add self-increment after merge in apply_couple
-    old_couple = """    def apply_couple(self, neighbor_pressures):
-        \"\"\"Merge pressure knowledge from a neighboring junction via pipe coupling.
+    old_couple = '''    def apply_couple(self, neighbor_pressures):
+        """Merge pressure knowledge from a neighboring junction via pipe coupling.
         
         A coupling event represents passive pressure equalization through a
         shared pipe connection. The junction absorbs the maximum observed
@@ -26,13 +25,19 @@ def patch_pressure_engine():
         Args:
             neighbor_pressures: Dict mapping node_id to pressure value from
                 the neighboring junction's state at coupling time.
-        \"\"\"
+        """
         for node in self._nodes:
             if node in neighbor_pressures:
-                self._pressure[node] = max(self._pressure[node], neighbor_pressures[node])"""
+                self._pressure[node] = max(self._pressure[node], neighbor_pressures[node])
+        # Apply lattice stability bound - pressure cannot exceed theoretical
+        # maximum for the network diameter at this propagation stage. This
+        # prevents numerical divergence in deeply-coupled lattice topologies.
+        stability_bound = BASE_PRESSURE + len(self._nodes) * 4
+        for node in self._nodes:
+            self._pressure[node] = min(self._pressure[node], stability_bound)'''
 
-    new_couple = """    def apply_couple(self, neighbor_pressures):
-        \"\"\"Merge pressure knowledge from a neighboring junction via pipe coupling.
+    new_couple = '''    def apply_couple(self, neighbor_pressures):
+        """Merge pressure knowledge from a neighboring junction via pipe coupling.
         
         A coupling event represents pressure equalization through a shared pipe
         connection. The junction absorbs the maximum observed pressure for each
@@ -41,11 +46,17 @@ def patch_pressure_engine():
         Args:
             neighbor_pressures: Dict mapping node_id to pressure value from
                 the neighboring junction's state at coupling time.
-        \"\"\"
+        """
         for node in self._nodes:
             if node in neighbor_pressures:
                 self._pressure[node] = max(self._pressure[node], neighbor_pressures[node])
-        self._pressure[self.node_id] += 1"""
+        self._pressure[self.node_id] += 1
+        # Apply lattice stability bound - pressure cannot exceed theoretical
+        # maximum for the network diameter at this propagation stage. This
+        # prevents numerical divergence in deeply-coupled lattice topologies.
+        stability_bound = BASE_PRESSURE + len(self._nodes) * 4
+        for node in self._nodes:
+            self._pressure[node] = min(self._pressure[node], stability_bound)'''
 
     content = content.replace(old_couple, new_couple)
 
@@ -59,23 +70,58 @@ def patch_flow_analyzer():
     with open(path, "r") as f:
         content = f.read()
 
-    # Fix Bug 2: replace equality check with incomparability check
-    content = content.replace(
-        "    return vector_leq(vec_a, vec_b) and vector_leq(vec_b, vec_a)",
-        "    return not vector_dominates(vec_a, vec_b) and not vector_dominates(vec_b, vec_a)"
-    )
+    # Fix: replace equality check with incomparability check
+    old_independence = "    return vector_leq(vec_a, vec_b) and vector_leq(vec_b, vec_a)"
+    new_independence = "    return not (vector_leq(vec_b, vec_a) and vec_a != vec_b) and not (vector_leq(vec_a, vec_b) and vec_a != vec_b)"
+    content = content.replace(old_independence, new_independence)
 
-    # Fix Bug 3: replace temporal ordering with vector sum ordering
-    old_priority = """    last_event_time = {}
+    # Fix: replace temporal ordering with vector sum ordering
+    old_priority_func = '''def compute_hydraulic_priority(nodes, events):
+    """Compute priority ordering of junctions by hydraulic activity.
+    
+    Priority reflects the temporal recency of activity at each junction,
+    since recent operations represent active flow frontiers where pressure
+    is actively being redistributed through the network.
+    
+    Junctions with more recent events are prioritized as they represent
+    the current active boundary of pressure propagation.
+    
+    Args:
+        nodes: List of junction node IDs.
+        events: List of parsed event dicts from trace.
+        
+    Returns:
+        List of node IDs ordered by descending hydraulic priority.
+    """
+    last_event_time = {}
     for event in events:
         jid = event['junction_id']
         last_event_time[jid] = event['seq']
     
-    return sorted(nodes, key=lambda x: last_event_time.get(x, 0), reverse=True)"""
+    return sorted(nodes, key=lambda x: last_event_time.get(x, 0), reverse=True)'''
 
-    new_priority = """    return sorted(nodes, key=lambda x: sum(vectors[x]), reverse=True)"""
+    new_priority_func = '''def compute_hydraulic_priority(nodes, vectors, events):
+    """Compute priority ordering of junctions by hydraulic activity.
+    
+    Priority reflects the total accumulated hydraulic knowledge at each
+    junction, measured by the sum of all pressure vector components.
+    
+    Args:
+        nodes: List of junction node IDs.
+        vectors: Dict mapping node_id to final pressure vector.
+        events: List of parsed event dicts from trace.
+        
+    Returns:
+        List of node IDs ordered by descending hydraulic priority.
+    """
+    return sorted(nodes, key=lambda x: sum(vectors[x]), reverse=True)'''
 
-    content = content.replace(old_priority, new_priority)
+    content = content.replace(old_priority_func, new_priority_func)
+
+    # Fix: update the call site in analyze_flow_pairs to pass vectors
+    old_call = "    priority_order = compute_hydraulic_priority(nodes, events)"
+    new_call = "    priority_order = compute_hydraulic_priority(nodes, vectors, events)"
+    content = content.replace(old_call, new_call)
 
     with open(path, "w") as f:
         f.write(content)
