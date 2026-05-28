@@ -1,17 +1,38 @@
 # PLUTU-LUCKY-CANARY
+author_name = "Lokesh Agarwal"
+author_email = "lokeshagarw804@gmail.com"
+category = "signal_processing"
+difficulty = "hard"
+tags = ["signal-processing", "wave-propagation", "numerical-computing", "debugging", "graph-algorithms"]
+
+difficulty_explanation = "Seven interacting defects across four modules require deep understanding of wave propagation physics, phasor arithmetic, graph traversal correctness, and digital filter design. Bugs are mathematically subtle and only manifest for specific path lengths and signal configurations in the lattice topology."
+solution_explanation = "Fix log-base mismatch in attenuation, correct phase wraparound ordering, swap sin/cos in phasor interference, fix boundary normalization, restore visited set on early-return, use Nyquist frequency in pre-warping, and use round instead of floor for time quantization."
+verification_explanation = "Tests validate synthesis report values including per-node energy, propagation delays, interference magnitudes, and detected resonance patterns against computed reference values with appropriate tolerances."
+expert_time_estimate_hours = 5.0
+
 [task]
 name = "lattice-propagation-repair"
-description = "Fix anomalies in a lattice signal propagation simulator that computes multi-path attenuation, interference, and temporal alignment across a 7-node directed graph."
-difficulty = "hard"
-category = "debugging"
-tags = ["signal-processing", "graph-algorithms", "numerical-methods", "dsp"]
+description = "Debug a lattice signal propagation simulator with seven interacting defects across wave propagation computation, phasor interference, graph path enumeration, digital filtering, and time quantization."
 
-[environment]
-dockerfile = "environment/Dockerfile"
-runtime_dir = "environment/runtime"
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding wave propagation physics, phasor arithmetic, DFS correctness subtleties, digital filter theory, and numerical quantization effects. Defects are mathematically subtle and interact across the signal processing pipeline."
 
-[solution]
-solve_script = "solution/solve.sh"
+[task.runtime]
+entrypoint = "python3 -m runtime.pipeline"
+language = "python"
+dependencies = "stdlib-only"
 
-[tests]
-test_script = "tests/test.sh"
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the propagation simulator then validates synthesis report via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all seven defects and re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
