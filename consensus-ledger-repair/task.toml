@@ -1,0 +1,38 @@
+# PLUTU-LUCKY-CANARY
+author_name = "Lokesh Agarwal"
+author_email = "lokeshagarw804@gmail.com"
+category = "distributed_systems"
+difficulty = "hard"
+tags = ["distributed-systems", "consensus", "merkle-tree", "byzantine-fault-tolerance", "debugging"]
+
+difficulty_explanation = "Six interacting defects across five modules require understanding Merkle tree construction standards, BFT quorum arithmetic, equivocation detection logic, floating-point fee computation, and hash collision mechanics. Bugs are designed to look intentional or only manifest with specific data patterns."
+solution_explanation = "Fix hash concatenation order in Merkle nodes, correct leaf padding to duplicate last leaf, fix quorum threshold to floor(2n/3)+1, change equivocation window to strict inequality, use round() for fee computation, and fix amount truncation in double-spend hash."
+verification_explanation = "Tests validate the audit report including Merkle root, validator classification, final balances, fee totals, double-spend counts, and quorum results against reference values computed with all bugs fixed."
+expert_time_estimate_hours = 5.0
+
+[task]
+name = "consensus-ledger-repair"
+description = "Debug a distributed consensus ledger verification system with six interacting defects across Merkle tree construction, BFT quorum verification, Byzantine fault detection, fee computation, and double-spend detection."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding Merkle tree standards, BFT quorum math, equivocation detection, floating-point arithmetic in financial contexts, and hash collision scenarios. Bugs are designed to look intentional via misleading comments."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.pipeline"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the consensus verification pipeline then validates audit report via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all six defects and re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
