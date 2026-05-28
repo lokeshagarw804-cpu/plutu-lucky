@@ -141,8 +141,8 @@ class TestIntegrity:
     def test_digest(self):
         """MD5 digest must match expected value for correct propagation state."""
         report = load_report()
-        assert report['digest'] == 'cc29a377eead891d', \
-            f"Digest: expected 'cc29a377eead891d', got '{report['digest']}'"
+        assert report['digest'] == '54784ba07076c2ca', \
+            f"Digest: expected '54784ba07076c2ca', got '{report['digest']}'"
 
     def test_isolated_pairs_consistent(self):
         """Independently verify isolation count from depth state matches report."""

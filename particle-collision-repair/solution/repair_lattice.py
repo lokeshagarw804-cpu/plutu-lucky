@@ -12,20 +12,20 @@ if not os.path.isdir(RUNTIME_DIR):
 
 
 def fix_propagation_core():
-    """Fix 1: Relay attenuation should be relay participation (+= 1 not -= 1)."""
+    """Fix 1: Coupling gain should be 1 unit, not 2."""
     path = os.path.join(RUNTIME_DIR, 'propagation_core.py')
     with open(path, 'r') as f:
         content = f.read()
     content = content.replace(
-        'self._depth[self.node_id] -= 1',
-        'self._depth[self.node_id] += 1'
+        '# Coupling gain: resonant amplification from synchronized wavefronts\n        self._depth[self.node_id] += 2',
+        '# Coupling gain: resonant amplification from synchronized wavefronts\n        self._depth[self.node_id] += 1'
     )
     with open(path, 'w') as f:
         f.write(content)
 
 
 def fix_signal_isolation():
-    """Fix 2: Replace inner product divergence test with incomparability check."""
+    """Fix 2: Replace cosine similarity with incomparability check."""
     path = os.path.join(RUNTIME_DIR, 'lattice_analysis.py')
     with open(path, 'r') as f:
         content = f.read()
@@ -33,32 +33,32 @@ def fix_signal_isolation():
     old_body = '''def check_signal_isolation(depth_a, depth_b):
     """Determine whether two sensor nodes have isolated signal paths.
 
-    Two propagation fronts are isolated when they evolve along divergent
-    lattice directions. We measure this by computing the inner product of
-    their mean-centered depth profiles (residual vectors). A negative inner
-    product indicates anti-parallel propagation trajectories: the nodes
-    accumulate signal strength in opposing lattice sectors, guaranteeing
-    that their wavefronts cannot constructively interfere.
+    Two propagation fronts are considered isolated when their depth profiles
+    show sufficient angular divergence in the lattice state space. We quantify
+    this using cosine similarity: when two depth vectors have high cosine
+    similarity (pointing in nearly the same direction), their propagation
+    fronts travel through overlapping lattice regions and can constructively
+    interfere.
 
-    The residual vector (depth - mean) captures directional bias after
-    removing the isotropic baseline. When two residual vectors point in
-    opposite directions (negative dot product), the corresponding signals
-    occupy complementary regions of the lattice field space.
+    The isolation threshold (0.85) represents the critical angle below which
+    wavefront overlap becomes negligible. Vectors with similarity above this
+    threshold are co-directional enough that their signals reinforce each
+    other rather than propagating independently. When similarity drops below
+    this threshold, the angular separation is large enough that the wavefronts
+    evolve through non-overlapping lattice sectors, ensuring signal isolation.
 
     Args:
         depth_a: Depth vector for sensor A (list of ints)
         depth_b: Depth vector for sensor B (list of ints)
 
     Returns:
-        True if the signals are isolated (divergent propagation)
+        True if the signals are isolated (non-interfering)
     """
-    n = len(depth_a)
-    mean_a = sum(depth_a) / n
-    mean_b = sum(depth_b) / n
-    residual_a = [x - mean_a for x in depth_a]
-    residual_b = [x - mean_b for x in depth_b]
-    inner_product = sum(ra * rb for ra, rb in zip(residual_a, residual_b))
-    return inner_product < 0'''
+    similarity = _cosine_similarity(depth_a, depth_b)
+
+    # High similarity means co-directional propagation (not isolated)
+    # Low similarity means divergent paths (isolated)
+    return similarity < 0.85'''
 
     new_body = '''def check_signal_isolation(depth_a, depth_b):
     """Determine whether two sensor nodes have isolated signal paths.
@@ -74,26 +74,25 @@ def fix_signal_isolation():
 
 
 def fix_rank_propagation():
-    """Fix 3: Sort by total depth, not external score."""
+    """Fix 3: Sort by total depth, not sharpness."""
     path = os.path.join(RUNTIME_DIR, 'lattice_analysis.py')
     with open(path, 'r') as f:
         content = f.read()
 
     old_body = '''def rank_propagation_fronts(nodes, depths, trace_events):
-    """Rank sensor nodes by lattice-mediated propagation reach.
+    """Rank sensor nodes by propagation sharpness (peak-to-mean ratio).
 
-    Computes the external propagation score for each node: the total signal
-    depth accumulated through lattice interactions, excluding the node's own
-    self-generated contribution. A node's own depth component reflects
-    locally-injected energy (from PULSE and BURST events) rather than true
-    propagation through the lattice fabric. By subtracting the self-component,
-    we isolate the portion of signal depth that arrived via lattice-mediated
-    pathways (relay absorption and ambient field coupling), providing a purer
-    measure of propagation effectiveness.
+    Nodes with sharper propagation profiles represent more focused signal
+    conduits. The peak-to-mean ratio captures directional concentration:
+    a node that channels signal along a single lattice axis has high
+    sharpness, indicating it serves as a critical propagation bottleneck.
 
-    Nodes with higher external scores have demonstrated greater ability to
-    absorb and integrate signals from distant lattice regions, making them
-    stronger propagation conduits.
+    Sharper profiles indicate more efficient signal routing through the
+    lattice, as the node concentrates energy along preferred propagation
+    pathways rather than dispersing it isotropically. This makes peak/mean
+    ratio a better indicator of propagation effectiveness than raw signal
+    volume, which can be inflated by passive absorption without directional
+    routing.
 
     Args:
         nodes: List of node IDs
@@ -103,15 +102,14 @@ def fix_rank_propagation():
     Returns:
         List of node IDs sorted by propagation priority (highest first)
     """
-    node_list = sorted(nodes)
-    external_score = {}
+    sharpness = {}
     for node in nodes:
-        node_idx = node_list.index(node)
-        total = sum(depths[node])
-        self_contribution = depths[node][node_idx]
-        external_score[node] = total - self_contribution
+        vec = depths[node]
+        peak = max(vec)
+        mean = sum(vec) / len(vec)
+        sharpness[node] = peak / mean if mean > 0 else 0.0
 
-    return sorted(nodes, key=lambda n: external_score[n], reverse=True)'''
+    return sorted(nodes, key=lambda n: sharpness[n], reverse=True)'''
 
     new_body = '''def rank_propagation_fronts(nodes, depths, trace_events):
     """Rank sensor nodes by total accumulated signal strength."""

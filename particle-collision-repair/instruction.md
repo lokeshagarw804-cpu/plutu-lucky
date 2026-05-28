@@ -22,7 +22,7 @@ The pipeline simulates signal propagation through a lattice of 7 sensor nodes (`
 
 - **PULSE**: Gradual signal accumulation (+1 to own depth component)
 - **BURST**: High-intensity signal spike (+2 to own depth component)
-- **RELAY**: Signal absorption from neighboring sensors via component-wise maximum, with relay attenuation correction
+- **RELAY**: Signal absorption from neighboring sensors via component-wise maximum, with coupling gain from resonant synchronization
 
 ## Problem Statement
 
@@ -63,7 +63,7 @@ One JSON record per line, one per node:
   "isolated_pairs": [["n0", "n1"], ...],
   "isolated_pair_count": 21,
   "priority_order": ["n0", "n5", "n1", "n2", "n3", "n4", "n6"],
-  "digest": "cc29a377eead891d"
+  "digest": "54784ba07076c2ca"
 }
 ```
 
@@ -74,7 +74,7 @@ When all bugs are fixed:
 - `n5` total depth = **47**
 - Isolated pair count = **21**
 - Priority ordering must reflect total accumulated signal strength: `['n0', 'n5', 'n1', 'n2', 'n3', 'n4', 'n6']`
-- Digest = `cc29a377eead891d`
+- Digest = `54784ba07076c2ca`
 
 ## Running the Pipeline
 

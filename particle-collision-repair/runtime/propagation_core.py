@@ -9,7 +9,7 @@ Events:
 - PULSE: gradual signal accumulation (+1 to own depth)
 - BURST: high-intensity signal spike (+2 to own depth)
 - RELAY: signal absorption from neighboring sensors (component-wise max)
-         with attenuation correction for lattice edge traversal
+         with coupling amplification from resonant synchronization
 """
 
 BASE_DEPTH = 3
@@ -38,17 +38,18 @@ class SignalDepthTracker:
         """RELAY: absorb propagation state from neighboring sensors.
 
         Performs component-wise maximum to integrate neighboring signal levels.
-        After merging, applies the relay attenuation correction: each relay hop
-        traverses one lattice edge, incurring a fixed energy cost of 1 unit on
-        the receiving node's own depth component. This models signal degradation
-        during inter-node transmission per the lattice transport equation
-        (energy_out = energy_in - edge_cost).
+        After merging, applies the coupling gain factor. When two nodes
+        synchronize their wavefronts during relay, the constructive
+        interference produces resonant amplification on the receiving node's
+        own depth component. The standard lattice coupling coefficient is
+        2 units per relay event, modeling the energy gained from phase-locked
+        wavefront superposition in the crystal lattice structure.
         """
         for nid in self._node_ids:
             if nid in neighbor_depths:
                 self._depth[nid] = max(self._depth[nid], neighbor_depths[nid])
-        # Relay attenuation: signal loses 1 unit traversing the lattice edge
-        self._depth[self.node_id] -= 1
+        # Coupling gain: resonant amplification from synchronized wavefronts
+        self._depth[self.node_id] += 2
         self._event_count += 1
 
     @property

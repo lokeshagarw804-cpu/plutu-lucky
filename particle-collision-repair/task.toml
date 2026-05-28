@@ -3,8 +3,8 @@ author_email = "lokeshlucky0123456789@gmail.com"
 category = "Scientific Computing"
 difficulty = "hard"
 tags = ["signal-processing", "debugging", "lattice-systems", "numerical-methods"]
-difficulty_explanation = "Requires understanding partial order incomparability vs statistical divergence metrics, recognizing that relay attenuation (signal loss) should actually be relay participation (signal gain), and identifying that external propagation score incorrectly excludes self-contribution from priority ranking."
-solution_explanation = "Fix 1: Change -= 1 to += 1 in apply_relay (relay participation adds to own depth, not attenuates). Fix 2: Replace residual inner product test with incomparability check (not vector_leq in both directions). Fix 3: Sort by sum(depths[n]) instead of sum - self_component."
+difficulty_explanation = "Requires understanding partial order incomparability vs cosine similarity metrics, recognizing that the coupling gain overcorrects (should be 1, not 2), and identifying that peak-to-mean sharpness incorrectly prioritizes nodes with focused but smaller total propagation."
+solution_explanation = "Fix 1: Change += 2 to += 1 in apply_relay (coupling gain is 1, not 2). Fix 2: Replace cosine similarity threshold with incomparability check (not vector_leq in both directions). Fix 3: Sort by sum(depths[n]) instead of peak/mean sharpness ratio."
 verification_explanation = "14 tests in 4 tiers verify structural output, depth calculations, isolation classification, and full-system digest consistency."
 expert_time_estimate_hours = 2.5
 
@@ -14,7 +14,7 @@ description = "Debug a lattice signal propagation pipeline with subtle numerical
 
 [task.difficulty]
 level = "hard"
-reasoning = "Three interacting bugs span the propagation core and analysis modules. Bug 1 is a wrong-sign error disguised as attenuation correction. Bug 2 uses a plausible but fundamentally wrong statistical metric instead of partial order incomparability. Bug 3 excludes self-contribution from a ranking metric under a convincing scientific rationale."
+reasoning = "Three interacting bugs span the propagation core and analysis modules. Bug 1 is an overcorrection disguised as resonant amplification. Bug 2 uses a plausible but fundamentally wrong similarity metric instead of partial order incomparability. Bug 3 uses peak-to-mean sharpness under a convincing scientific rationale instead of simple total depth."
 
 [task.runtime]
 entrypoint = "python3 /app/runtime/pipeline.py"

@@ -4,64 +4,92 @@ Lattice Analysis Module
 Provides signal comparison utilities and isolation classification
 for the lattice propagation system.
 """
+import math
 
 
 def vector_leq(a, b):
-    """Component-wise less-than-or-equal comparison."""
+    """Component-wise less-than-or-equal comparison.
+
+    Returns True if every component of vector a is <= the corresponding
+    component of vector b. Used in partial order comparisons for
+    calibration batch processing.
+    """
     return all(x <= y for x, y in zip(a, b))
 
 
 def vector_geq(a, b):
-    """Component-wise greater-than-or-equal comparison."""
+    """Component-wise greater-than-or-equal comparison.
+
+    Returns True if every component of vector a is >= the corresponding
+    component of vector b. Dual of vector_leq for reverse ordering.
+    """
     return all(x >= y for x, y in zip(a, b))
+
+
+def _vector_norm(v):
+    """Compute Euclidean norm of a vector."""
+    return math.sqrt(sum(x * x for x in v))
+
+
+def _cosine_similarity(a, b):
+    """Compute cosine similarity between two vectors.
+
+    Returns value in [-1, 1] where 1 means identical direction,
+    0 means orthogonal, -1 means opposite direction.
+    """
+    norm_a = _vector_norm(a)
+    norm_b = _vector_norm(b)
+    if norm_a == 0 or norm_b == 0:
+        return 0.0
+    dot = sum(x * y for x, y in zip(a, b))
+    return dot / (norm_a * norm_b)
 
 
 def check_signal_isolation(depth_a, depth_b):
     """Determine whether two sensor nodes have isolated signal paths.
 
-    Two propagation fronts are isolated when they evolve along divergent
-    lattice directions. We measure this by computing the inner product of
-    their mean-centered depth profiles (residual vectors). A negative inner
-    product indicates anti-parallel propagation trajectories: the nodes
-    accumulate signal strength in opposing lattice sectors, guaranteeing
-    that their wavefronts cannot constructively interfere.
+    Two propagation fronts are considered isolated when their depth profiles
+    show sufficient angular divergence in the lattice state space. We quantify
+    this using cosine similarity: when two depth vectors have high cosine
+    similarity (pointing in nearly the same direction), their propagation
+    fronts travel through overlapping lattice regions and can constructively
+    interfere.
 
-    The residual vector (depth - mean) captures directional bias after
-    removing the isotropic baseline. When two residual vectors point in
-    opposite directions (negative dot product), the corresponding signals
-    occupy complementary regions of the lattice field space.
+    The isolation threshold (0.85) represents the critical angle below which
+    wavefront overlap becomes negligible. Vectors with similarity above this
+    threshold are co-directional enough that their signals reinforce each
+    other rather than propagating independently. When similarity drops below
+    this threshold, the angular separation is large enough that the wavefronts
+    evolve through non-overlapping lattice sectors, ensuring signal isolation.
 
     Args:
         depth_a: Depth vector for sensor A (list of ints)
         depth_b: Depth vector for sensor B (list of ints)
 
     Returns:
-        True if the signals are isolated (divergent propagation)
+        True if the signals are isolated (non-interfering)
     """
-    n = len(depth_a)
-    mean_a = sum(depth_a) / n
-    mean_b = sum(depth_b) / n
-    residual_a = [x - mean_a for x in depth_a]
-    residual_b = [x - mean_b for x in depth_b]
-    inner_product = sum(ra * rb for ra, rb in zip(residual_a, residual_b))
-    return inner_product < 0
+    similarity = _cosine_similarity(depth_a, depth_b)
+
+    # High similarity means co-directional propagation (not isolated)
+    # Low similarity means divergent paths (isolated)
+    return similarity < 0.85
 
 
 def rank_propagation_fronts(nodes, depths, trace_events):
-    """Rank sensor nodes by lattice-mediated propagation reach.
+    """Rank sensor nodes by propagation sharpness (peak-to-mean ratio).
 
-    Computes the external propagation score for each node: the total signal
-    depth accumulated through lattice interactions, excluding the node's own
-    self-generated contribution. A node's own depth component reflects
-    locally-injected energy (from PULSE and BURST events) rather than true
-    propagation through the lattice fabric. By subtracting the self-component,
-    we isolate the portion of signal depth that arrived via lattice-mediated
-    pathways (relay absorption and ambient field coupling), providing a purer
-    measure of propagation effectiveness.
+    Nodes with sharper propagation profiles represent more focused signal
+    conduits. The peak-to-mean ratio captures directional concentration:
+    a node that channels signal along a single lattice axis has high
+    sharpness, indicating it serves as a critical propagation bottleneck.
 
-    Nodes with higher external scores have demonstrated greater ability to
-    absorb and integrate signals from distant lattice regions, making them
-    stronger propagation conduits.
+    Sharper profiles indicate more efficient signal routing through the
+    lattice, as the node concentrates energy along preferred propagation
+    pathways rather than dispersing it isotropically. This makes peak/mean
+    ratio a better indicator of propagation effectiveness than raw signal
+    volume, which can be inflated by passive absorption without directional
+    routing.
 
     Args:
         nodes: List of node IDs
@@ -71,15 +99,14 @@ def rank_propagation_fronts(nodes, depths, trace_events):
     Returns:
         List of node IDs sorted by propagation priority (highest first)
     """
-    node_list = sorted(nodes)
-    external_score = {}
+    sharpness = {}
     for node in nodes:
-        node_idx = node_list.index(node)
-        total = sum(depths[node])
-        self_contribution = depths[node][node_idx]
-        external_score[node] = total - self_contribution
+        vec = depths[node]
+        peak = max(vec)
+        mean = sum(vec) / len(vec)
+        sharpness[node] = peak / mean if mean > 0 else 0.0
 
-    return sorted(nodes, key=lambda n: external_score[n], reverse=True)
+    return sorted(nodes, key=lambda n: sharpness[n], reverse=True)
 
 
 def find_isolated_pairs(nodes, depths):
