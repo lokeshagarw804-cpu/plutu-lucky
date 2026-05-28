@@ -1,0 +1,37 @@
+author_name = "Terminal-Bench"
+author_email = "bench@terminal.dev"
+category = "scientific_computing"
+difficulty = "hard"
+tags = ["scientific-computing", "lattice-boltzmann", "fluid-simulation", "vector-clocks", "debugging"]
+
+difficulty_explanation = "Four interacting defects across three modules require understanding vector dominance relations, lattice momentum propagation semantics, and the distinction between equality and incomparability in partial orders. Misleading comments actively steer solvers toward incorrect reasoning."
+solution_explanation = "Fix missing self-increment after collision in momentum_engine, replace equality check with incomparability check in flow_analyzer, replace temporal sort with magnitude sort in flow_analyzer, and the report_writer bug cascades automatically."
+verification_explanation = "Tests validate structural properties (always pass), momentum values after collision (need Bug 1), flow analysis correctness (need Bugs 2+3), and full simulation integrity (need all bugs fixed)."
+expert_time_estimate_hours = 3.0
+
+[task]
+name = "lattice-momentum-repair"
+description = "Debug a lattice Boltzmann momentum propagation simulator with four interacting defects across collision handling, flow decoupling analysis, and dissipation priority computation."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding vector dominance vs equality in partial orders, lattice momentum propagation semantics, and tracing cascading bugs across modules. Misleading comments reinforce buggy behavior as correct."
+
+[task.runtime]
+entrypoint = "python3 -c \"import sys; sys.path.insert(0, '/app/runtime'); from orchestrator import main; main()\""
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the simulation then validates output via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all four defects and re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
