@@ -6,13 +6,18 @@ This system simulates signal propagation across a lattice of 7 sensor nodes (n0 
 
 ## Architecture
 
-- **/app/runtime/signal_trace.log**: Input data containing 45 signal events in arrow-separated format
-- **/app/runtime/trace_reader.py**: Parses the log into structured event records
-- **/app/runtime/propagation_core.py**: Maintains per-node depth vectors and processes signal events
-- **/app/runtime/lattice_analysis.py**: Computes isolation pairs and propagation priority rankings
-- **/app/runtime/synthesis_output.py**: Generates the final JSON report with digest
-- **/app/runtime/calibration.py**: Offline calibration utilities (not part of the live pipeline)
-- **/app/runtime/pipeline.py**: Orchestrates the full simulation
+All source modules are located under `/app/runtime/`. The test suite is under `/tests/`.
+
+| Module | Role |
+|--------|------|
+| signal_trace.log | Input data containing 45 signal events |
+| trace_reader.py | Parses the log into structured event records |
+| propagation_core.py | Maintains per-node depth vectors and processes signal events |
+| lattice_analysis.py | Computes isolation pairs and propagation priority rankings |
+| synthesis_output.py | Generates the final JSON report with digest |
+| calibration.py | Offline calibration utilities (not part of the live pipeline) |
+| pipeline.py | Orchestrates the full simulation |
+| test_lattice_propagation.py | Validation test suite (14 tests) |
 
 ## Signal Event Types
 
@@ -26,8 +31,15 @@ The synthesis report does not match expected values. Investigation suggests the 
 
 ## Files with Potential Issues
 
-- `/app/runtime/propagation_core.py` - Signal depth tracking logic
-- `/app/runtime/lattice_analysis.py` - Isolation classification and priority ranking
+- `/app/runtime/propagation_core.py` (signal depth tracking logic)
+- `/app/runtime/lattice_analysis.py` (isolation classification and priority ranking)
+
+## Files Known to be Correct
+
+- `/app/runtime/trace_reader.py`
+- `/app/runtime/pipeline.py`
+- `/app/runtime/calibration.py`
+- `/app/runtime/synthesis_output.py`
 
 ## Expected Behavior
 
@@ -37,14 +49,14 @@ When functioning correctly, the pipeline should:
 3. Produce a priority ordering that reflects accumulated signal strength
 4. Generate a consistent digest fingerprint of the propagation state
 
-## Running the Pipeline
+## Running
 
-```bash
+```
 python3 /app/runtime/pipeline.py
 ```
 
 ## Validation
 
-```bash
+```
 uv run --with pytest pytest -v /tests/test_lattice_propagation.py
 ```
