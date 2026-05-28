@@ -1,0 +1,22 @@
+[task]
+name = "particle-collision-repair"
+version = "1.0.0"
+description = "Debug a particle collision simulation that tracks momentum vectors across 7 particles processing collision events."
+difficulty = "medium"
+tags = ["debugging", "physics-simulation", "vector-clocks", "python"]
+
+[environment]
+base_image = "python:3.11-slim"
+dockerfile = "environment/Dockerfile"
+
+[environment.resources]
+cpu = 1
+memory = "512M"
+
+[tests]
+script = "tests/test.sh"
+total = 14
+passing_with_bugs = 8
+
+[solution]
+script = "solution/solve.sh"
