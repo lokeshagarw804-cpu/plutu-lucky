@@ -9,29 +9,29 @@ produces diagnostic reports including regime classification and relaxation sched
 
 ## Architecture
 
-The codebase consists of the following modules:
+The codebase consists of the following modules located in `/app/runtime/`:
 
-- **parser.py** - Parses the propagation log file (`propagation_log.dat`) into structured
+- **`/app/runtime/parser.py`** - Parses the propagation log file (`/app/runtime/propagation_log.dat`) into structured
   event records. Handles validation, normalization, and event registry bookkeeping.
 
-- **momentum_engine.py** - Core simulation engine. Maintains per-cell momentum state and
+- **`/app/runtime/momentum_engine.py`** - Core simulation engine. Maintains per-cell momentum state and
   applies streaming, drift, and collision operations according to the propagation log events.
 
-- **regime_classifier.py** - Analyzes the evolved momentum state to classify pairwise
+- **`/app/runtime/regime_classifier.py`** - Analyzes the evolved momentum state to classify pairwise
   interaction regimes between cells and compute relaxation scheduling priorities.
 
-- **report_writer.py** - Generates output artifacts: per-cell state dumps and flow analysis
+- **`/app/runtime/report_writer.py`** - Generates output artifacts: per-cell state dumps and flow analysis
   reports with digests for validation.
 
-- **orchestrator.py** - Coordinates the pipeline: parse, simulate, classify, report. Manages
+- **`/app/runtime/orchestrator.py`** - Coordinates the pipeline: parse, simulate, classify, report. Manages
   configuration, caching, and diagnostic output channels.
 
-- **calibration.py** - Computes thermal equilibrium constants, lattice parameters, and
+- **`/app/runtime/calibration.py`** - Computes thermal equilibrium constants, lattice parameters, and
   Reynolds number estimates used for diagnostic annotations.
 
 ## Data Format
 
-### Input: `propagation_log.dat`
+### Input: `/app/runtime/propagation_log.dat`
 
 Each line represents one propagation event in the format:
 
@@ -48,13 +48,13 @@ Event types:
 
 Two output files are produced in `/app/runtime/output/`:
 
-1. **lattice_state.jsonl** - One JSON object per cell containing:
+1. **`/app/runtime/output/lattice_state.jsonl`** - One JSON object per cell containing:
    - `cell_id`: Lattice coordinate identifier
    - `momentum_vector`: Dict mapping all cell IDs to integer momentum components
    - `total_events`: Count of events processed for this cell
    - `last_event_step`: Sequence number of last event affecting this cell
 
-2. **flow_report.json** - Analysis results containing:
+2. **`/app/runtime/output/flow_report.json`** - Analysis results containing:
    - `decoupled_pairs`: List of cell pairs classified as decoupled
    - `decoupled_count`: Number of decoupled pairs
    - `relaxation_priority`: Ordered list of cells for relaxation sweep
