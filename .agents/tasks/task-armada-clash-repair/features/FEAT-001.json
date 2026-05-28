@@ -1,0 +1,60 @@
+{
+  "id": "FEAT-001",
+  "type": "feat",
+  "description": "Create the complete armada-clash-repair Harbor task with all files following the proven vector clock bug pattern. This is a game bot/solver task where 7 armadas track engagement vectors to determine fleet autonomy and deployment priority. The task contains 4 bugs (3 code locations) that defeat AI solvers through misleading docstrings.",
+  "status": "in_progress",
+  "steps": [
+    "STEP 1 - Create runtime/engagements.dat: A pipe-separated data file with 45 engagement events for 7 armadas (IDs: A0-A6). Event types: SKIRMISH (+1 to own vector component), BARRAGE (+2 to own vector component), REGROUP (merge/sync from peer). Distribution: A0 gets 8 events, A1 gets 7, A2-A6 get 6 each. Each armada has 0-2 REGROUP events. Format: tick|armada_id|event_type|target_armada(for REGROUP)|sector. BASE_VALUE=3 for initial vector components.",
+
+    "STEP 2 - Create runtime/parser.py: Parse the pipe-separated engagements.dat file. Load events into a list of dicts with fields: tick, armada_id, event_type, target_armada, sector. Simple straightforward parser, no bugs.",
+
+    "STEP 3 - Create runtime/fleet_doctrine.py (RED HERRING - 220-280 lines, ALL CORRECT): A complex-looking module with 5-8 classes: FleetFormation(enum), DoctrineProfile, TacticalStance, EngagementRules, FleetComposition, SectorControl, CommandHierarchy, MoraleTracker. Include methods with complex-looking logic (formation bonuses, morale calculations, stance transitions). This file is imported by other files but its values are never used in the computation path that produces the output. Every class should have docstrings and look important.",
+
+    "STEP 4 - Create runtime/vector_engine.py (BUG 1): Implements VectorClock class for tracking armada engagement vectors. Key method: regroup_from(peer_id) which does component-wise max merge from a peer armada's vector. BUG: The method does NOT increment self._state[self.entity_id] after the merge. Misleading docstring says: 'Incrementing after regroup would conflate coordination overhead with actual combat engagements, violating the separation of concerns in vector semantics.' The class should have __init__ taking entity_id and fleet_count (7), get_state(), record_event(cost) methods. record_event increments self._state[self.entity_id] by cost amount.",
+
+    "STEP 5 - Create runtime/clash_analyzer.py (BUGS 2+3): Two functions with bugs. BUG 2: fleets_are_autonomous(vec_a, vec_b) - should check incomparability (NOT dominates(a,b) AND NOT dominates(b,a)) but BUGGY version checks equality in partial order (all(a<=b) AND all(b<=a)). Helper dominates(x,y) checks all(x[i]>=y[i]) and any(x[i]>y[i]). Misleading docstring: 'Bidirectional containment is the standard criterion for operational independence - if neither fleet has strictly surpassed the other in any engagement dimension, they share symmetric awareness and can safely operate without coordination overhead.' BUG 3: compute_deployment_priority(armada_ids, vectors) - should sort by sum of vector components (logical weight) but BUGGY version sorts by the last/max tick timestamp. Misleading docstring: 'Temporal recency provides a natural proxy for fleet volatility - armadas with more recent engagements require priority deployment to capitalize on momentum.' Include a helper function dominates(a, b) that is correct.",
+
+    "STEP 6 - Create runtime/armada_report.py (BUG 4 - cascading): Imports fleets_are_autonomous from clash_analyzer. Builds the final report including: all vector states, list of autonomous pairs (using the buggy predicate), deployment order, and a SHA256 digest that incorporates vectors + autonomous pairs + deployment order. When Bug 2 is fixed, this automatically produces correct autonomous pairs.",
+
+    "STEP 7 - Create runtime/orchestrator.py (CORRECT): Main entry point that ties everything together. Loads engagements via parser, creates VectorClock instances, processes events in tick order (SKIRMISH adds +1, BARRAGE adds +2, REGROUP calls regroup_from), then calls clash_analyzer and armada_report to produce final output. Writes intermediate state to clash_state.jsonl and final report to armada_report.json. Imports fleet_doctrine but only uses it for a no-op validation call that doesn't affect outputs.",
+
+    "STEP 8 - Create tests/test_armada_clash.py (14 tests in 4 tiers): Tier 1 (6 tests, always pass): test_report_file_exists, test_report_has_required_keys, test_all_armadas_present, test_vector_dimensions_correct, test_base_values_present, test_deployment_order_length. Tier 2 (2 tests, always pass): test_event_count_in_state_file, test_sector_coverage. Tier 3 (4 tests, need fix): test_autonomous_pair_count, test_specific_autonomous_pairs, test_deployment_order_by_weight, test_vector_values_after_regroup. Tier 4 (2 tests, need all fixes): test_digest_integrity, test_full_consistency_check. Target: NOP=8 pass 6 fail, Oracle=14 pass 0 fail.",
+
+    "STEP 9 - Create tests/test.sh: Shell script that creates /logs/verifier dir, runs orchestrator if state file missing, then runs pytest with uv, writes reward.txt.",
+
+    "STEP 10 - Create solution/repair_armada.py: Fix script that looks analytical (not hardcoded). For Bug 1: reads vector_engine.py line by line, finds the regroup_from method's merge loop end, inserts self._state[self.entity_id] += 1 after it. For Bugs 2+3: uses semantic string replacement in clash_analyzer.py - replaces the equality check with incomparability check, replaces timestamp sort with sum-of-components sort. Then removes old state/report files and re-runs orchestrator.",
+
+    "STEP 11 - Create solution/solve.sh: Simple shell script that runs orchestrator first then repair script.",
+
+    "STEP 12 - Create instruction.md: Describes the armada clash system vaguely. Names all files. Marks fleet_doctrine.py as correct. Shows output schema. Describes symptoms (wrong autonomous pairs, wrong deployment order, wrong digest) but does NOT define mathematical meaning of autonomy, does NOT use words 'incomparable' or 'partial order'. Says 'Global system-wide tooling: uv and pytest are available'. Uses absolute paths /app/runtime/...",
+
+    "STEP 13 - Create task.toml: With author Dhruvkumar Patel, category games, difficulty hard, appropriate tags and explanations.",
+
+    "STEP 14 - Create environment/Dockerfile: FROM python:3.11-slim, RUN pip install uv, COPY runtime/ /app/runtime/, WORKDIR /app",
+
+    "STEP 15 - Copy runtime/ files to environment/runtime/ (exact duplicates of the buggy versions)",
+
+    "STEP 16 - Verify: Set up test environment at /app/runtime/, run orchestrator, run pytest expecting 8 pass 6 fail. Then run repair, re-run pytest expecting 14 pass 0 fail.",
+
+    "STEP 17 - Create ZIP file of the armada-clash-repair directory"
+  ],
+  "acceptance_criteria": [
+    "All files exist in armada-clash-repair/ with correct structure",
+    "Running buggy orchestrator + pytest shows exactly 8 passed, 6 failed",
+    "Running repair script + orchestrator + pytest shows exactly 14 passed, 0 failed",
+    "No '# BUG:' comments anywhere in source code",
+    "All misleading docstrings reinforce buggy behavior as correct",
+    "instruction.md does not contain 'incomparable' or 'partial order'",
+    "fleet_doctrine.py is 220-280 lines and purely a red herring",
+    "engagements.dat has exactly 45 events across 7 armadas",
+    "environment/runtime/ is exact copy of runtime/",
+    "ZIP file created successfully"
+  ],
+  "verification": [
+    "python3 /app/runtime/orchestrator.py runs without error",
+    "uv run --with pytest pytest -v /tests/test_armada_clash.py shows 8 passed, 6 failed with buggy code",
+    "After running repair: uv run --with pytest pytest -v /tests/test_armada_clash.py shows 14 passed, 0 failed"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}
