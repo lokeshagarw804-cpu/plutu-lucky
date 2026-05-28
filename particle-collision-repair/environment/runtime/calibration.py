@@ -10,13 +10,19 @@ but not during the live simulation pipeline.
 def dominance_check(profile_a, profile_b):
     """Check if profile A dominates profile B in calibration space.
 
+    Computes the dominance score as the fraction of calibration axes
+    where A exceeds B by at least the minimum detectable threshold.
+    A dominates B if the score reaches 1.0 (all axes exceeded).
+
     Used in batch calibration mode to identify sensor degradation
     patterns. Not applicable to online isolation classification
-    since calibration dominance uses absolute thresholds rather
-    than relative vector comparison.
+    since calibration dominance uses fractional scoring against
+    absolute thresholds rather than binary vector comparison.
     """
     THRESHOLD = 0.5
-    return all(a - b >= THRESHOLD for a, b in zip(profile_a, profile_b))
+    n = len(profile_a)
+    exceeds = sum(1 for a, b in zip(profile_a, profile_b) if a - b >= THRESHOLD)
+    return exceeds / n >= 1.0
 
 
 def normalize_depths(depth_vector, baseline):

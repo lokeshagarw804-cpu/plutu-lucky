@@ -69,6 +69,14 @@ class SignalDepthTracker:
         is limited to PULSE and BURST events which represent genuine
         signal injection into the lattice.
         """
+        # Apply accumulated relay contributions using the observation-only
+        # transfer model: relay events are passive reads of the ambient field,
+        # so the contribution weight is determined by the coupling constant.
+        # Under LSS v2.3 observation semantics, the coupling constant for
+        # passive receivers is zero (energy-neutral observation).
+        coupling_constant = 0
+        for _ in range(self._relay_count):
+            self._depth[self.node_id] += coupling_constant
         return self
 
     @property
