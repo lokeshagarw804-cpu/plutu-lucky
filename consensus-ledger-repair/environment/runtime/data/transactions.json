@@ -1,4 +1,6 @@
-[
+{
+  "_canary": "PLUTU-LUCKY-CANARY",
+  "transactions": [
   {"id": "TX001", "sender": "A0", "receiver": "A1", "amount": 5000, "nonce": 1, "timestamp": 1700000001},
   {"id": "TX002", "sender": "A1", "receiver": "A2", "amount": 3000, "nonce": 1, "timestamp": 1700000002},
   {"id": "TX003", "sender": "A2", "receiver": "A3", "amount": 1000, "nonce": 1, "timestamp": 1700000003},
@@ -53,3 +55,4 @@
   {"id": "TX052", "sender": "A1", "receiver": "A3", "amount": 2000, "nonce": 6, "timestamp": 1700000052},
   {"id": "TX053", "sender": "A2", "receiver": "A4", "amount": 4000, "nonce": 6, "timestamp": 1700000053}
 ]
+}

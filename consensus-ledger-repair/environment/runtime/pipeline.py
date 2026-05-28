@@ -24,10 +24,10 @@ def load_data():
     data_dir = os.path.join(os.path.dirname(__file__), "data")
 
     with open(os.path.join(data_dir, "transactions.json")) as f:
-        transactions = json.load(f)
+        transactions = json.load(f)["transactions"]
 
     with open(os.path.join(data_dir, "validators.json")) as f:
-        validators = json.load(f)
+        validators = json.load(f)["validators"]
 
     with open(os.path.join(data_dir, "voting_records.json")) as f:
         voting_records = json.load(f)
