@@ -1,0 +1,35 @@
+author_name = "Lokesh Agarwal"
+author_email = "lokeshlucky0123456789@gmail.com"
+category = "Scientific Computing"
+difficulty = "hard"
+tags = ["lattice-boltzmann", "fluid-dynamics", "vector-clocks", "pressure-propagation", "numerical-simulation"]
+difficulty_explanation = "Requires understanding lattice-based pressure propagation semantics where coupling operations have non-obvious increment rules, combined with a subtle confusion between vector equality and vector incomparability in the flow independence check."
+solution_explanation = "Fix three bugs: (1) add own-component increment after COUPLE sync in pressure_engine.py, (2) replace equality check with incomparability check in flows_are_independent, (3) fix priority ordering to use vector sum instead of event timestamp."
+verification_explanation = "14 tests in 4 tiers verify structural output, pressure state correctness, flow pair classification, and full digest consistency."
+
+[task]
+name = "lattice-flow-repair"
+description = "Debug a lattice-based pipe flow simulator that tracks pressure propagation vectors across junction nodes, fixing issues in the pressure engine, flow analyzer, and report generation."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Multiple interacting bugs span three files with misleading comments that suggest the buggy behavior is intentional. The independence predicate bug requires understanding partial order theory."
+
+[task.runtime]
+entrypoint = "python3 /app/runtime/orchestrator.py"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs 14 pytest tests across 4 tiers checking structure, state values, pair classification, and digest consistency."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Applies fixes to pressure_engine.py and flow_analyzer.py, then regenerates outputs."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
