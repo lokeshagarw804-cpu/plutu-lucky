@@ -1,4 +1,5 @@
 #!/bin/bash
 # PLUTU-LUCKY-CANARY
-cd /app
-python3 /solution/repair_consensus.py
+set -e
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+python3 "$SCRIPT_DIR/repair_consensus.py"

@@ -1,2 +1,3 @@
 # PLUTU-LUCKY-CANARY
-"""Distributed Consensus Ledger Verification System."""
+"""Consensus Ledger Runtime Package."""
+__version__ = "2.1.0"

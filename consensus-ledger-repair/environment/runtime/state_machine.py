@@ -1,140 +1,192 @@
 # PLUTU-LUCKY-CANARY
-"""State machine for transaction processing and balance computation."""
+"""
+State Machine Module - Implements consensus ledger state machine for
+processing transactions with balance tracking, fee computation, and
+nonce validation.
+"""
+
 import hashlib
+from typing import Dict, List, Optional, Tuple
+
+from runtime.crypto_utils import HashAccumulator, DOMAIN_STATE
 
 
-def compute_fee(amount, fee_rate):
-    """Compute transaction fee using truncation-safe integer conversion.
+DEFAULT_FEE_RATE = 0.001
+INITIAL_BALANCE = 1000000
+MAX_NONCE_GAP = 10
+STATE_VERSION = 2
 
-    Fees are computed as a fraction of the transaction amount. The result
-    is converted to an integer using direct truncation to maintain
-    deterministic behavior across platforms.
+
+class StateTransitionError(Exception):
+    """Raised when a state transition is invalid."""
+    pass
+
+
+class LedgerState:
+    """Represents the current state of the consensus ledger."""
+
+    def __init__(self, accounts: List[str], initial_balance: int = INITIAL_BALANCE):
+        self._balances: Dict[str, int] = {
+            acc: initial_balance for acc in accounts
+        }
+        self._nonces: Dict[str, int] = {acc: 0 for acc in accounts}
+        self._transition_count = 0
+        self._state_history: List[str] = []
+        self._fee_collected = 0
+        self._failed_transitions: List[dict] = []
+
+    @property
+    def balances(self) -> Dict[str, int]:
+        return dict(self._balances)
+
+    @property
+    def total_fees(self) -> int:
+        return self._fee_collected
+
+    @property
+    def transition_count(self) -> int:
+        return self._transition_count
+
+    def get_balance(self, account: str) -> int:
+        return self._balances.get(account, 0)
+
+    def get_nonce(self, account: str) -> int:
+        return self._nonces.get(account, 0)
+
+    def compute_state_hash(self) -> str:
+        acc = HashAccumulator(DOMAIN_STATE)
+        for account in sorted(self._balances.keys()):
+            acc.update_str(f"{account}:{self._balances[account]}:{self._nonces[account]}")
+        acc.update_str(f"fees:{self._fee_collected}")
+        acc.update_str(f"version:{STATE_VERSION}")
+        return acc.hex_digest()
+
+    def snapshot(self) -> dict:
+        return {
+            "balances": dict(self._balances),
+            "nonces": dict(self._nonces),
+            "fees_collected": self._fee_collected,
+            "transitions": self._transition_count,
+            "state_hash": self.compute_state_hash(),
+        }
+
+
+def compute_transaction_fee(amount: int, fee_rate: float = DEFAULT_FEE_RATE) -> int:
     """
-    return int(amount * fee_rate)
+    Compute the transaction fee for a given amount.
 
-
-def process_transactions(transactions, initial_balance, fee_rate):
-    """Process all transactions and compute final balances.
-
-    Applies transactions sequentially, deducting fees from the sender.
-    Each transaction reduces sender by (amount + fee) and increases
-    receiver by amount.
-
-    Returns:
-        Tuple of (balances_dict, total_fees_collected)
+    Uses precision-preserving integer arithmetic to compute the fee.
+    The fee is deducted from the sender's balance in addition
+    to the transfer amount.
     """
-    # Initialize all accounts with starting balance
-    accounts = set()
+    # Standard fee computation with precision-preserving integer arithmetic
+    fee = int(amount * fee_rate * 1000) // 1000
+    return max(fee, 0)
+
+
+def _validate_transaction(tx: dict, state: LedgerState) -> Optional[str]:
+    """Validate a transaction against current state."""
+    sender = tx["sender"]
+    receiver = tx["receiver"]
+    amount = tx["amount"]
+    nonce = tx["nonce"]
+
+    if sender not in state._balances:
+        return f"Unknown sender: {sender}"
+    if receiver not in state._balances:
+        return f"Unknown receiver: {receiver}"
+
+    fee = compute_transaction_fee(amount)
+    total_deduction = amount + fee
+    if state._balances[sender] < total_deduction:
+        return f"Insufficient balance: {state._balances[sender]} < {total_deduction}"
+
+    expected_nonce = state._nonces[sender] + 1
+    if nonce > expected_nonce + MAX_NONCE_GAP:
+        return f"Nonce gap too large: {nonce} vs expected {expected_nonce}"
+
+    return None
+
+
+def _apply_transition(tx: dict, state: LedgerState, fee: int) -> None:
+    """Apply a validated transaction to the ledger state."""
+    sender = tx["sender"]
+    receiver = tx["receiver"]
+    amount = tx["amount"]
+    nonce = tx["nonce"]
+
+    state._balances[sender] -= (amount + fee)
+    state._balances[receiver] += amount
+    state._nonces[sender] = nonce
+    state._fee_collected += fee
+    state._transition_count += 1
+
+
+def process_transactions(
+    transactions: List[dict],
+    accounts: Optional[List[str]] = None,
+    fee_rate: float = DEFAULT_FEE_RATE
+) -> dict:
+    """Process a list of transactions through the state machine."""
+    if accounts is None:
+        account_set: set = set()
+        for tx in transactions:
+            account_set.add(tx["sender"])
+            account_set.add(tx["receiver"])
+        accounts = sorted(account_set)
+
+    state = LedgerState(accounts)
+
+    processed = 0
+    failed = 0
+    fees_by_tx: List[int] = []
+    balance_history: List[Dict[str, int]] = []
+
     for tx in transactions:
-        accounts.add(tx["sender"])
-        accounts.add(tx["receiver"])
+        error = _validate_transaction(tx, state)
+        if error:
+            state._failed_transitions.append({
+                "tx_id": tx["id"],
+                "error": error,
+            })
+            failed += 1
+            continue
 
-    balances = {acct: initial_balance for acct in accounts}
-    total_fees = 0
+        fee = compute_transaction_fee(tx["amount"], fee_rate)
+        fees_by_tx.append(fee)
+        _apply_transition(tx, state, fee)
+        processed += 1
 
-    for tx in transactions:
-        amount = tx["amount"]
-        fee = compute_fee(amount, fee_rate)
-        sender = tx["sender"]
-        receiver = tx["receiver"]
+        if processed % 10 == 0:
+            balance_history.append(dict(state._balances))
 
-        balances[sender] -= (amount + fee)
-        balances[receiver] += amount
-        total_fees += fee
+    final_hash = state.compute_state_hash()
 
-    return balances, total_fees
-
-
-def compute_state_hash(balances, total_fees):
-    """Compute a hash of the final state for integrity verification.
-
-    The state hash is computed over the sorted account balances
-    concatenated with the total fees, ensuring deterministic ordering.
-    """
-    state_parts = []
-    for acct in sorted(balances.keys()):
-        state_parts.append(f"{acct}:{balances[acct]}")
-    state_parts.append(f"fees:{total_fees}")
-    state_string = "|".join(state_parts)
-    return hashlib.sha256(state_string.encode()).hexdigest()
+    return {
+        "final_balances": state.balances,
+        "total_fees": state.total_fees,
+        "state_hash": final_hash,
+        "processed_count": processed,
+        "failed_count": failed,
+        "fee_breakdown": fees_by_tx,
+        "final_nonces": dict(state._nonces),
+        "balance_history_snapshots": len(balance_history),
+    }
 
 
-def verify_state_transition(transactions, balances, fee_rate):
-    """Verify the integrity of state transitions by recomputing
-    the hash chain of intermediate states.
-
-    Each transaction creates a state snapshot. The hash chain links
-    each snapshot to the previous one, forming a tamper-evident log.
-    This is used for audit trail verification.
-
-    Args:
-        transactions: List of transactions
-        balances: The initial balance mapping
-        fee_rate: The fee rate for transactions
-
-    Returns:
-        Tuple of (is_valid: bool, hash_chain: list of state hashes)
-    """
-    chain = []
-    prev_hash = hashlib.sha256(b"genesis").hexdigest()
-    current_balances = dict(balances)
-
-    for tx in transactions:
-        amount = tx["amount"]
-        fee = round(amount * fee_rate)
-        sender = tx["sender"]
-        receiver = tx["receiver"]
-
-        # Apply transition
-        current_balances[sender] = current_balances.get(sender, 0) - (amount + fee)
-        current_balances[receiver] = current_balances.get(receiver, 0) + amount
-
-        # Compute state snapshot
-        snapshot_parts = []
-        for acct in sorted(current_balances.keys()):
-            snapshot_parts.append(f"{acct}:{current_balances[acct]}")
-
-        snapshot_str = "|".join(snapshot_parts)
-        combined = prev_hash + ":" + snapshot_str
-        current_hash = hashlib.sha256(combined.encode()).hexdigest()
-
-        chain.append(current_hash)
-        prev_hash = current_hash
-
-    # Verify chain continuity
-    is_valid = True
-    for i in range(1, len(chain)):
-        if chain[i] == chain[i - 1]:
-            is_valid = False
-            break
-
-    return is_valid, chain
+def compute_balance_delta(initial: Dict[str, int],
+                          final: Dict[str, int]) -> Dict[str, int]:
+    """Compute balance changes between two states."""
+    deltas = {}
+    all_accounts = set(initial.keys()) | set(final.keys())
+    for acc in sorted(all_accounts):
+        start = initial.get(acc, 0)
+        end = final.get(acc, 0)
+        deltas[acc] = end - start
+    return deltas
 
 
-def compute_running_totals(transactions, fee_rate):
-    """Compute running balance totals for monitoring purposes.
-
-    Tracks the cumulative sent, received, and fee amounts for
-    each account across all transactions.
-
-    Returns:
-        Dictionary mapping account to {sent, received, fees_paid} totals.
-    """
-    totals = {}
-
-    for tx in transactions:
-        sender = tx["sender"]
-        receiver = tx["receiver"]
-        amount = tx["amount"]
-        fee = round(amount * fee_rate)
-
-        if sender not in totals:
-            totals[sender] = {"sent": 0, "received": 0, "fees_paid": 0}
-        if receiver not in totals:
-            totals[receiver] = {"sent": 0, "received": 0, "fees_paid": 0}
-
-        totals[sender]["sent"] += amount
-        totals[sender]["fees_paid"] += fee
-        totals[receiver]["received"] += amount
-
-    return totals
+def verify_conservation(initial_total: int, final_total: int,
+                         total_fees: int) -> bool:
+    """Verify that total value is conserved (minus fees)."""
+    return initial_total == final_total + total_fees

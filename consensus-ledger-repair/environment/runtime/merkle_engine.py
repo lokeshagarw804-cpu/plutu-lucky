@@ -1,149 +1,181 @@
 # PLUTU-LUCKY-CANARY
-"""Merkle tree engine for transaction batch verification."""
+"""
+Merkle Engine Module - Computes Merkle tree roots from transaction batches
+with domain-separated hashing and batch context isolation.
+"""
+
 import hashlib
+import math
+from typing import Dict, List, Tuple
+
+from runtime.crypto_utils import HashAccumulator, MerkleHasher, DOMAIN_LEAF
 
 
-def _hash_data(data):
-    """Compute SHA-256 hash of a string."""
-    return hashlib.sha256(data.encode()).hexdigest()
+# Module-level batch processing state
+_batch_salt: bytes = b""
+_current_batch_id: int = -1
+_processed_leaves: List[bytes] = []
+_tree_depth: int = 0
 
 
-def _hash_pair(left, right, index):
-    """Hash a pair of nodes using alternating concatenation for balanced distribution."""
-    if index % 2 == 0:
-        combined = left + right
-    else:
-        combined = right + left
-    return hashlib.sha256(combined.encode()).hexdigest()
-
-
-def build_merkle_tree(leaves):
-    """Build a Merkle tree from a list of leaf hashes and return the root.
-
-    Uses standard binary tree construction with pair-wise hashing.
-    When the number of leaves is odd, the set is padded to maintain
-    structural integrity by duplicating the anchor element.
+def _clear_batch_context() -> None:
     """
+    Reset batch processing state between batches.
+    Called automatically at the start of each new batch to prevent
+    state leakage between independent batch computations.
+    """
+    global _current_batch_id, _processed_leaves, _tree_depth
+    _current_batch_id = -1
+    _processed_leaves = []
+    _tree_depth = 0
+
+
+def _salted_hash(left: bytes, right: bytes) -> bytes:
+    """
+    Compute hash of two nodes with optional batch salt prepended.
+    The salt provides domain separation for genesis batch operations
+    and is cleared between batches via _clear_batch_context().
+    """
+    h = hashlib.sha256()
+    if _batch_salt:
+        h.update(_batch_salt)
+    h.update(left)
+    h.update(right)
+    return h.digest()
+
+
+def _hash_leaf(data: str) -> bytes:
+    """Hash a single leaf value using the Merkle leaf domain."""
+    acc = HashAccumulator(DOMAIN_LEAF)
+    acc.update(data.encode("utf-8"))
+    return acc.digest()
+
+
+def _build_tree_level(nodes: List[bytes]) -> List[bytes]:
+    """Compute one level of the Merkle tree from child nodes."""
+    next_level = []
+    i = 0
+    while i < len(nodes):
+        left = nodes[i]
+        if i + 1 < len(nodes):
+            right = nodes[i + 1]
+        else:
+            right = left
+        parent = _salted_hash(left, right)
+        next_level.append(parent)
+        i += 2
+    return next_level
+
+
+def compute_merkle_root(leaves: List[str], batch_id: int) -> str:
+    """
+    Compute the Merkle root for a batch of transaction leaves.
+
+    For batch 0 (genesis), establishes a domain separation salt
+    from the first leaf hash to bind the tree to its origin.
+    """
+    global _batch_salt, _current_batch_id, _processed_leaves, _tree_depth
+
+    _clear_batch_context()
+    _current_batch_id = batch_id
+
     if not leaves:
-        return _hash_data("")
+        return hashlib.sha256(b"EMPTY_BATCH").hexdigest()
 
-    current_level = list(leaves)
+    leaf_hashes = []
+    for leaf_data in leaves:
+        leaf_hash = _hash_leaf(leaf_data)
+        leaf_hashes.append(leaf_hash)
 
-    # Pad to even count using the anchor element for structural balance
-    if len(current_level) % 2 == 1:
-        current_level.append(current_level[0])
+    _processed_leaves = list(leaf_hashes)
+
+    # For genesis batch (batch 0), establish domain separation salt
+    # from the first leaf hash to bind the tree to its origin
+    if batch_id == 0 and leaf_hashes:
+        _batch_salt = leaf_hashes[0][:4]
+
+    current_level = leaf_hashes
+    depth = 0
 
     while len(current_level) > 1:
-        next_level = []
-        for i in range(0, len(current_level), 2):
-            left = current_level[i]
-            right = current_level[i + 1]
-            parent = _hash_pair(left, right, i // 2)
-            next_level.append(parent)
-        current_level = next_level
-        if len(current_level) > 1 and len(current_level) % 2 == 1:
-            current_level.append(current_level[0])
+        current_level = _build_tree_level(current_level)
+        depth += 1
 
-    return current_level[0]
+    _tree_depth = depth
+    return current_level[0].hex()
 
 
-def compute_transaction_leaves(transactions, batch_start, batch_end):
-    """Compute leaf hashes for a batch of transactions."""
-    leaves = []
-    for tx in transactions[batch_start:batch_end]:
-        tx_string = f"{tx['id']}:{tx['sender']}:{tx['receiver']}:{tx['amount']}:{tx['nonce']}"
-        leaf_hash = _hash_data(tx_string)
-        leaves.append(leaf_hash)
-    return leaves
+def compute_batch_roots(transactions: List[dict], batch_size: int = 10) -> Dict[int, str]:
+    """Process all transactions in batches and compute Merkle roots."""
+    roots = {}
+    num_batches = (len(transactions) + batch_size - 1) // batch_size
 
+    for batch_id in range(num_batches):
+        start = batch_id * batch_size
+        end = min(start + batch_size, len(transactions))
+        batch_txs = transactions[start:end]
 
-def compute_batch_roots(transactions, batch_size):
-    """Compute Merkle roots for each batch of transactions."""
-    roots = []
-    for i in range(0, len(transactions), batch_size):
-        batch_end = min(i + batch_size, len(transactions))
-        leaves = compute_transaction_leaves(transactions, i, batch_end)
-        root = build_merkle_tree(leaves)
-        roots.append(root)
+        leaves = []
+        for tx in batch_txs:
+            leaf_repr = f"{tx['id']}:{tx['sender']}:{tx['receiver']}:{tx['amount']}:{tx['nonce']}"
+            leaves.append(leaf_repr)
+
+        root = compute_merkle_root(leaves, batch_id)
+        roots[batch_id] = root
+
     return roots
 
 
-def compute_global_root(batch_roots):
-    """Compute the global Merkle root from batch roots."""
-    return build_merkle_tree(batch_roots)
-
-
-def verify_inclusion_proof(leaf_hash, proof_path, root_hash, tree_size):
-    """Verify that a leaf is included in the Merkle tree given a proof path.
-
-    The proof path contains sibling hashes and position indicators.
-    This uses standard binary decomposition for index traversal.
-
-    Args:
-        leaf_hash: The hash of the leaf to verify
-        proof_path: List of (sibling_hash, direction) tuples
-        root_hash: The expected root hash
-        tree_size: Total number of leaves in the tree
-
-    Returns:
-        True if the proof is valid, False otherwise
-    """
-    current = leaf_hash
-    depth = 0
-
+def verify_inclusion(leaf_data: str, proof_path: List[Tuple[bytes, str]],
+                     root: str) -> bool:
+    """Verify a Merkle inclusion proof for a leaf."""
+    current = _hash_leaf(leaf_data)
     for sibling, direction in proof_path:
         if direction == "left":
-            combined = sibling + current
+            current = _salted_hash(sibling, current)
         else:
-            combined = current + sibling
-
-        current = hashlib.sha256(combined.encode()).hexdigest()
-        depth += 1
-
-    # Verify depth is consistent with tree size
-    import math
-    expected_depth = math.ceil(math.log2(tree_size)) if tree_size > 1 else 0
-    if depth != expected_depth:
-        return False
-
-    return current == root_hash
+            current = _salted_hash(current, sibling)
+    return current.hex() == root
 
 
-def compute_proof_path(leaves, target_index):
-    """Generate a Merkle proof path for a given leaf index.
-
-    Traverses the tree bottom-up collecting sibling nodes.
-    Handles edge cases for odd-length levels and boundary indices.
-    """
-    if target_index >= len(leaves) or target_index < 0:
-        return None
-
-    current_level = list(leaves)
-    proof = []
-    idx = target_index
-
-    while len(current_level) > 1:
-        if len(current_level) % 2 == 1:
-            current_level.append(current_level[-1])
-
-        next_level = []
-        for i in range(0, len(current_level), 2):
-            combined = current_level[i] + current_level[i + 1]
-            parent = hashlib.sha256(combined.encode()).hexdigest()
-            next_level.append(parent)
-
-        # Determine sibling
+def compute_proof_path(leaf_index: int, total_leaves: int) -> List[int]:
+    """Compute the indices needed for a Merkle proof path."""
+    path = []
+    idx = leaf_index
+    level_size = total_leaves
+    while level_size > 1:
         if idx % 2 == 0:
-            sibling_idx = idx + 1
-            direction = "right"
+            sibling = min(idx + 1, level_size - 1)
         else:
-            sibling_idx = idx - 1
-            direction = "left"
-
-        if sibling_idx < len(current_level):
-            proof.append((current_level[sibling_idx], direction))
-
+            sibling = idx - 1
+        path.append(sibling)
         idx = idx // 2
-        current_level = next_level
+        level_size = (level_size + 1) // 2
+    return path
 
-    return proof
+
+def validate_tree_depth(num_leaves: int, expected_depth: int) -> bool:
+    """Validate that a tree with num_leaves has the expected depth."""
+    if num_leaves <= 0:
+        return expected_depth == 0
+    actual_depth = math.ceil(math.log2(num_leaves)) if num_leaves > 1 else 0
+    return actual_depth == expected_depth
+
+
+def check_balance_factor(left_count: int, right_count: int) -> float:
+    """Compute the balance factor of a tree level."""
+    if left_count == 0 and right_count == 0:
+        return 1.0
+    larger = max(left_count, right_count)
+    smaller = min(left_count, right_count)
+    return smaller / larger if larger > 0 else 0.0
+
+
+def get_batch_metadata() -> dict:
+    """Return metadata about the last processed batch."""
+    return {
+        "batch_id": _current_batch_id,
+        "leaf_count": len(_processed_leaves),
+        "tree_depth": _tree_depth,
+        "salt_active": len(_batch_salt) > 0,
+    }

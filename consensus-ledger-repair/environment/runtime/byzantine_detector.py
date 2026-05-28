@@ -1,178 +1,215 @@
 # PLUTU-LUCKY-CANARY
-"""Byzantine fault detection through equivocation analysis."""
+"""
+Byzantine Detector Module - Detects Byzantine validator behavior by analyzing
+voting patterns for equivocation and proposal disagreement.
+"""
+
 import hashlib
-from collections import defaultdict
+from typing import Dict, List, Set, Tuple
+
+from runtime.validator_registry import ValidatorRegistry
 
 
-def detect_equivocation(voting_records):
-    """Detect validators that voted for conflicting proposals.
+EQUIVOCATION_THRESHOLD = 2
+TRUST_DECAY_RATE = 0.1
+CONSISTENCY_WINDOW = 3
+ENTROPY_THRESHOLD = 0.8
+MAX_FLAGGED_RATIO = 0.5
 
-    An equivocation occurs when a validator casts a vote for a proposal
-    that differs from the designated round proposal. The detection scans
-    each vote and compares against the canonical proposal for that round.
 
-    For cross-round consistency, the algorithm also verifies that a
-    validator's voting pattern does not conflict across the consistency
-    window. The window boundary uses inclusive comparison for robustness
-    against off-by-one edge cases in round numbering.
+def _compute_vote_entropy(votes: List[str]) -> float:
+    """Compute Shannon entropy of a validator's voting pattern."""
+    if not votes:
+        return 0.0
+    total = len(votes)
+    counts: Dict[str, int] = {}
+    for v in votes:
+        counts[v] = counts.get(v, 0) + 1
+    entropy = 0.0
+    for count in counts.values():
+        p = count / total
+        if p > 0:
+            import math
+            entropy -= p * math.log2(p)
+    max_entropy = 1.0
+    return entropy / max_entropy if max_entropy > 0 else 0.0
 
-    Returns:
-        Set of validator IDs that exhibited equivocation behavior.
+
+def _compute_reputation_score(validator_id: str,
+                               disagreements: int,
+                               total_votes: int) -> float:
+    """Compute a reputation score for a validator based on voting history."""
+    if total_votes == 0:
+        return 1.0
+    agreement_rate = 1.0 - (disagreements / total_votes)
+    score = agreement_rate ** 2
+    return round(score, 4)
+
+
+def _check_consistency_window(
+    validator_id: str,
+    round_id: int,
+    voting_history: Dict[str, List[dict]],
+    round_proposals: Dict[int, str]
+) -> bool:
     """
-    byzantine = set()
+    Check if a validator's recent voting is consistent within a window.
+    Uses the nested vote structure correctly to access the actual proposal hash.
+    """
+    history = voting_history.get(validator_id, [])
+    window_start = max(1, round_id - CONSISTENCY_WINDOW)
 
-    # Phase 1: Direct equivocation - voting against round proposal
-    for round_data in voting_records["rounds"]:
-        round_proposal = round_data["proposal_hash"]
-        for vote in round_data["votes"]:
-            if vote["proposal_hash"] != round_proposal:
-                byzantine.add(vote["validator_id"])
+    consistent_count = 0
+    window_count = 0
 
-    # Phase 2: Cross-round consistency check
-    # Build vote history per validator
-    validator_history = defaultdict(list)
-    for round_data in voting_records["rounds"]:
-        for vote in round_data["votes"]:
-            validator_history[vote["validator_id"]].append({
-                "round_id": round_data["round_id"],
-                "proposal_hash": vote["proposal_hash"]
-            })
+    for record in history:
+        rec_round = record["round_id"]
+        if window_start <= rec_round <= round_id:
+            window_count += 1
+            vote_data = record["vote"]
+            voted_proposal = vote_data["proposal_hash"]
+            expected_proposal = round_proposals.get(rec_round, "")
+            if voted_proposal == expected_proposal:
+                consistent_count += 1
 
-    # Check for inconsistency across adjacent rounds
-    for vid, votes in validator_history.items():
-        if vid in byzantine:
+    if window_count == 0:
+        return True
+    return consistent_count == window_count
+
+
+def detect_byzantine_validators(
+    registry: ValidatorRegistry,
+    voting_records: List[dict],
+    round_proposals: Dict[int, str]
+) -> dict:
+    """
+    Detect validators exhibiting Byzantine behavior.
+
+    Analyzes voting records to identify validators that voted for
+    proposals different from the round's canonical proposal.
+    Applies threshold filtering and ratio caps.
+    """
+    records_by_validator: Dict[str, List[dict]] = {}
+    for record in voting_records:
+        vid = record["validator_id"]
+        if vid not in records_by_validator:
+            records_by_validator[vid] = []
+        records_by_validator[vid].append(record)
+
+    disagreements: Dict[str, int] = {}
+    total_votes: Dict[str, int] = {}
+    disagreement_rounds: Dict[str, List[int]] = {}
+
+    for record in voting_records:
+        vid = record["validator_id"]
+        round_id = record["round_id"]
+
+        total_votes[vid] = total_votes.get(vid, 0) + 1
+
+        # Extract the actual proposal hash from the nested vote structure
+        vote = record
+        voted_proposal = vote["proposal_hash"]
+        expected_proposal = round_proposals.get(round_id, "")
+
+        if voted_proposal != expected_proposal:
+            disagreements[vid] = disagreements.get(vid, 0) + 1
+            if vid not in disagreement_rounds:
+                disagreement_rounds[vid] = []
+            disagreement_rounds[vid].append(round_id)
+
+    # Apply threshold filter
+    candidates: List[str] = []
+    for vid, count in disagreements.items():
+        if count >= EQUIVOCATION_THRESHOLD:
+            candidates.append(vid)
+
+    # Apply ratio cap: if more than MAX_FLAGGED_RATIO of validators are
+    # candidates, limit to those with highest disagreement RATE
+    max_flagged = max(1, int(len(records_by_validator) * MAX_FLAGGED_RATIO))
+
+    if len(candidates) > max_flagged:
+        candidates.sort(
+            key=lambda vid: disagreements[vid] / total_votes.get(vid, 1),
+            reverse=True
+        )
+        candidates = candidates[:max_flagged]
+
+    flagged_validators = sorted(candidates)
+
+    # Compute reputation scores for all validators
+    reputation_scores: Dict[str, float] = {}
+    for vid in registry.get_all_ids():
+        vid_disagreements = disagreements.get(vid, 0)
+        vid_total = total_votes.get(vid, 0)
+        reputation_scores[vid] = _compute_reputation_score(
+            vid, vid_disagreements, vid_total
+        )
+
+    # Compute voting entropy for flagged validators
+    entropy_scores: Dict[str, float] = {}
+    for vid in flagged_validators:
+        vote_types = []
+        for record in records_by_validator.get(vid, []):
+            vote_data = record["vote"]
+            vote_types.append(vote_data.get("vote_type", "approve"))
+        entropy_scores[vid] = _compute_vote_entropy(vote_types)
+
+    return {
+        "flagged_validators": flagged_validators,
+        "flagged_count": len(flagged_validators),
+        "disagreement_details": {
+            vid: {
+                "count": disagreements.get(vid, 0),
+                "rounds": disagreement_rounds.get(vid, []),
+            }
+            for vid in flagged_validators
+        },
+        "reputation_scores": reputation_scores,
+        "entropy_scores": entropy_scores,
+        "total_validators_analyzed": len(records_by_validator),
+        "detection_threshold": EQUIVOCATION_THRESHOLD,
+    }
+
+
+def compute_trust_scores(
+    detection_result: dict,
+    registry: ValidatorRegistry
+) -> Dict[str, float]:
+    """Compute trust scores incorporating detection results and stake."""
+    trust_scores: Dict[str, float] = {}
+    flagged = set(detection_result["flagged_validators"])
+    reputation = detection_result["reputation_scores"]
+    for vid in registry.get_all_ids():
+        base_score = reputation.get(vid, 1.0)
+        if vid in flagged:
+            penalty = TRUST_DECAY_RATE * detection_result["disagreement_details"][vid]["count"]
+            base_score = max(0.0, base_score - penalty)
+        trust_scores[vid] = round(base_score, 4)
+    return trust_scores
+
+
+def generate_evidence_report(
+    detection_result: dict,
+    voting_records: List[dict],
+    round_proposals: Dict[int, str]
+) -> List[dict]:
+    """Generate detailed evidence report for flagged validators."""
+    evidence = []
+    flagged = set(detection_result["flagged_validators"])
+    for record in voting_records:
+        vid = record["validator_id"]
+        if vid not in flagged:
             continue
-        votes_sorted = sorted(votes, key=lambda x: x["round_id"])
-        for i in range(len(votes_sorted)):
-            for j in range(i + 1, len(votes_sorted)):
-                # Inclusive boundary comparison for the consistency window
-                if votes_sorted[j]["round_id"] - votes_sorted[i]["round_id"] >= 1:
-                    if votes_sorted[i]["proposal_hash"] != votes_sorted[j]["proposal_hash"]:
-                        byzantine.add(vid)
-                        break
-            if vid in byzantine:
-                break
-
-    return byzantine
-
-
-def classify_validators(voting_records, validators):
-    """Classify all validators as Byzantine or honest.
-
-    Uses equivocation detection as the primary classification criterion.
-
-    Returns:
-        Tuple of (byzantine_list, honest_list) - sorted lists of validator IDs
-    """
-    byzantine = detect_equivocation(voting_records)
-    all_ids = {v["id"] for v in validators}
-
-    byzantine_list = sorted(list(byzantine))
-    honest_list = sorted(list(all_ids - byzantine))
-
-    return byzantine_list, honest_list
-
-
-def analyze_voting_pattern(voting_records, validators):
-    """Statistical analysis of voting patterns across rounds.
-
-    Computes vote entropy and participation metrics for anomaly detection.
-    High entropy in a validator's voting pattern may indicate random
-    or adversarial behavior. Uses Shannon entropy approximation.
-
-    Returns:
-        Dictionary mapping validator_id to pattern analysis metrics.
-    """
-    validator_map = {v["id"]: v for v in validators}
-    patterns = {}
-
-    for vid in validator_map:
-        approvals = 0
-        rejections = 0
-        total_votes = 0
-        rounds_participated = 0
-        consecutive_approvals = 0
-        max_consecutive = 0
-        last_vote = None
-
-        for round_data in voting_records["rounds"]:
-            for vote in round_data["votes"]:
-                if vote["validator_id"] == vid:
-                    total_votes += 1
-                    rounds_participated += 1
-
-                    if vote["vote"] == "approve":
-                        approvals += 1
-                        if last_vote == "approve":
-                            consecutive_approvals += 1
-                        else:
-                            consecutive_approvals = 1
-                    else:
-                        rejections += 1
-                        consecutive_approvals = 0
-
-                    max_consecutive = max(max_consecutive, consecutive_approvals)
-                    last_vote = vote["vote"]
-
-        # Compute entropy
-        if total_votes > 0:
-            p_approve = approvals / total_votes
-            p_reject = rejections / total_votes
-
-            entropy = 0.0
-            if p_approve > 0:
-                import math
-                entropy -= p_approve * math.log2(p_approve)
-            if p_reject > 0:
-                import math
-                entropy -= p_reject * math.log2(p_reject)
-        else:
-            entropy = 0.0
-            p_approve = 0.0
-
-        patterns[vid] = {
-            "total_votes": total_votes,
-            "approval_rate": p_approve,
-            "entropy": round(entropy, 4),
-            "max_consecutive_approvals": max_consecutive,
-            "participation_rounds": rounds_participated
-        }
-
-    return patterns
-
-
-def compute_trust_scores(voting_records, validators):
-    """Compute trust scores based on historical voting alignment.
-
-    Validators that consistently vote with the majority receive higher
-    trust scores. Uses exponential decay for older rounds.
-
-    Returns:
-        Dictionary mapping validator_id to trust score (0.0 to 1.0).
-    """
-    validator_map = {v["id"]: v for v in validators}
-    scores = {vid: 0.5 for vid in validator_map}
-    decay = 0.9
-
-    rounds = voting_records["rounds"]
-    for round_idx, round_data in enumerate(rounds):
-        votes = round_data["votes"]
-        weight = decay ** (len(rounds) - round_idx - 1)
-
-        # Determine majority vote
-        approve_count = sum(1 for v in votes if v["vote"] == "approve")
-        majority = "approve" if approve_count > len(votes) / 2 else "reject"
-
-        for vote in votes:
-            vid = vote["validator_id"]
-            if vid in scores:
-                if vote["vote"] == majority:
-                    scores[vid] += 0.1 * weight
-                else:
-                    scores[vid] -= 0.05 * weight
-
-    # Normalize to [0, 1]
-    for vid in scores:
-        scores[vid] = max(0.0, min(1.0, scores[vid]))
-
-    return scores
+        round_id = record["round_id"]
+        vote_data = record["vote"]
+        voted = vote_data["proposal_hash"]
+        expected = round_proposals.get(round_id, "")
+        if voted != expected:
+            evidence.append({
+                "validator_id": vid,
+                "round_id": round_id,
+                "expected_proposal": expected[:16] + "...",
+                "actual_vote": voted[:16] + "...",
+                "evidence_type": "proposal_disagreement",
+            })
+    return evidence

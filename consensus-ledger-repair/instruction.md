@@ -1,89 +1,68 @@
+# Consensus Ledger Repair
 <!-- PLUTU-LUCKY-CANARY -->
-# Distributed Consensus Ledger Verification System
 
 ## Overview
 
-This system implements a distributed consensus ledger verification pipeline that processes financial transactions, verifies Byzantine fault-tolerant (BFT) quorum consensus, detects equivocation among validators, and produces a comprehensive audit report.
+You are debugging a distributed consensus ledger verification system. The system processes cryptocurrency-like transactions through a pipeline of verification modules that work together to ensure consistency, detect Byzantine behavior, and reconcile final balances.
 
-The pipeline consists of five core modules that work together to verify ledger integrity:
+The pipeline runs without errors but produces incorrect output. There are bugs hidden in the codebase that cause wrong computation results. Your task is to identify and fix all bugs so that the system produces correct, internally consistent output.
 
-## Modules
+## System Architecture
 
-### Merkle Engine (`/app/runtime/merkle_engine.py`)
+The verification pipeline (`/app/runtime/pipeline.py`) orchestrates 8 modules in sequence:
 
-Builds Merkle trees from transaction batches to produce a tamper-evident root hash. Transactions are divided into batches (configured batch size: 16), each batch produces a local Merkle root, and all batch roots are combined into a global root.
+### Utility Modules
 
-### Quorum Verifier (`/app/runtime/quorum_verifier.py`)
+1. **`/app/runtime/crypto_utils.py`** - Cryptographic primitives including `HashAccumulator` (stateful hash builder with domain separation), `MerkleHasher` (leaf/node hashing), hex utilities, batch hashing, and chain hashing. Used by merkle_engine.py and state_machine.py for hash operations.
 
-Verifies that each consensus round achieved the required BFT quorum. The threshold computation determines the minimum number of approving votes needed for a round to be considered valid.
+2. **`/app/runtime/validator_registry.py`** - `ValidatorRegistry` class managing validator state: stake weights, participation tracking, epoch rotation logic, and eligibility checks. Used by quorum_verifier.py and byzantine_detector.py for validator lookups.
 
-### Byzantine Detector (`/app/runtime/byzantine_detector.py`)
+3. **`/app/runtime/audit_trail.py`** - `AuditLogger` class maintaining a hash-chain audit trail of all pipeline operations. Provides tamper-evident logging with integrity verification. Used by pipeline.py for operation tracking.
 
-Analyzes voting records to identify validators exhibiting Byzantine behavior through equivocation detection. A validator is considered Byzantine if they vote for proposals that conflict with the designated round proposal.
+### Core Verification Modules
 
-### State Machine (`/app/runtime/state_machine.py`)
+4. **`/app/runtime/merkle_engine.py`** - Computes Merkle tree roots for transaction batches. Processes transactions in batches of 10, computing independent roots for each batch. Features batch context management with domain separation salt for the genesis batch.
 
-Processes all transactions sequentially, computing balance transfers and fees. Each transaction deducts `amount + fee` from the sender and credits `amount` to the receiver.
+5. **`/app/runtime/quorum_verifier.py`** - Implements BFT (Byzantine Fault Tolerance) quorum verification. Checks that sufficient stake weight has approved proposals in each consensus round using the 2/3+1 threshold formula. Tracks participation and computes safety margins.
 
-### Balance Reconciler (`/app/runtime/balance_reconciler.py`)
+6. **`/app/runtime/byzantine_detector.py`** - Detects Byzantine validators by analyzing voting patterns. Identifies validators that voted for proposals different from the round's canonical proposal. Applies threshold filtering and ratio caps to limit false positives.
 
-Detects double-spend attempts by computing transaction fingerprints and identifying collisions. Transactions with identical fingerprints are flagged as potential double-spends.
+7. **`/app/runtime/state_machine.py`** - Processes transactions through a ledger state machine. Handles balance tracking, fee computation, nonce validation, and state transition recording. Maintains account balances across all transactions.
 
-## Configuration (`/app/runtime/config.ini`)
-
-| Section | Key | Value | Description |
-|---------|-----|-------|-------------|
-| ledger | fee_rate | 0.001 | Transaction fee as fraction of amount |
-| ledger | initial_balance | 1000000000 | Starting balance per account |
-| consensus | quorum_model | bft | Byzantine fault tolerant model |
-| consensus | max_rounds | 8 | Maximum consensus rounds |
-| merkle | hash_algorithm | sha256 | Hash function for Merkle tree |
-| merkle | batch_size | 16 | Transactions per Merkle batch |
-| audit | output_path | /app/runtime/output/audit_report.json | Output location |
+8. **`/app/runtime/balance_reconciler.py`** - Reconciles transaction history with final balances. Computes canonical transaction fingerprints, detects double-spends, identifies nonce gaps, and verifies balance consistency.
 
 ## Data Files
 
-- `/app/runtime/data/transactions.json` - 53 transactions between 10 accounts (A0-A9)
-- `/app/runtime/data/validators.json` - 10 validator nodes (V0-V9)
-- `/app/runtime/data/voting_records.json` - 8 rounds of voting records
+- **`/app/runtime/data/transactions.json`** - 53 transactions between 10 accounts (A0-A9), with amounts ranging from 1000 to 100000009, nonces 1-6.
+- **`/app/runtime/data/validators.json`** - 10 validators (V0-V9) with varying stake weights (80-130), public keys, and metadata.
+- **`/app/runtime/data/voting_records.json`** - Voting records for 8 consensus rounds. Each record has a nested structure with outer metadata and an inner `vote` object containing the actual vote details.
 
-## Output Schema (`/app/runtime/output/audit_report.json`)
+## Configuration
 
-| Field | Type | Description |
-|-------|------|-------------|
-| merkle_root | string | SHA-256 hex hash - global Merkle root of all transactions |
-| total_transactions | integer | Total number of transactions processed |
-| valid_rounds | integer | Number of rounds that achieved quorum |
-| total_rounds | integer | Total consensus rounds (8) |
-| byzantine_validators | array | Sorted list of validator IDs classified as Byzantine |
-| honest_validators | array | Sorted list of validator IDs classified as honest |
-| final_balances | object | Mapping of account ID to final integer balance |
-| total_fees_collected | integer | Sum of all transaction fees |
-| double_spend_detected | integer | Number of double-spend collision detections |
-| quorum_failures | integer | Number of rounds that failed to achieve quorum |
-| state_hash | string | SHA-256 hex hash of the final state |
+**`/app/runtime/config.ini`** contains parameters for all modules including batch sizes, fee rates, thresholds, and algorithm selections.
 
-## Expected Behavior
+## Pipeline Output
 
-When operating correctly, the system should produce:
-
-- A Merkle root computed using standard left-right concatenation with last-leaf padding
-- Quorum threshold of `floor(2n/3) + 1` for n participating validators per round
-- Byzantine detection limited to validators whose votes conflict with round proposals
-- Fees computed with proper rounding for fractional amounts
-- Double-spend detection using complete transaction amount in fingerprints
-
-## Problem
-
-The pipeline currently produces incorrect results in the audit report. Multiple modules contain defects that cause wrong values for various fields. The system runs without errors but produces an invalid audit report.
+The pipeline writes `/app/runtime/output/audit_report.json` containing:
+- Merkle roots for each transaction batch
+- Per-round quorum verification results
+- Byzantine validator detection results
+- Final account balances and state hash
+- Balance reconciliation status and fingerprint root
 
 ## Task
 
-Identify and fix all defects in the pipeline modules so that the audit report passes validation. The pipeline should be invoked with:
+Find and fix all bugs in the codebase. The corrected system should produce internally consistent output where:
+- Merkle roots are computed independently per batch (no cross-batch contamination)
+- Quorum thresholds are computed relative to the correct stake base
+- Byzantine detection correctly identifies only truly malicious validators
+- Fee computations use proper rounding without precision loss
+- Transaction fingerprints use a deterministic canonical field ordering
 
-```bash
-cd /app
-python3 -m runtime.pipeline
-```
+## Constraints
 
-All source files are located under `/app/runtime/`. The pipeline reads from `/app/runtime/data/` and writes to `/app/runtime/output/audit_report.json`.
+- All code must use Python standard library only (no pip packages in runtime)
+- Do not modify the data files
+- Do not modify the test file
+- The pipeline must run without errors after your fixes
+- Write your fix as a Python script at `/app/solution/repair_consensus.py` that patches the source files and re-runs the pipeline
