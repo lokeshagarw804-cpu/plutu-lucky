@@ -1,0 +1,36 @@
+author_name = "Lokesh Agarwal"
+author_email = "lokeshlucky0123456789@gmail.com"
+category = "games"
+difficulty = "hard"
+tags = ["auction", "game-bot", "vector-clock", "multi-agent", "strategy"]
+difficulty_explanation = "Four interconnected bugs spread across 1500+ lines in 7 files. Requires understanding partial order semantics, vector clock theory applied to auction activity tracking, and distinguishing equality from incomparability in component-wise orderings."
+solution_explanation = "Four interconnected bugs spread across 1500+ lines: (1) bid_tracker.py missing self-increment after peer intel merge, (2) strategy_evaluator.py checks equality instead of incomparability for independence, (3) strategy_evaluator.py sorts by temporal recency instead of activity weight, (4) auction_report.py cascading fix from evaluator correction."
+verification_explanation = "14 tests in 4 tiers: 6 structural (always pass), 2 unaffected values (always pass), 4 bug-sensitive (need fixes), 2 full consistency (need all fixes). NOP gives 8 pass / 6 fail, Oracle gives 14 pass / 0 fail."
+expert_time_estimate_hours = 2.5
+
+[task]
+name = "auction-sniper-repair"
+description = "Fix bugs in an auction sniper bot simulation that tracks bid activity vectors, classifies bot strategy independence, and computes optimal execution ordering for multi-agent competitive auctions."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Bugs exploit confusion between equality and incomparability in partial orders, hidden behind misleading docstrings that describe the buggy behavior as intentional engineering decisions. Large codebase with red herring types file and multiple comparison primitives creates significant noise."
+
+[task.runtime]
+entrypoint = "python3 /app/runtime/auction_orchestrator.py"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs 14 pytest tests covering structural integrity, unaffected values, bug-sensitive computations, and full system consistency."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Fixes bid_tracker.py (missing self-increment), strategy_evaluator.py (equality→incomparability, recency→weight), and auction_report.py (cascading fix)."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
