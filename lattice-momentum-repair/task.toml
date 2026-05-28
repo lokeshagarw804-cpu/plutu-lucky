@@ -1,5 +1,5 @@
-author_name = "Terminal-Bench"
-author_email = "bench@terminal.dev"
+author_name = "Lokesh Agarwal"
+author_email = "lokeshlucky0123456789@gmail.com"
 category = "scientific_computing"
 difficulty = "hard"
 tags = ["scientific-computing", "lattice-boltzmann", "fluid-simulation", "vector-clocks", "debugging"]
