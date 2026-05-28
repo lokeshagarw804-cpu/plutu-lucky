@@ -1,22 +1,36 @@
+author_name = "Lokesh Agarwal"
+author_email = "lokeshlucky0123456789@gmail.com"
+category = "Scientific Computing"
+difficulty = "hard"
+tags = ["particle-physics", "vector-clocks", "causal-ordering", "simulation", "debugging"]
+difficulty_explanation = "Requires understanding vector dominance in partial orders, distinguishing equality from incomparability, and tracing cascading data-flow bugs across three modules."
+solution_explanation = "Fix 1: increment own momentum component after ABSORB sync. Fix 2: replace equality check with incomparability check in are_causally_independent. Fix 3: sort by vector sum instead of timestep recency. Fix 4: cascades from Fix 2."
+verification_explanation = "14 tests in 4 tiers verify structural output, momentum calculations, pair classification logic, and full-system digest consistency."
+expert_time_estimate_hours = 2.5
+
 [task]
 name = "particle-collision-repair"
-version = "1.0.0"
-description = "Debug a particle collision simulation that tracks momentum vectors across 7 particles processing collision events."
-difficulty = "medium"
-tags = ["debugging", "physics-simulation", "vector-clocks", "python"]
+description = "Debug a particle collision simulation system that tracks momentum vectors across 7 particles. The system processes collision events, computes causal independence between particle paths, and generates priority-ordered evolution reports."
 
-[environment]
-base_image = "python:3.11-slim"
-dockerfile = "environment/Dockerfile"
+[task.difficulty]
+level = "hard"
+reasoning = "Three interacting bugs span the engine, analyzer, and report modules. The key bug confuses vector equality with causal incomparability — a subtle mathematical distinction obscured by plausible documentation."
 
-[environment.resources]
-cpu = 1
-memory = "512M"
+[task.runtime]
+entrypoint = "python3 /app/runtime/simulator.py"
+language = "python"
+dependencies = "stdlib-only"
 
-[tests]
-script = "tests/test.sh"
-total = 14
-passing_with_bugs = 8
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs 14 pytest tests across 4 tiers verifying structure, momentum values, pair classification, and digest."
 
-[solution]
-script = "solution/solve.sh"
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Applies fixes to collision_engine.py and interaction_analyzer.py, then regenerates outputs."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"

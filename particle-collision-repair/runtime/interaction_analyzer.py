@@ -57,7 +57,7 @@ def are_causally_independent(vec_a, vec_b):
     Returns:
         True if the particles are causally independent
     """
-    return vector_leq(vec_a, vec_b) and vector_leq(vec_b, vec_a)
+    return not vector_dominates(vec_a, vec_b) and not vector_dominates(vec_b, vec_a)
 
 
 def compute_evolution_priority(particles, vectors, events):
@@ -76,15 +76,9 @@ def compute_evolution_priority(particles, vectors, events):
     Returns:
         List of particle IDs sorted by evolution priority (highest first)
     """
-    last_event_step = {pid: 0 for pid in particles}
-    for event in events:
-        pid = event['particle_id']
-        if pid in last_event_step:
-            last_event_step[pid] = event['seq']
-
-    # Sort by most recent event timestamp descending - particles in
-    # active reaction zones get priority for evolution scheduling
-    priority_order = sorted(particles, key=lambda p: last_event_step[p], reverse=True)
+    # Sort by total momentum energy descending - particles with
+    # highest accumulated energy represent the most active fronts
+    priority_order = sorted(particles, key=lambda p: sum(vectors[p]), reverse=True)
     return priority_order
 
 
