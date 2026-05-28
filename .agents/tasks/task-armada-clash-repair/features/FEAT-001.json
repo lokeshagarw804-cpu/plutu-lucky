@@ -2,7 +2,7 @@
   "id": "FEAT-001",
   "type": "feat",
   "description": "Create the complete armada-clash-repair Harbor task with all files following the proven vector clock bug pattern. This is a game bot/solver task where 7 armadas track engagement vectors to determine fleet autonomy and deployment priority. The task contains 4 bugs (3 code locations) that defeat AI solvers through misleading docstrings.",
-  "status": "in_progress",
+  "status": "completed",
   "steps": [
     "STEP 1 - Create runtime/engagements.dat: A pipe-separated data file with 45 engagement events for 7 armadas (IDs: A0-A6). Event types: SKIRMISH (+1 to own vector component), BARRAGE (+2 to own vector component), REGROUP (merge/sync from peer). Distribution: A0 gets 8 events, A1 gets 7, A2-A6 get 6 each. Each armada has 0-2 REGROUP events. Format: tick|armada_id|event_type|target_armada(for REGROUP)|sector. BASE_VALUE=3 for initial vector components.",
 
@@ -56,5 +56,5 @@
     "After running repair: uv run --with pytest pytest -v /tests/test_armada_clash.py shows 14 passed, 0 failed"
   ],
   "blocked_reason": null,
-  "findings": ""
+  "findings": "Verification confirmed: buggy code yields 8 passed / 6 failed, repair yields 14 passed / 0 failed. Used pyenv Python 3.11.15 with pre-installed pytest since network is INTEGRATIONS_ONLY (uv run --with pytest cannot download). fleet_doctrine.py is 269 lines. All 21 correct autonomous pairs are incomparable due to each armada dominating only in its own component. The digest test uses a hardcoded expected value (108cb7df8bfe718defc64f72b717796ce43101d013acc1d1c0f6f6d13bc11b8d) since a self-recomputing digest would always pass."
 }
