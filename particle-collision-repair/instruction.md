@@ -1,89 +1,89 @@
-# Particle Collision Repair
+# Type Inference Constraint Solver Repair
 
 ## Overview
 
-A lattice signal propagation simulation pipeline has three bugs causing incorrect outputs. Your task is to identify and fix all bugs so the test suite passes completely.
+A type inference constraint solver pipeline has three bugs causing incorrect outputs. Your task is to identify and fix all bugs so the test suite passes completely.
 
-The pipeline simulates signal propagation through a lattice of 7 sensor nodes (`n0`-`n6`). Each node maintains a depth vector tracking accumulated signal strength from every other node in the lattice.
+The pipeline solves type inference constraints for a simple expression language with 7 type variables (`t0`-`t6`). Each type variable maintains a constraint vector tracking accumulated inference constraints from every other variable in the system.
 
 ## Architecture
 
 | File | Role |
 |------|------|
-| `/app/runtime/signal_trace.log` | Input: 45 sensor events in arrow-separated format |
-| `/app/runtime/trace_reader.py` | Parses trace log into structured event records |
-| `/app/runtime/propagation_core.py` | Signal depth tracking with PULSE, BURST, RELAY events |
-| `/app/runtime/lattice_analysis.py` | Signal isolation classification and priority ranking |
-| `/app/runtime/synthesis_output.py` | Generates final synthesis report (JSON) |
-| `/app/runtime/pipeline.py` | Orchestrates the full simulation |
+| `/app/runtime/constraint_log.dat` | Input: 45 constraint events in pipe-separated format |
+| `/app/runtime/log_reader.py` | Parses constraint log into structured event records |
+| `/app/runtime/type_engine.py` | Constraint tracking with BIND, PROPAGATE, UNIFY events |
+| `/app/runtime/type_analyzer.py` | Type compatibility classification and priority ranking |
+| `/app/runtime/report_writer.py` | Generates final inference report (JSON) |
+| `/app/runtime/orchestrator.py` | Orchestrates the full inference pipeline |
 | `/app/runtime/calibration.py` | Offline calibration utilities (not used in pipeline) |
 
 ## Event Types
 
-- **PULSE**: Gradual signal accumulation (+1 to own depth component)
-- **BURST**: High-intensity signal spike (+2 to own depth component)
-- **RELAY**: Signal absorption from neighboring sensors via component-wise maximum, with coupling gain from resonant synchronization
+- **BIND**: Direct constraint addition (+1 to own constraint component)
+- **PROPAGATE**: Strong constraint propagation (+2 to own constraint component)
+- **UNIFY**: Constraint set absorption from peer type variable via component-wise maximum, with coupling gain from unification synchronization
 
 ## Problem Statement
 
-The pipeline produces incorrect propagation state and synthesis report outputs. Three bugs exist across two source files. The test suite validates correctness at multiple levels:
+The pipeline produces incorrect constraint state and inference report outputs. Three bugs exist across two source files. The test suite validates correctness at multiple levels:
 
 1. **Structural tests** (8): Verify output files exist and have correct shape
-2. **Depth accuracy tests** (2): Verify signal depth calculations
-3. **Analysis accuracy tests** (2): Verify isolation and priority logic
+2. **Constraint accuracy tests** (2): Verify constraint calculations
+3. **Analysis accuracy tests** (2): Verify compatibility and priority logic
 4. **Integrity tests** (2): Verify overall report consistency
 
-Currently 8 tests pass (structural) and 6 fail (depth, analysis, integrity).
+Currently 8 tests pass (structural) and 6 fail (constraint, analysis, integrity).
 
 ## Files With Potential Issues
 
-- `/app/runtime/propagation_core.py`
-- `/app/runtime/lattice_analysis.py`
+- `/app/runtime/type_engine.py`
+- `/app/runtime/type_analyzer.py`
 
 ## Files Known Correct
 
-- `/app/runtime/trace_reader.py`
-- `/app/runtime/pipeline.py`
+- `/app/runtime/log_reader.py`
+- `/app/runtime/orchestrator.py`
 - `/app/runtime/calibration.py`
-- `/app/runtime/synthesis_output.py`
+- `/app/runtime/report_writer.py`
 
 ## Output Schema
 
-### propagation_state.jsonl
+### type_state.jsonl
 
-One JSON record per line, one per node:
+One JSON record per line, one per type variable:
 ```json
-{"node_id": "n0", "depth_vector": {"n0": ..., "n1": ..., ...}, "total_depth": ..., "event_count": ...}
+{"type_id": "t0", "constraint_vector": {"t0": ..., "t1": ..., ...}, "total_constraints": ..., "event_count": ...}
 ```
 
-### synthesis_report.json
+### inference_report.json
 
 ```json
 {
-  "isolated_pairs": [["n0", "n1"], ...],
-  "isolated_pair_count": 21,
-  "priority_order": ["n0", "n5", "n1", "n2", "n3", "n4", "n6"],
-  "digest": "54784ba07076c2ca"
+  "compatible_pairs": [["t0", "t1"], ...],
+  "compatible_pair_count": 21,
+  "priority_order": ["t0", "t5", "t1", "t2", "t3", "t4", "t6"],
+  "digest": "3fed9282152e0234"
 }
 ```
 
 ## Expected Values
 
 When all bugs are fixed:
-- `n0` self-depth (`depth_vector.n0` for node n0) = **16**
-- `n5` total depth = **47**
-- Isolated pair count = **21**
-- Priority ordering must reflect total accumulated signal strength: `['n0', 'n5', 'n1', 'n2', 'n3', 'n4', 'n6']`
-- Digest = `54784ba07076c2ca`
+- `t0` self-constraint (`constraint_vector.t0` for type t0) = **16**
+- `t5` total constraints = **47**
+- Compatible pair count = **21**
+- Priority ordering must reflect total accumulated constraint strength: `['t0', 't5', 't1', 't2', 't3', 't4', 't6']`
+- Digest = `3fed9282152e0234`
 
 ## Running the Pipeline
 
 ```bash
-python3 /app/runtime/pipeline.py
+python3 /app/runtime/orchestrator.py
 ```
 
 ## Running Tests
 
 ```bash
-uv run --with pytest pytest -v /tests/test_lattice_propagation.py
+uv run --with pytest pytest -v /tests/test_type_inference.py
 ```
