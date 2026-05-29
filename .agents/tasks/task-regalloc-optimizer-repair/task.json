@@ -1,7 +1,14 @@
 {
   "task_id": "task-regalloc-optimizer-repair",
   "task_description": "Create a t-bench debugging task for a register allocator and instruction scheduler for a custom bytecode VM. Five bugs across compiler optimization modules require deep domain knowledge to find and fix.",
-  "status": "in_progress",
+  "status": "completed",
   "feature_order": ["FEAT-001"],
-  "blocked_reason": null
+  "blocked_reason": null,
+  "verification": {
+    "build": "pass",
+    "tests": "pass",
+    "test_quality": "pass",
+    "docker_build": "skipped",
+    "summary": "Pipeline runs without errors (buggy: 4 tests fail, fixed: all 32 tests pass). All 5 patches apply cleanly. All files contain PLUTU-LUCKY-CANARY. Dockerfile uses python:3.11-slim. All paths in instruction.md are absolute. Zip file created."
+  }
 }
