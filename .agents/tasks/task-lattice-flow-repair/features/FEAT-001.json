@@ -1,0 +1,39 @@
+{
+  "id": "FEAT-001",
+  "type": "feat",
+  "description": "Create the complete lattice-flow-repair task with all files: trace log, parser, buggy engine, buggy analyzer, report writer, orchestrator, tests, solution, instruction.md, task.toml, and Dockerfile. This is a single large feature because all files are interdependent.",
+  "status": "completed",
+  "steps": [
+    "Create /projects/sandbox/plutu-lucky/lattice-flow-repair/environment/runtime/flow_trace.log with ~45 arrow-separated events across 7 junctions (junc_alpha through junc_eta). Use BASE_PRESSURE=3, event types PUMP(+1), SURGE(+2), COUPLE(sync). Ensure some junctions have 0 couples and some have 1-2 couples.",
+    "Create /projects/sandbox/plutu-lucky/lattice-flow-repair/environment/runtime/trace_parser.py - correct parser for arrow-separated format returning list of event dicts.",
+    "Create /projects/sandbox/plutu-lucky/lattice-flow-repair/environment/runtime/pressure_engine.py - JunctionPressure class with apply_pump, apply_surge, apply_couple. Bug 1: apply_couple does component-wise max but MISSING self._pressure[self.node_id] += 1 after merge. Include misleading comment explaining why not incrementing is correct.",
+    "Create /projects/sandbox/plutu-lucky/lattice-flow-repair/environment/runtime/flow_analyzer.py - Contains vector_leq, vector_dominates, flows_are_independent (BUGGY: checks equality via both-leq instead of incomparability via neither-dominates), compute_hydraulic_priority (BUGGY: sorts by last_event_time instead of sum of vector), and analyze_flow_pairs. Include misleading docstrings.",
+    "Create /projects/sandbox/plutu-lucky/lattice-flow-repair/environment/runtime/report_writer.py - imports flows_are_independent from flow_analyzer, generates final report with MD5 digest (hashlib.md5(json.dumps(data, sort_keys=True).encode()).hexdigest()[:16]).",
+    "Create /projects/sandbox/plutu-lucky/lattice-flow-repair/environment/runtime/orchestrator.py - correct main entry point that calls parser -> engine -> analyzer -> report_writer, writes flow_state.jsonl and flow_report.json.",
+    "Copy environment/runtime/ to runtime/ (exact duplicate with buggy code).",
+    "Create /projects/sandbox/plutu-lucky/lattice-flow-repair/environment/Dockerfile.",
+    "Create /projects/sandbox/plutu-lucky/lattice-flow-repair/solution/repair_lattice_flow.py - patches Bug 1 (add increment), Bug 2 (replace equality with incomparability), Bug 3 (sort by vector sum not timestamp), then re-runs orchestrator.",
+    "Create /projects/sandbox/plutu-lucky/lattice-flow-repair/solution/solve.sh.",
+    "Create /projects/sandbox/plutu-lucky/lattice-flow-repair/tests/test_lattice_flow.py with 14 tests in 4 tiers. Tier 1 (6 tests) always pass. Tier 2 (3 tests) need Bug 1 fixed. Tier 3 (3 tests) need Bugs 2+3 fixed. Tier 4 (2 tests) need all bugs fixed. IMPORTANT: leave placeholder values for digest, pair counts, and specific pressure values that need to be computed by running the code.",
+    "Create /projects/sandbox/plutu-lucky/lattice-flow-repair/tests/test.sh.",
+    "Create /projects/sandbox/plutu-lucky/lattice-flow-repair/instruction.md - describes system, symptoms, expected output. Uses only /app/runtime/ paths. Does NOT reveal bug details or use terms like 'incomparable' or 'partial order'.",
+    "Create /projects/sandbox/plutu-lucky/lattice-flow-repair/task.toml."
+  ],
+  "acceptance_criteria": [
+    "All files exist in the correct directory structure",
+    "runtime/ and environment/runtime/ contain identical files",
+    "Running the buggy orchestrator.py produces flow_state.jsonl and flow_report.json",
+    "Running repair_lattice_flow.py produces different (correct) outputs",
+    "No comments contain 'BUG' or hint at the bugs",
+    "All misleading comments reinforce buggy behavior as correct",
+    "instruction.md uses only absolute /app/runtime/ paths and does not use 'incomparable' or 'partial order'"
+  ],
+  "verification": [
+    "Run the buggy orchestrator.py and confirm it produces output files",
+    "Run the repair script and confirm it produces different output files",
+    "Run pytest on the buggy output - should get exactly 8 pass, 6 fail",
+    "Run pytest on the repaired output - should get 14 pass, 0 fail"
+  ],
+  "blocked_reason": null,
+  "findings": "All 19 files created successfully. Buggy code: 8 tests pass, 6 fail. Repaired code: 14 tests pass. runtime/ and environment/runtime/ verified identical via md5sum. Used pyenv global 3.11.15 for pytest. No forbidden terms in instruction.md. No BUG comments in any source files. The /app symlink was created for testing but the actual Docker runtime will handle that path mapping."
+}

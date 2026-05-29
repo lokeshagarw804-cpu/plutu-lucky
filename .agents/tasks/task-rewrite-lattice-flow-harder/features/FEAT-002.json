@@ -1,0 +1,33 @@
+{
+  "id": "FEAT-002",
+  "type": "feat",
+  "description": "Rewrite tests, instruction.md, repair script, and task.toml. Calculate correct expected values from the new trace, write tests that verify without explaining math, write a vaguer instruction.md, and write a repair script that handles: adding +1, rewriting independence check from scratch (no vector_dominates available), and changing priority signature + call site.",
+  "status": "completed",
+  "steps": [
+    "Step 1: Calculate the CORRECT expected values by running the simulation with fixes applied. This means: (a) replay all 52 events with +1 per couple, (b) compute all final vectors, (c) determine independent pairs using incomparability check (not vector_leq(a,b) and a!=b in either direction), (d) compute priority by vector sum. Record all these values.",
+    "Step 2: Also calculate the BUGGY expected values: (a) replay without +1, (b) compute vectors, (c) determine independent pairs using equality check, (d) compute priority by last event time. This tells us which tests pass/fail in buggy mode.",
+    "Step 3: Rewrite lattice-flow-repair/tests/test_lattice_flow.py. Keep the 4-tier structure (Tier 1: structural always-pass, Tier 2: pressure state needs Bug 1, Tier 3: flow analysis needs Bugs 2+3, Tier 4: consistency needs all). REMOVE ALL explanatory comments and formulas from test docstrings - no 'BASE(3) + 4 PUMPs...' style explanations. Use only bare assertions with short error messages. Target: 8 pass buggy (Tier 1 = 6 tests), 14 pass repaired (all).",
+    "Step 4: Rewrite lattice-flow-repair/instruction.md. Make it MUCH vaguer: (a) Do NOT mention 'lower own-component pressure' - just say 'unexpected pressure values', (b) Do NOT mention 'fewer independent pairs' - just say 'classification anomalies', (c) Do NOT say which files are buggy vs correct, (d) Do NOT say 'trace parser and orchestrator are functioning correctly', (e) Just describe the architecture and say 'the system produces incorrect output'. Keep the architecture description and output schema.",
+    "Step 5: Rewrite lattice-flow-repair/solution/repair_lattice_flow.py. The repair must: (a) Fix pressure_engine.py by adding self._pressure[self.node_id] += 1 after the merge loop (before the stability bound clamp), (b) Fix flow_analyzer.py by WRITING a new independence check from scratch using 'not (vector_leq(a, b) and a != b) and not (vector_leq(b, a) and b != a)' since vector_dominates doesn't exist, (c) Fix flow_analyzer.py by changing compute_hydraulic_priority signature to accept vectors AND updating the call site in analyze_flow_pairs. The string replacements must match the exact buggy code.",
+    "Step 6: Update lattice-flow-repair/task.toml with new event count (52), updated descriptions, keep the same difficulty level.",
+    "Step 7: Verify the full pipeline: run buggy orchestrator, run tests (expect 8 pass / 6 fail), then run repair script, run orchestrator again, run tests (expect 14 pass / 0 fail)."
+  ],
+  "acceptance_criteria": [
+    "Test file has NO explanatory formulas or derivation comments",
+    "Test file has 14 tests in 4 tiers",
+    "Buggy code produces exactly 8 pass / 6 fail",
+    "Repaired code produces exactly 14 pass / 0 fail",
+    "instruction.md does not identify which files are buggy",
+    "instruction.md does not mention 'lower own-component pressure' or 'fewer independent pairs'",
+    "instruction.md does not say trace parser/orchestrator are correct",
+    "Repair script works via string replacement on the exact buggy code",
+    "Repair script writes a new independence check from scratch (no vector_dominates reference)",
+    "task.toml reflects 52 events"
+  ],
+  "verification": [
+    "Run buggy simulation + pytest: exactly 8 pass, 6 fail",
+    "Run repair + simulation + pytest: exactly 14 pass, 0 fail"
+  ],
+  "blocked_reason": null,
+  "findings": "All 4 files rewritten successfully. Buggy mode verified: 8 pass / 6 fail. Fixed mode verified: 14 pass / 0 fail. Repair script string replacements confirmed to match exact buggy source code. Digest 5426791a02bc19a0 confirmed. runtime/ and environment/runtime/ remain byte-identical (no changes needed to environment/runtime/ since only tests/instruction/solution/task.toml were modified)."
+}

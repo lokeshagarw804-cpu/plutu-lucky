@@ -1,0 +1,14 @@
+{
+  "task_id": "task-lattice-flow-repair",
+  "task_description": "Create a Harbor Terminal-Bench debugging task called lattice-flow-repair in the Scientific Computing & Numerics domain. The task involves a lattice-based fluid flow simulator that tracks pressure propagation vectors (vector clocks) across 7 pipe junction nodes. Contains 4 bugs across 3 files with misleading comments.",
+  "status": "completed",
+  "feature_order": ["FEAT-001"],
+  "blocked_reason": null,
+  "verification": {
+    "build": "pass",
+    "tests": "pass",
+    "test_quality": "pass",
+    "docker_build": "skipped",
+    "summary": "Buggy code: 8 pass, 6 fail. Repaired code: 14 pass, 0 fail. All file structure verified. runtime/ and environment/runtime/ byte-identical. No BUG comments. No forbidden terms in instruction.md. Digest cc4f8ca3d64147e6 verified correct."
+  }
+}
