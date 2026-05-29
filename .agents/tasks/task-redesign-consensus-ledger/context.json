@@ -1,0 +1,30 @@
+{
+  "project_type": "Python puzzle task for LLM evaluation - distributed consensus ledger debugging",
+  "language": "python",
+  "build_system": "Docker with python:3.11-slim + uv for pytest",
+  "test_framework": "pytest with fixture loading audit_report.json",
+  "build_command": "cd /projects/sandbox/plutu-lucky/consensus-ledger-repair && docker build -t consensus-test -f environment/Dockerfile environment/",
+  "test_command": "docker run --rm -v $(pwd)/tests:/tests consensus-test bash -c 'cd /app && python3 -m runtime.pipeline && uv run --with pytest pytest /tests/test_consensus_ledger.py -v'",
+  "verification_instructions": "1. Build docker image. 2. Run pipeline inside container. 3. Run pytest to verify all 26 assertions pass with the solution applied. 4. Run pipeline WITHOUT solution to verify tests FAIL (bugs produce wrong output). 5. Verify solution/repair_consensus.py patches fix all bugs correctly.",
+  "snapshot_or_generated_files": null,
+  "setup_instructions": "Docker must be available. Build with Dockerfile in environment/.",
+  "environment_constraints": "stdlib-only Python - no external packages in runtime code. pytest via uv for tests only.",
+  "contribution_requirements": "All files must contain PLUTU-LUCKY-CANARY marker. Dockerfile uses python:3.11-slim with pip install uv. All paths in instruction.md must be absolute (/app/...).",
+  "key_patterns": "Pipeline orchestrates modules, each module has bugs. Tests check final audit_report.json values. Solution script patches source files and re-runs.",
+  "relevant_files": [
+    "consensus-ledger-repair/environment/runtime/merkle_engine.py",
+    "consensus-ledger-repair/environment/runtime/quorum_verifier.py",
+    "consensus-ledger-repair/environment/runtime/byzantine_detector.py",
+    "consensus-ledger-repair/environment/runtime/state_machine.py",
+    "consensus-ledger-repair/environment/runtime/balance_reconciler.py",
+    "consensus-ledger-repair/environment/runtime/pipeline.py",
+    "consensus-ledger-repair/environment/runtime/data/transactions.json",
+    "consensus-ledger-repair/environment/runtime/data/validators.json",
+    "consensus-ledger-repair/environment/runtime/data/voting_records.json",
+    "consensus-ledger-repair/tests/test_consensus_ledger.py",
+    "consensus-ledger-repair/solution/repair_consensus.py",
+    "consensus-ledger-repair/instruction.md",
+    "consensus-ledger-repair/task.toml"
+  ],
+  "directory_structure": "consensus-ledger-repair/ contains: environment/ (Dockerfile + runtime/ with Python modules and data/), tests/ (test.sh + pytest), solution/ (repair script), instruction.md, task.toml"
+}

@@ -1,0 +1,14 @@
+{
+  "task_id": "task-lattice-propagation-repair",
+  "task_description": "Replace the spatial-index-repair task with a new, much harder lattice-propagation-repair debugging challenge that has 7 interacting bugs across 4 files in a lattice signal propagation simulator.",
+  "status": "completed",
+  "verification": {
+    "build": "pass",
+    "tests": "pass",
+    "test_quality": "pass",
+    "docker_build": "skipped",
+    "summary": "Pipeline runs cleanly (buggy mode produces output, 17/20 tests fail). After repair script patches all 7 bugs, pipeline produces correct output and all 20 assertions pass. String replacement patterns in repair script all match source code exactly."
+  },
+  "feature_order": ["FEAT-001"],
+  "blocked_reason": null
+}

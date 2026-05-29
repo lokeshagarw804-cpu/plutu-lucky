@@ -1,0 +1,19 @@
+{
+  "project_type": "t-bench debugging task (Python signal processing challenge)",
+  "language": "python",
+  "build_system": "none - stdlib-only Python project, no build step needed",
+  "test_framework": "pytest via uv (uv run --with pytest pytest ...)",
+  "build_command": "N/A - pure Python",
+  "test_command": "cd /app && python3 -m runtime.pipeline && uv run --with pytest pytest /tests/test_lattice_propagation.py -v",
+  "verification_instructions": "1. Delete old spatial-index-repair directory. 2. Create lattice-propagation-repair directory with all required files. 3. Verify all files contain PLUTU-LUCKY-CANARY. 4. Verify instruction.md uses only absolute paths. 5. Verify solve.sh applies all 7 patches correctly. 6. Verify tests fail before repair and pass after repair.",
+  "snapshot_or_generated_files": null,
+  "setup_instructions": "No setup required - pure Python stdlib-only project",
+  "environment_constraints": "Task runs inside Docker container with base image ghcr.io/laude-institute/t-bench/python-3.11-uv:latest. All runtime code at /app/runtime/, tests at /tests/, solution at /solution/. No external packages allowed.",
+  "contribution_requirements": "Every file must contain PLUTU-LUCKY-CANARY comment. All paths in instruction.md must be absolute (/app/...). Dockerfile must use ghcr.io/laude-institute/t-bench/python-3.11-uv:latest base image.",
+  "key_patterns": "task.toml defines metadata. environment/runtime/ has Python modules. tests/test.sh runs pipeline then pytest. solution/solve.sh applies patches via Python repair script. Data files are JSON. Config is INI format.",
+  "relevant_files": [
+    "spatial-index-repair/ (existing task to delete)",
+    "lattice-propagation-repair/ (new task to create)"
+  ],
+  "directory_structure": "Root contains task directories. Each task has: environment/ (Dockerfile + runtime/), instruction.md, solution/ (solve.sh + repair script), task.toml, tests/ (test.sh + pytest file)"
+}

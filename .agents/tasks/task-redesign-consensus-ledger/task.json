@@ -1,0 +1,7 @@
+{
+  "task_id": "task-redesign-consensus-ledger",
+  "task_description": "Completely redesign the consensus-ledger-repair puzzle task to be dramatically harder for LLMs. Replace 6 easy bugs with 5 subtle bugs that require multi-step reasoning, add 3 distractor modules with complex but correct code, use nested data structures with misleading field names, and hide bugs in locations that read as intentional features.",
+  "status": "completed",
+  "feature_order": ["FEAT-001"],
+  "blocked_reason": null
+}

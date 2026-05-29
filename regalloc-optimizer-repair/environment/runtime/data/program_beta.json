@@ -1,0 +1,52 @@
+{
+  "_comment": "PLUTU-LUCKY-CANARY",
+  "name": "beta",
+  "blocks": [
+    {
+      "id": 0,
+      "instructions": [
+        {"op": "load", "def": ["v0"], "use": [], "imm": 10},
+        {"op": "load", "def": ["v1"], "use": [], "imm": 20},
+        {"op": "add", "def": ["v2"], "use": ["v0", "v1"]},
+        {"op": "load", "def": ["v3"], "use": [], "imm": 30},
+        {"op": "mul", "def": ["v4"], "use": ["v2", "v3"]},
+        {"op": "cmp", "def": ["v5"], "use": ["v4", "v0"]}
+      ],
+      "successors": [1, 2],
+      "predecessors": []
+    },
+    {
+      "id": 1,
+      "instructions": [
+        {"op": "mov", "def": ["v6"], "use": ["v2"]},
+        {"op": "add", "def": ["v7"], "use": ["v6", "v4"]},
+        {"op": "load", "def": ["v2"], "use": [], "imm": 99},
+        {"op": "add", "def": ["v8"], "use": ["v7", "v2"]}
+      ],
+      "successors": [3],
+      "predecessors": [0]
+    },
+    {
+      "id": 2,
+      "instructions": [
+        {"op": "mov", "def": ["v9"], "use": ["v3"]},
+        {"op": "sub", "def": ["v10"], "use": ["v9", "v4"]},
+        {"op": "load", "def": ["v3"], "use": [], "imm": 88},
+        {"op": "add", "def": ["v11"], "use": ["v10", "v3"]}
+      ],
+      "successors": [3],
+      "predecessors": [0]
+    },
+    {
+      "id": 3,
+      "instructions": [
+        {"op": "add", "def": ["v12"], "use": ["v8", "v11"]},
+        {"op": "store", "def": [], "use": ["v12", "v0"]},
+        {"op": "ret", "def": [], "use": ["v12"]}
+      ],
+      "successors": [],
+      "predecessors": [1, 2]
+    }
+  ],
+  "phi_nodes": []
+}

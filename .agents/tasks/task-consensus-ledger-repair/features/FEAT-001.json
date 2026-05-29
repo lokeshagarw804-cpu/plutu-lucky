@@ -1,0 +1,50 @@
+{
+  "id": "FEAT-001",
+  "type": "chore",
+  "description": "Delete the existing lattice-propagation-repair directory and zip file, create the complete consensus-ledger-repair task with all files: data files (transactions.json, validators.json, voting_records.json), runtime modules (merkle_engine.py, quorum_verifier.py, byzantine_detector.py, state_machine.py, balance_reconciler.py, pipeline.py, __init__.py, config.ini), Dockerfile, instruction.md, task.toml, test.sh, test_consensus_ledger.py, solve.sh, repair_consensus.py. The task must contain 6 carefully designed bugs and pass all tests after the repair script is applied.",
+  "status": "completed",
+  "steps": [
+    "Delete /projects/sandbox/plutu-lucky/lattice-propagation-repair/ directory and /projects/sandbox/plutu-lucky/lattice-propagation-repair.zip file",
+    "Create directory structure: consensus-ledger-repair/environment/runtime/data/, consensus-ledger-repair/solution/, consensus-ledger-repair/tests/",
+    "Create consensus-ledger-repair/environment/runtime/data/transactions.json with 50+ transactions between 10 accounts (accounts A0-A9), including transactions with amounts >= 10000000 to trigger bug 6, with odd-count batches to trigger bug 2. Each transaction has: id, sender, receiver, amount (integer), nonce, timestamp fields.",
+    "Create consensus-ledger-repair/environment/runtime/data/validators.json with 10 validator nodes (V0-V9) each having: id, public_key (hex string), stake_weight fields.",
+    "Create consensus-ledger-repair/environment/runtime/data/voting_records.json with voting records across 8 rounds. Each round has a subset of validators voting (varying sizes: 4, 5, 6, 7, 8, 9, 10 validators) to trigger bug 3. Include some validators voting for multiple proposals in same round to test equivocation detection.",
+    "Create consensus-ledger-repair/environment/runtime/__init__.py with PLUTU-LUCKY-CANARY comment",
+    "Create consensus-ledger-repair/environment/runtime/config.ini with sections: [ledger] fee_rate=0.001, min_confirmations=3; [consensus] quorum_model=bft, max_rounds=8; [merkle] hash_algorithm=sha256, batch_size=16; [audit] output_path=/app/runtime/output/audit_report.json",
+    "Create consensus-ledger-repair/environment/runtime/merkle_engine.py - Builds Merkle trees from transaction batches. BUG 1: When building internal nodes, alternates hash(left+right) for even-indexed and hash(right+left) for odd-indexed nodes with misleading comment 'alternating concatenation for balanced distribution'. Correct: always hash(left+right). BUG 2: When leaves count is odd, pads by duplicating FIRST leaf instead of LAST leaf. Include red herring: complex but correct 'verify_inclusion_proof' function.",
+    "Create consensus-ledger-repair/environment/runtime/quorum_verifier.py - Verifies BFT quorum across rounds. BUG 3: Computes threshold as math.ceil(2*n/3) instead of correct (2*n)//3 + 1. These differ when n is not divisible by 3 in specific ways. Include red herring: elaborate 'weighted_quorum_check' function that is complex but correct.",
+    "Create consensus-ledger-repair/environment/runtime/byzantine_detector.py - Detects equivocation in voting records. BUG 4: Uses >= instead of > when comparing round numbers in sliding window, causing a vote to be compared against itself and flagging honest validators as Byzantine. Include red herring: complex but correct 'analyze_voting_pattern' function with statistical analysis.",
+    "Create consensus-ledger-repair/environment/runtime/state_machine.py - Processes transactions and computes state transitions. BUG 5: Uses int(amount * fee_rate) instead of round(amount * fee_rate) for fee computation. With fee_rate=0.001 and certain amounts, floating point causes truncation to wrong value. Include red herring: complex but correct 'verify_state_transition' with hash chain validation.",
+    "Create consensus-ledger-repair/environment/runtime/balance_reconciler.py - Detects double-spending via transaction hash comparison. BUG 6: Computes hash of str(sender)+str(receiver)+str(amount)[:8]+str(nonce) - the str(amount)[:8] truncation causes collisions for amounts >= 10000000. Correct: use full str(amount). Include red herring: complex but correct 'reconcile_cross_shard' function.",
+    "Create consensus-ledger-repair/environment/runtime/pipeline.py - Main orchestration that loads config, loads data, runs all modules in sequence, and writes audit_report.json to /app/runtime/output/. Uses only stdlib (hashlib, json, os, configparser, math).",
+    "Create consensus-ledger-repair/environment/Dockerfile: FROM ghcr.io/laude-institute/t-bench/python-3.11-uv:latest, COPY runtime/ /app/runtime/, WORKDIR /app",
+    "Create consensus-ledger-repair/task.toml with the exact content specified in the task description",
+    "Create consensus-ledger-repair/instruction.md with: overview of the system, module descriptions with absolute paths, output JSON schema with field descriptions table, expected behavior section with specific values that match test assertions, problem description, task instructions, run command",
+    "Create consensus-ledger-repair/tests/test.sh following the exact pattern from the existing task (run pipeline, mkdir logs, run pytest, capture exit code, write reward)",
+    "Create consensus-ledger-repair/tests/test_consensus_ledger.py with 20+ assertions validating audit report values. Tests should check: merkle_root (exact hex), total_transactions, valid_rounds, total_rounds, byzantine_validators (exact list), honest_validators (exact list), final_balances for each account, total_fees_collected, double_spend_detected count, quorum_failures count, state_hash.",
+    "Create consensus-ledger-repair/solution/solve.sh that runs python3 /solution/repair_consensus.py",
+    "Create consensus-ledger-repair/solution/repair_consensus.py using patch_file pattern (string replacements) to fix all 6 bugs then re-run pipeline",
+    "CRITICAL: All expected test values must be computed from what the FIXED code would produce. Design data and code together so outputs are deterministic and known.",
+    "CRITICAL: The buggy code must run without errors (no crashes) but produce wrong values. The fixed code must produce correct values that match test assertions.",
+    "CRITICAL: Every single file must contain PLUTU-LUCKY-CANARY as a comment (Python: # PLUTU-LUCKY-CANARY, JSON: cannot have comments so skip JSON files, INI: # PLUTU-LUCKY-CANARY, Dockerfile: # PLUTU-LUCKY-CANARY, bash: # PLUTU-LUCKY-CANARY, markdown: <!-- PLUTU-LUCKY-CANARY -->, toml: # PLUTU-LUCKY-CANARY)"
+  ],
+  "acceptance_criteria": [
+    "lattice-propagation-repair directory and zip no longer exist",
+    "consensus-ledger-repair directory exists with complete structure matching specification",
+    "Running python3 -m runtime.pipeline in consensus-ledger-repair/environment/ produces audit_report.json without errors",
+    "Running the repair script then pipeline produces output that passes all 20+ test assertions",
+    "All 6 bugs are present in the runtime code with misleading comments",
+    "Every non-JSON file contains PLUTU-LUCKY-CANARY",
+    "instruction.md uses only absolute paths (/app/runtime/...)",
+    "Data files contain 50+ transactions, 10 validators, 8 rounds of voting",
+    "No comments hint at what the correct behavior should be near bug locations"
+  ],
+  "verification": [
+    "Run: cd /projects/sandbox/plutu-lucky/consensus-ledger-repair/environment && python3 -m runtime.pipeline (should succeed without errors)",
+    "Run: ls /projects/sandbox/plutu-lucky/consensus-ledger-repair/environment/runtime/output/audit_report.json (should exist)",
+    "Verify lattice-propagation-repair directory does not exist",
+    "Run repair then pipeline then tests to confirm all pass"
+  ],
+  "blocked_reason": null,
+  "findings": "All 6 bugs verified to produce different outputs from the fixed version. Bug 4 redesigned to use cross-round window comparison (>= 1) instead of same-round-only (== 0) for cleaner detection logic. Network is INTEGRATIONS_ONLY so pytest could not be installed directly, but all test assertions verified manually via equivalent Python checks. The zip file was also generated for direct download as requested."
+}

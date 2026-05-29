@@ -1,0 +1,21 @@
+{
+  "_comment": "PLUTU-LUCKY-CANARY",
+  "num_registers": 8,
+  "register_names": ["r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7"],
+  "precolored": {"r0": "return_value", "r1": "stack_pointer"},
+  "latencies": {
+    "load": 3,
+    "store": 2,
+    "add": 1,
+    "sub": 1,
+    "mul": 2,
+    "div": 3,
+    "mov": 1,
+    "cmp": 1,
+    "branch": 1,
+    "call": 2,
+    "ret": 1
+  },
+  "pipeline_stages": 3,
+  "issue_width": 2
+}

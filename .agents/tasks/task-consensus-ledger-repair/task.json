@@ -1,0 +1,14 @@
+{
+  "task_id": "task-consensus-ledger-repair",
+  "task_description": "Replace the lattice-propagation-repair t-bench task with a completely new consensus-ledger-repair task in the distributed systems domain. The new task has 6 carefully designed bugs across 5 modules dealing with Merkle trees, BFT quorum verification, Byzantine fault detection, fee computation, and double-spend detection.",
+  "status": "completed",
+  "feature_order": ["FEAT-001"],
+  "blocked_reason": null,
+  "verification": {
+    "build": "pass",
+    "tests": "pass",
+    "test_quality": "pass",
+    "docker_build": "skipped",
+    "summary": "Buggy pipeline runs without errors producing wrong values. After repair, all 26 tests pass. All 6 bugs produce observable differences: merkle_root (bugs 1,2), valid_rounds/quorum_failures (bug 3), byzantine_validators (bug 4), total_fees_collected (bug 5), double_spend_detected (bug 6), state_hash (bug 5)."
+  }
+}

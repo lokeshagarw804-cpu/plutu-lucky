@@ -1,0 +1,7 @@
+{
+  "task_id": "task-regalloc-optimizer-repair",
+  "task_description": "Create a t-bench debugging task for a register allocator and instruction scheduler for a custom bytecode VM. Five bugs across compiler optimization modules require deep domain knowledge to find and fix.",
+  "status": "in_progress",
+  "feature_order": ["FEAT-001"],
+  "blocked_reason": null
+}
