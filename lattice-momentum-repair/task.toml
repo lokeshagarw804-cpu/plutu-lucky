@@ -1,0 +1,37 @@
+author_name = "Lokesh Agarwal"
+author_email = "lokeshlucky0123456789@gmail.com"
+category = "scientific_computing"
+difficulty = "hard"
+tags = ["scientific-computing", "lattice-boltzmann", "fluid-simulation", "vector-clocks", "debugging"]
+
+difficulty_explanation = "Multiple interacting defects across three modules require understanding vector space relationships, lattice momentum propagation semantics, and subtle mathematical distinctions between ordering predicates. The codebase contains numerous correct-but-complex helper functions that create analysis noise."
+solution_explanation = "Fix collision self-increment in momentum_engine, replace symmetric containment with incomparability in regime_classifier, replace activity-score formula with magnitude sort in regime_classifier."
+verification_explanation = "Tests validate structural properties (always pass), momentum values after collision (need Bug 1), regime classification correctness (need Bugs 2+3), and full simulation integrity (need all bugs fixed)."
+expert_time_estimate_hours = 3.5
+
+[task]
+name = "lattice-momentum-repair"
+description = "Debug a lattice Boltzmann momentum propagation simulator with interacting defects across collision handling, regime classification, and relaxation scheduling."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding vector space relationships, lattice momentum propagation semantics, and tracing cascading bugs across modules with numerous plausible red herring functions."
+
+[task.runtime]
+entrypoint = "python3 -c \"import sys; sys.path.insert(0, '/app/runtime'); from orchestrator import main; main()\""
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the simulation then validates output via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all defects and re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
