@@ -1,0 +1,16 @@
+{"vehicle_id": "V201", "lat": 40.712, "lon": -74.015, "timestamp": "2024-03-01T08:00:00Z", "seq": 1}
+{"vehicle_id": "V201", "lat": 40.715, "lon": -74.012, "timestamp": "2024-03-01T08:00:30Z", "seq": 2}
+{"vehicle_id": "V201", "lat": 40.718, "lon": -74.010, "timestamp": "2024-03-01T08:01:00Z", "seq": 3}
+{"vehicle_id": "V201", "lat": 40.720, "lon": -74.015, "timestamp": "2024-03-01T08:01:30Z", "seq": 4}
+{"vehicle_id": "V201", "lat": 40.715, "lon": -74.018, "timestamp": "2024-03-01T08:02:00Z", "seq": 5}
+{"vehicle_id": "V201", "lat": 40.710, "lon": -74.015, "timestamp": "2024-03-01T08:02:30Z", "seq": 6}
+{"vehicle_id": "V203", "lat": 40.732, "lon": -74.005, "timestamp": "2024-03-01T08:00:00Z", "seq": 1}
+{"vehicle_id": "V203", "lat": 40.735, "lon": -74.003, "timestamp": "2024-03-01T08:00:30Z", "seq": 2}
+{"vehicle_id": "V203", "lat": 40.738, "lon": -74.005, "timestamp": "2024-03-01T08:01:00Z", "seq": 3}
+{"vehicle_id": "V203", "lat": 40.741, "lon": -74.002, "timestamp": "2024-03-01T08:01:30Z", "seq": 4}
+{"vehicle_id": "V203", "lat": 40.744, "lon": -74.006, "timestamp": "2024-03-01T08:02:00Z", "seq": 5}
+{"vehicle_id": "V203", "lat": 40.747, "lon": -74.004, "timestamp": "2024-03-01T08:02:30Z", "seq": 6}
+{"vehicle_id": "V201", "lat": 40.713, "lon": -74.025, "timestamp": "2024-03-01T08:03:00Z", "seq": 7}
+{"vehicle_id": "V201", "lat": 40.716, "lon": -74.022, "timestamp": "2024-03-01T08:03:30Z", "seq": 8}
+{"vehicle_id": "V201", "lat": 40.719, "lon": -74.020, "timestamp": "2024-03-01T08:04:00Z", "seq": 9}
+{"vehicle_id": "V201", "lat": 40.722, "lon": -74.018, "timestamp": "2024-03-01T08:04:30Z", "seq": 10}
