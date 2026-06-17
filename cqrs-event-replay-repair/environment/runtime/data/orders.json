@@ -1,0 +1,25 @@
+{
+  "stream_id": "orders",
+  "aggregate_type": "order",
+  "events": [
+    {"seq": 1, "timestamp": 1700000100, "type": "OrderCreated", "payload": {"order_id": "ORD-001", "customer": "alice", "total": 150.00}},
+    {"seq": 2, "timestamp": 1700000200, "type": "OrderConfirmed", "payload": {"order_id": "ORD-001", "status": "confirmed"}},
+    {"seq": 3, "timestamp": 1700000350, "type": "OrderCreated", "payload": {"order_id": "ORD-002", "customer": "bob", "total": 89.50}},
+    {"seq": 4, "timestamp": 1700000400, "type": "OrderShipped", "payload": {"order_id": "ORD-001", "carrier": "express", "tracking": "TRK-9981"}},
+    {"seq": 5, "timestamp": 1700000500, "type": "OrderConfirmed", "payload": {"order_id": "ORD-002", "status": "confirmed"}},
+    {"seq": 6, "timestamp": 1700000600, "type": "OrderCreated", "payload": {"order_id": "ORD-003", "customer": "charlie", "total": 220.00}},
+    {"seq": 7, "timestamp": 1700000700, "type": "OrderShipped", "payload": {"order_id": "ORD-002", "carrier": "standard", "tracking": "TRK-4412"}},
+    {"seq": 8, "timestamp": 1700000800, "type": "OrderConfirmed", "payload": {"order_id": "ORD-003", "status": "confirmed"}},
+    {"seq": 9, "timestamp": 1700000900, "type": "OrderDelivered", "payload": {"order_id": "ORD-001", "status": "delivered"}},
+    {"seq": 10, "timestamp": 1700001000, "type": "OrderCreated", "payload": {"order_id": "ORD-004", "customer": "diana", "total": 45.00}},
+    {"seq": 11, "timestamp": 1700001100, "type": "OrderShipped", "payload": {"order_id": "ORD-003", "carrier": "express", "tracking": "TRK-7723"}},
+    {"seq": 12, "timestamp": 1700001200, "type": "OrderConfirmed", "payload": {"order_id": "ORD-004", "status": "confirmed"}},
+    {"seq": 13, "timestamp": 1700001300, "type": "OrderDelivered", "payload": {"order_id": "ORD-002", "status": "delivered"}},
+    {"seq": 14, "timestamp": 1700001400, "type": "OrderCancelled", "payload": {"order_id": "ORD-004", "reason": "customer_request"}},
+    {"seq": 15, "timestamp": 1700001500, "type": "OrderDelivered", "payload": {"order_id": "ORD-003", "status": "delivered"}},
+    {"seq": 16, "timestamp": 1700001600, "type": "OrderCreated", "payload": {"order_id": "ORD-005", "customer": "eve", "total": 310.75}},
+    {"seq": 17, "timestamp": 1700001700, "type": "OrderConfirmed", "payload": {"order_id": "ORD-005", "status": "confirmed"}},
+    {"seq": 18, "timestamp": 1700001800, "type": "OrderShipped", "payload": {"order_id": "ORD-005", "carrier": "overnight", "tracking": "TRK-1190"}},
+    {"seq": 19, "timestamp": 1700001900, "type": "OrderDelivered", "payload": {"order_id": "ORD-005", "status": "delivered"}}
+  ]
+}

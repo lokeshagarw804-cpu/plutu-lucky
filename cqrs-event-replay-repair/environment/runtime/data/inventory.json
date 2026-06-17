@@ -1,0 +1,24 @@
+{
+  "stream_id": "inventory",
+  "aggregate_type": "stock",
+  "events": [
+    {"seq": 1, "timestamp": 1700000050, "type": "StockInitialized", "payload": {"sku": "SKU-A", "quantity": 100, "warehouse": "WH-1"}},
+    {"seq": 2, "timestamp": 1700000150, "type": "StockReserved", "payload": {"sku": "SKU-A", "quantity": 2, "order_id": "ORD-001"}},
+    {"seq": 3, "timestamp": 1700000250, "type": "StockInitialized", "payload": {"sku": "SKU-B", "quantity": 50, "warehouse": "WH-1"}},
+    {"seq": 4, "timestamp": 1700000350, "type": "StockReserved", "payload": {"sku": "SKU-B", "quantity": 1, "order_id": "ORD-002"}},
+    {"seq": 5, "timestamp": 1700000450, "type": "StockReplenished", "payload": {"sku": "SKU-A", "quantity": 25, "supplier": "SUP-01"}},
+    {"seq": 6, "timestamp": 1700000550, "type": "StockReserved", "payload": {"sku": "SKU-A", "quantity": 3, "order_id": "ORD-003"}},
+    {"seq": 7, "timestamp": 1700000650, "type": "StockDamaged", "payload": {"sku": "SKU-B", "quantity": 5, "reason": "water_damage"}},
+    {"seq": 8, "timestamp": 1700000750, "type": "StockReplenished", "payload": {"sku": "SKU-B", "quantity": 30, "supplier": "SUP-02"}},
+    {"seq": 9, "timestamp": 1700000850, "type": "StockReserved", "payload": {"sku": "SKU-A", "quantity": 1, "order_id": "ORD-004"}},
+    {"seq": 10, "timestamp": 1700000900, "type": "StockReleased", "payload": {"sku": "SKU-A", "quantity": 1, "order_id": "ORD-004"}},
+    {"seq": 11, "timestamp": 1700001050, "type": "StockInitialized", "payload": {"sku": "SKU-C", "quantity": 200, "warehouse": "WH-2"}},
+    {"seq": 12, "timestamp": 1700001150, "type": "StockReserved", "payload": {"sku": "SKU-C", "quantity": 10, "order_id": "ORD-005"}},
+    {"seq": 13, "timestamp": 1700001250, "type": "StockReplenished", "payload": {"sku": "SKU-A", "quantity": 50, "supplier": "SUP-01"}},
+    {"seq": 14, "timestamp": 1700001350, "type": "StockDamaged", "payload": {"sku": "SKU-C", "quantity": 3, "reason": "handling"}},
+    {"seq": 15, "timestamp": 1700001450, "type": "StockReserved", "payload": {"sku": "SKU-B", "quantity": 4, "order_id": "ORD-005"}},
+    {"seq": 16, "timestamp": 1700001550, "type": "StockReplenished", "payload": {"sku": "SKU-C", "quantity": 15, "supplier": "SUP-03"}},
+    {"seq": 17, "timestamp": 1700001650, "type": "StockReserved", "payload": {"sku": "SKU-A", "quantity": 5, "order_id": "ORD-005"}},
+    {"seq": 18, "timestamp": 1700001750, "type": "StockAudited", "payload": {"sku": "SKU-A", "actual_quantity": 164, "warehouse": "WH-1"}}
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "stream_id": "payments",
+  "aggregate_type": "payment",
+  "events": [
+    {"seq": 1, "timestamp": 1700000200, "type": "PaymentInitiated", "payload": {"payment_id": "PAY-001", "order_id": "ORD-001", "amount": 150.00, "method": "credit_card"}},
+    {"seq": 2, "timestamp": 1700000300, "type": "PaymentCaptured", "payload": {"payment_id": "PAY-001", "amount": 150.00, "processor": "stripe"}},
+    {"seq": 3, "timestamp": 1700000500, "type": "PaymentInitiated", "payload": {"payment_id": "PAY-002", "order_id": "ORD-002", "amount": 89.50, "method": "debit_card"}},
+    {"seq": 4, "timestamp": 1700000600, "type": "PaymentCaptured", "payload": {"payment_id": "PAY-002", "amount": 89.50, "processor": "stripe"}},
+    {"seq": 5, "timestamp": 1700000700, "type": "PaymentInitiated", "payload": {"payment_id": "PAY-003", "order_id": "ORD-003", "amount": 220.00, "method": "credit_card"}},
+    {"seq": 6, "timestamp": 1700000850, "type": "PaymentCaptured", "payload": {"payment_id": "PAY-003", "amount": 220.00, "processor": "adyen"}},
+    {"seq": 7, "timestamp": 1700001000, "type": "PaymentInitiated", "payload": {"payment_id": "PAY-004", "order_id": "ORD-004", "amount": 45.00, "method": "wallet"}},
+    {"seq": 8, "timestamp": 1700001100, "type": "PaymentCaptured", "payload": {"payment_id": "PAY-004", "amount": 45.00, "processor": "internal"}},
+    {"seq": 9, "timestamp": 1700001400, "type": "PaymentRefunded", "payload": {"payment_id": "PAY-004", "amount": 45.00, "reason": "order_cancelled"}},
+    {"seq": 10, "timestamp": 1700001500, "type": "PaymentInitiated", "payload": {"payment_id": "PAY-005", "order_id": "ORD-005", "amount": 310.75, "method": "credit_card"}},
+    {"seq": 11, "timestamp": 1700001600, "type": "PaymentCaptured", "payload": {"payment_id": "PAY-005", "amount": 310.75, "processor": "stripe"}},
+    {"seq": 12, "timestamp": 1700001700, "type": "PaymentFeeApplied", "payload": {"payment_id": "PAY-005", "fee": 9.32, "type": "processing"}},
+    {"seq": 13, "timestamp": 1700001800, "type": "PaymentSettled", "payload": {"payment_id": "PAY-005", "net_amount": 301.43, "settled_at": 1700001800}},
+    {"seq": 14, "timestamp": 1700001900, "type": "PaymentSettled", "payload": {"payment_id": "PAY-001", "net_amount": 145.50, "settled_at": 1700001900}},
+    {"seq": 15, "timestamp": 1700001900, "type": "PaymentSettled", "payload": {"payment_id": "PAY-002", "net_amount": 86.82, "settled_at": 1700001900}},
+    {"seq": 16, "timestamp": 1700001900, "type": "PaymentSettled", "payload": {"payment_id": "PAY-003", "net_amount": 213.40, "settled_at": 1700001900}}
+  ]
+}

@@ -1,0 +1,37 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+category = "event_sourcing"
+difficulty = "hard"
+tags = ["cqrs", "event-sourcing", "replay", "materialized-views", "debugging"]
+
+difficulty_explanation = "Four interacting defects across five modules require understanding CQRS replay semantics, batch snapshot modes, deterministic ordering across event streams, and configuration section scoping. Bugs cannot be identified from the instruction document alone — they require tracing data flow through the replay stages and understanding how batch boundaries interact with snapshot accumulation."
+solution_explanation = "Fix whitespace handling in aggregate list parsing, correct config section for batch size and snapshot mode, and add stream_id to sort key for deterministic cross-stream event ordering."
+verification_explanation = "Tests validate stream completeness, event counts, materialized totals with known expected values, and deterministic ordering via hash comparison. Tests use graduated difficulty — structural checks pass with buggy code while value assertions require specific bug fixes."
+expert_time_estimate_hours = 3.0
+
+[task]
+name = "cqrs-event-replay-repair"
+description = "Debug a CQRS event replay engine with four interacting defects across stream loading, batch configuration, snapshot materialization, and cross-stream event sequencing. Bugs involve configuration scoping subtleties and replay semantics."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding event sourcing replay semantics, how batch snapshots combine under different modes, deterministic ordering requirements for multi-stream replay, and config section precedence. Defects interact — fixing one changes outputs that downstream modules depend on."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.run_replay"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the event replay engine then validates output via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all four defects and re-runs the replay engine."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
