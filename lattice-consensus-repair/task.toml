@@ -1,0 +1,37 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+category = "distributed_systems"
+difficulty = "hard"
+tags = ["dag-consensus", "distributed-systems", "graph-theory", "finality", "debugging"]
+
+difficulty_explanation = "Four interacting defects across six modules require understanding DAG-based consensus protocols, stake-weighted voting, causal ordering of concurrent events, and the distinction between per-round accumulation versus distinct-validator counting. Bugs span configuration parsing, graph traversal, and sort stability — none are identifiable from a single file in isolation."
+solution_explanation = "Fix whitespace handling in validator list parsing, correct the config section for quorum threshold from consensus to consensus.finality, modify weight calculator to count each validator only at their earliest confirming round (preventing stake double-counting across rounds), and add validator_id to the DAG sort key for deterministic ordering at same-timestamp tiebreaks."
+verification_explanation = "Tests validate validator count, transaction count, finality decisions with exact counts per validator, deterministic ordering at shared timestamps, and overall finality rate. Tests use exact value assertions for counts and ordering checks that require all four bugs to be fixed simultaneously for full passage."
+expert_time_estimate_hours = 3.5
+
+[task]
+name = "lattice-consensus-repair"
+description = "Debug a DAG-based distributed consensus analyzer with four interacting defects across validator loading, causal ordering, stake-weighted confirmation, and quorum-based finality checking. Requires understanding graph traversal, weighted voting protocols, and configuration scoping."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires deep understanding of DAG consensus protocols, stake-weighted BFS traversal, the semantics of per-round vs per-validator counting, and config section scoping. Defects interact: fixing the loader changes which transactions exist in the DAG, which changes weight computation, which changes finality outcomes."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.run_consensus"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the consensus analyzer then validates output via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all four defects and re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"

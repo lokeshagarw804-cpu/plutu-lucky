@@ -1,0 +1,19 @@
+{
+  "validator_id": "validator_3",
+  "stake": 0.25,
+  "start_round": 2,
+  "transactions": [
+    {"tx_id": "tx_c01", "timestamp": 1003, "seq": 1, "parents": ["tx_a02", "tx_b02"], "round": 2, "weight": 0.25},
+    {"tx_id": "tx_c02", "timestamp": 1004, "seq": 2, "parents": ["tx_c01"], "round": 2, "weight": 0.25},
+    {"tx_id": "tx_c03", "timestamp": 1005, "seq": 3, "parents": ["tx_c02"], "round": 3, "weight": 0.25},
+    {"tx_id": "tx_c04", "timestamp": 1006, "seq": 4, "parents": ["tx_c03", "tx_a05"], "round": 3, "weight": 0.25},
+    {"tx_id": "tx_c05", "timestamp": 1008, "seq": 5, "parents": ["tx_c04"], "round": 4, "weight": 0.25},
+    {"tx_id": "tx_c06", "timestamp": 1009, "seq": 6, "parents": ["tx_c05", "tx_b07"], "round": 4, "weight": 0.25},
+    {"tx_id": "tx_c07", "timestamp": 1010, "seq": 7, "parents": ["tx_c06"], "round": 5, "weight": 0.25},
+    {"tx_id": "tx_c08", "timestamp": 1012, "seq": 8, "parents": ["tx_c07"], "round": 5, "weight": 0.25},
+    {"tx_id": "tx_c09", "timestamp": 1014, "seq": 9, "parents": ["tx_c08", "tx_b10"], "round": 6, "weight": 0.25},
+    {"tx_id": "tx_c10", "timestamp": 1015, "seq": 10, "parents": ["tx_c09"], "round": 6, "weight": 0.25},
+    {"tx_id": "tx_c11", "timestamp": 1017, "seq": 11, "parents": ["tx_c10"], "round": 7, "weight": 0.25},
+    {"tx_id": "tx_c12", "timestamp": 1018, "seq": 12, "parents": ["tx_c11", "tx_a13"], "round": 7, "weight": 0.25}
+  ]
+}

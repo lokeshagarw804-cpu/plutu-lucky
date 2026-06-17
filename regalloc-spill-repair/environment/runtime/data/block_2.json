@@ -1,0 +1,13 @@
+{
+  "block_id": "loop_header",
+  "loop_depth": 1,
+  "predecessors": ["entry", "loop_body"],
+  "successors": ["loop_body", "loop_exit"],
+  "instructions": [
+    {"op": "phi", "dest": "v8", "srcs": ["v7", "v6"], "line": 11},
+    {"op": "cmp", "dest": "v9", "srcs": ["v8", "v3"], "line": 12},
+    {"op": "add", "dest": "v10", "srcs": ["v8", "v5"], "line": 13},
+    {"op": "mul", "dest": "v11", "srcs": ["v10", "v3"], "line": 14},
+    {"op": "sub", "dest": "v12", "srcs": ["v11", "v6"], "line": 15}
+  ]
+}
