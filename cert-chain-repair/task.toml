@@ -1,0 +1,37 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+category = "cryptographic_verification"
+difficulty = "hard"
+tags = ["certificate-chain", "trust-store", "config-parsing", "chain-of-trust", "validation"]
+
+difficulty_explanation = "The task requires identifying four interacting defects across multiple files: a subtle whitespace issue in config parsing that silently excludes a trusted authority, an incorrect config section reference that relaxes chain depth enforcement, a trust score accumulation bug in chain traversal, and a sort-key omission that causes non-deterministic output ordering. These bugs do not produce crashes and require cross-file reasoning to diagnose."
+solution_explanation = "Fix the trusted_roots parsing to strip whitespace from each entry, read max_chain_depth from the validation.strict section instead of validation, replace cumulative score addition with per-hop assignment in the chain builder, and add issuer_id to the sort key in the reporter for deterministic ordering."
+verification_explanation = "Tests validate certificate counts, trust validation correctness for all authorities including delta_ca, chain depth enforcement with the strict limit of 4, trust score accuracy at expected values, and deterministic ordering of the chain summary output."
+expert_time_estimate_hours = 3.0
+
+[task]
+name = "cert-chain-repair"
+description = "Debug a certificate chain verification system that validates X.509 certificates against a trust store, builds chain-of-trust relationships, and generates structured reports. Four interacting defects cause incorrect validation, lenient depth enforcement, inflated scores, and non-deterministic ordering."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires cross-file reasoning across config parsing, validation logic, chain building, and report generation. Bugs interact subtly and do not produce visible errors."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.run_crypto"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the verification system then executes pytest to check validation accuracy, chain depth enforcement, trust scores, and deterministic output ordering."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Applies patches to fix config parsing, section reference, score computation, and sort ordering, then re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"

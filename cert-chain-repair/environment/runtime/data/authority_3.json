@@ -1,0 +1,14 @@
+[
+  {"cert_id": "C032", "subject": "iot-hub.devices", "issuer_id": "delta_ca", "serial": 3001, "issued_date": "2024-02-01", "expiry_date": "2025-02-01", "key_bits": 2048, "signature_algo": "sha256", "chain_parent": null},
+  {"cert_id": "C033", "subject": "sensor-gateway.devices", "issuer_id": "delta_ca", "serial": 3002, "issued_date": "2024-03-01", "expiry_date": "2025-03-01", "key_bits": 2048, "signature_algo": "sha256", "chain_parent": "C032"},
+  {"cert_id": "C034", "subject": "firmware-update.devices", "issuer_id": "delta_ca", "serial": 3003, "issued_date": "2024-04-01", "expiry_date": "2025-04-01", "key_bits": 2048, "signature_algo": "sha256", "chain_parent": "C033"},
+  {"cert_id": "C035", "subject": "device-registry.devices", "issuer_id": "delta_ca", "serial": 1003, "issued_date": "2024-05-01", "expiry_date": "2025-06-01", "key_bits": 4096, "signature_algo": "sha384", "chain_parent": null},
+  {"cert_id": "C036", "subject": "telemetry-ingest.devices", "issuer_id": "delta_ca", "serial": 3005, "issued_date": "2024-05-15", "expiry_date": "2025-05-15", "key_bits": 2048, "signature_algo": "sha256", "chain_parent": "C032"},
+  {"cert_id": "C037", "subject": "ota-distributor.devices", "issuer_id": "delta_ca", "serial": 1004, "issued_date": "2024-06-01", "expiry_date": "2025-06-01", "key_bits": 2048, "signature_algo": "sha256", "chain_parent": "C035"},
+  {"cert_id": "C038", "subject": "edge-compute.devices", "issuer_id": "delta_ca", "serial": 3007, "issued_date": "2024-06-15", "expiry_date": "2025-06-15", "key_bits": 4096, "signature_algo": "sha256", "chain_parent": "C034"},
+  {"cert_id": "C039", "subject": "mesh-router.devices", "issuer_id": "delta_ca", "serial": 3008, "issued_date": "2024-07-01", "expiry_date": "2025-07-01", "key_bits": 2048, "signature_algo": "sha256", "chain_parent": null},
+  {"cert_id": "C040", "subject": "provision-agent.devices", "issuer_id": "delta_ca", "serial": 3009, "issued_date": "2024-07-15", "expiry_date": "2025-07-15", "key_bits": 2048, "signature_algo": "sha256", "chain_parent": "C039"},
+  {"cert_id": "C041", "subject": "fleet-manager.devices", "issuer_id": "delta_ca", "serial": 3010, "issued_date": "2024-08-01", "expiry_date": "2025-08-01", "key_bits": 4096, "signature_algo": "sha256", "chain_parent": "C035"},
+  {"cert_id": "C042", "subject": "diagnostics-svc.devices", "issuer_id": "delta_ca", "serial": 3011, "issued_date": "2024-08-15", "expiry_date": "2025-08-15", "key_bits": 2048, "signature_algo": "sha256", "chain_parent": "C039"},
+  {"cert_id": "C043", "subject": "remote-shell.devices", "issuer_id": "delta_ca", "serial": 3012, "issued_date": "2024-09-01", "expiry_date": "2025-09-01", "key_bits": 2048, "signature_algo": "sha256", "chain_parent": "C040"}
+]

@@ -1,0 +1,20 @@
+[
+  {"cert_id": "C001", "subject": "web-server-01.internal", "issuer_id": "alpha_ca", "serial": 1001, "issued_date": "2024-01-15", "expiry_date": "2025-01-15", "key_bits": 2048, "signature_algo": "sha256", "chain_parent": null},
+  {"cert_id": "C002", "subject": "api-gateway.internal", "issuer_id": "alpha_ca", "serial": 1002, "issued_date": "2024-02-10", "expiry_date": "2025-02-10", "key_bits": 4096, "signature_algo": "sha256", "chain_parent": "C001"},
+  {"cert_id": "C003", "subject": "db-primary.internal", "issuer_id": "alpha_ca", "serial": 1003, "issued_date": "2024-03-05", "expiry_date": "2025-03-05", "key_bits": 2048, "signature_algo": "sha384", "chain_parent": "C002"},
+  {"cert_id": "C004", "subject": "cache-node-1.internal", "issuer_id": "alpha_ca", "serial": 1004, "issued_date": "2024-03-20", "expiry_date": "2025-03-20", "key_bits": 2048, "signature_algo": "sha256", "chain_parent": null},
+  {"cert_id": "C005", "subject": "worker-pool-a.internal", "issuer_id": "alpha_ca", "serial": 1005, "issued_date": "2024-04-01", "expiry_date": "2025-04-01", "key_bits": 4096, "signature_algo": "sha256", "chain_parent": "C003"},
+  {"cert_id": "C006", "subject": "monitor-svc.internal", "issuer_id": "alpha_ca", "serial": 1006, "issued_date": "2024-04-15", "expiry_date": "2025-04-15", "key_bits": 2048, "signature_algo": "sha256", "chain_parent": "C004"},
+  {"cert_id": "C007", "subject": "scheduler.internal", "issuer_id": "alpha_ca", "serial": 1007, "issued_date": "2024-05-01", "expiry_date": "2025-06-01", "key_bits": 2048, "signature_algo": "sha256", "chain_parent": null},
+  {"cert_id": "C008", "subject": "ingress-lb.internal", "issuer_id": "alpha_ca", "serial": 1008, "issued_date": "2024-05-15", "expiry_date": "2025-06-01", "key_bits": 4096, "signature_algo": "sha512", "chain_parent": "C007"},
+  {"cert_id": "C009", "subject": "vault-seal.internal", "issuer_id": "alpha_ca", "serial": 1009, "issued_date": "2024-06-01", "expiry_date": "2025-06-01", "key_bits": 4096, "signature_algo": "sha256", "chain_parent": "C002"},
+  {"cert_id": "C010", "subject": "log-shipper.internal", "issuer_id": "alpha_ca", "serial": 1010, "issued_date": "2024-06-10", "expiry_date": "2025-06-10", "key_bits": 2048, "signature_algo": "sha256", "chain_parent": null},
+  {"cert_id": "C011", "subject": "metrics-agg.internal", "issuer_id": "alpha_ca", "serial": 1011, "issued_date": "2024-06-20", "expiry_date": "2025-06-20", "key_bits": 2048, "signature_algo": "sha256", "chain_parent": "C010"},
+  {"cert_id": "C012", "subject": "batch-runner.internal", "issuer_id": "alpha_ca", "serial": 1012, "issued_date": "2024-07-01", "expiry_date": "2025-07-01", "key_bits": 4096, "signature_algo": "sha384", "chain_parent": "C005"},
+  {"cert_id": "C013", "subject": "notification-svc.internal", "issuer_id": "alpha_ca", "serial": 1013, "issued_date": "2024-07-10", "expiry_date": "2025-07-10", "key_bits": 2048, "signature_algo": "sha256", "chain_parent": null},
+  {"cert_id": "C014", "subject": "auth-proxy.internal", "issuer_id": "alpha_ca", "serial": 1014, "issued_date": "2024-07-20", "expiry_date": "2025-07-20", "key_bits": 4096, "signature_algo": "sha256", "chain_parent": "C013"},
+  {"cert_id": "C015", "subject": "cdn-edge-1.internal", "issuer_id": "alpha_ca", "serial": 1015, "issued_date": "2024-08-01", "expiry_date": "2025-08-01", "key_bits": 2048, "signature_algo": "sha256", "chain_parent": "C003"},
+  {"cert_id": "C016", "subject": "search-indexer.internal", "issuer_id": "alpha_ca", "serial": 1016, "issued_date": "2024-08-10", "expiry_date": "2025-08-10", "key_bits": 2048, "signature_algo": "sha256", "chain_parent": null},
+  {"cert_id": "C017", "subject": "queue-broker.internal", "issuer_id": "alpha_ca", "serial": 1017, "issued_date": "2024-08-20", "expiry_date": "2025-08-20", "key_bits": 4096, "signature_algo": "sha256", "chain_parent": "C016"},
+  {"cert_id": "C018", "subject": "config-store.internal", "issuer_id": "alpha_ca", "serial": 1018, "issued_date": "2024-09-01", "expiry_date": "2025-09-01", "key_bits": 2048, "signature_algo": "sha256", "chain_parent": "C007"}
+]
