@@ -1,0 +1,21 @@
+{
+  "stream_id": "payments",
+  "description": "Payment processing events",
+  "events": [
+    {"sequence_num": 1, "timestamp": 1002, "account_id": "acct_100", "event_type": "debit", "amount": 50.00},
+    {"sequence_num": 2, "timestamp": 1008, "account_id": "acct_101", "event_type": "debit", "amount": 30.00},
+    {"sequence_num": 3, "timestamp": 1015, "account_id": "acct_102", "event_type": "debit", "amount": 100.00},
+    {"sequence_num": 4, "timestamp": 1020, "account_id": "acct_100", "event_type": "debit", "amount": 75.25},
+    {"sequence_num": 5, "timestamp": 1030, "account_id": "acct_101", "event_type": "debit", "amount": 44.50},
+    {"sequence_num": 6, "timestamp": 1038, "account_id": "acct_102", "event_type": "debit", "amount": 210.00},
+    {"sequence_num": 7, "timestamp": 1045, "account_id": "acct_100", "event_type": "debit", "amount": 88.90},
+    {"sequence_num": 8, "timestamp": 1052, "account_id": "acct_101", "event_type": "debit", "amount": 125.00},
+    {"sequence_num": 9, "timestamp": 1060, "account_id": "acct_102", "event_type": "debit", "amount": 55.30},
+    {"sequence_num": 10, "timestamp": 1068, "account_id": "acct_100", "event_type": "debit", "amount": 142.60},
+    {"sequence_num": 11, "timestamp": 1075, "account_id": "acct_101", "event_type": "debit", "amount": 95.00},
+    {"sequence_num": 12, "timestamp": 1082, "account_id": "acct_102", "event_type": "debit", "amount": 67.80},
+    {"sequence_num": 13, "timestamp": 1090, "account_id": "acct_100", "event_type": "debit", "amount": 200.00},
+    {"sequence_num": 14, "timestamp": 1095, "account_id": "acct_101", "event_type": "debit", "amount": 180.50},
+    {"sequence_num": 15, "timestamp": 1102, "account_id": "acct_102", "event_type": "debit", "amount": 310.25}
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "stream_id": "refunds",
+  "description": "Refund processing events",
+  "events": [
+    {"sequence_num": 1, "timestamp": 1018, "account_id": "acct_100", "event_type": "credit", "amount": 50.00},
+    {"sequence_num": 2, "timestamp": 1025, "account_id": "acct_101", "event_type": "credit", "amount": 89.99},
+    {"sequence_num": 3, "timestamp": 1040, "account_id": "acct_102", "event_type": "credit", "amount": 100.00},
+    {"sequence_num": 4, "timestamp": 1055, "account_id": "acct_100", "event_type": "credit", "amount": 75.25},
+    {"sequence_num": 5, "timestamp": 1070, "account_id": "acct_101", "event_type": "credit", "amount": 44.50},
+    {"sequence_num": 6, "timestamp": 1085, "account_id": "acct_102", "event_type": "credit", "amount": 67.80},
+    {"sequence_num": 7, "timestamp": 1098, "account_id": "acct_100", "event_type": "credit", "amount": 142.60},
+    {"sequence_num": 8, "timestamp": 1108, "account_id": "acct_101", "event_type": "credit", "amount": 95.00}
+  ]
+}

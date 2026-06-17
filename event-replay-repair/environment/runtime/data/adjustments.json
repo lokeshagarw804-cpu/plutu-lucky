@@ -1,0 +1,18 @@
+{
+  "stream_id": "adjustments",
+  "description": "Manual balance adjustment events",
+  "events": [
+    {"sequence_num": 1, "timestamp": 1010, "account_id": "acct_100", "event_type": "credit", "amount": 15.00},
+    {"sequence_num": 2, "timestamp": 1020, "account_id": "acct_101", "event_type": "debit", "amount": 5.75},
+    {"sequence_num": 3, "timestamp": 1035, "account_id": "acct_102", "event_type": "credit", "amount": 22.40},
+    {"sequence_num": 4, "timestamp": 1048, "account_id": "acct_100", "event_type": "debit", "amount": 8.15},
+    {"sequence_num": 5, "timestamp": 1055, "account_id": "acct_101", "event_type": "credit", "amount": 33.20},
+    {"sequence_num": 6, "timestamp": 1065, "account_id": "acct_102", "event_type": "debit", "amount": 12.90},
+    {"sequence_num": 7, "timestamp": 1080, "account_id": "acct_100", "event_type": "credit", "amount": 45.60},
+    {"sequence_num": 8, "timestamp": 1088, "account_id": "acct_101", "event_type": "debit", "amount": 19.30},
+    {"sequence_num": 9, "timestamp": 1096, "account_id": "acct_102", "event_type": "credit", "amount": 28.75},
+    {"sequence_num": 10, "timestamp": 1105, "account_id": "acct_100", "event_type": "credit", "amount": 62.40},
+    {"sequence_num": 11, "timestamp": 1110, "account_id": "acct_101", "event_type": "credit", "amount": 18.50},
+    {"sequence_num": 12, "timestamp": 1115, "account_id": "acct_102", "event_type": "debit", "amount": 7.25}
+  ]
+}

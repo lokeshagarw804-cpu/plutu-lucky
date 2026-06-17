@@ -1,0 +1,37 @@
+author_name = "Dhruvkumar Patel"
+author_email = "dhruvpatel2284@gmail.com"
+category = "event_sourcing"
+difficulty = "hard"
+tags = ["event-sourcing", "cqrs", "replay-engine", "reconciliation", "debugging"]
+
+difficulty_explanation = "Four interacting defects across five modules require understanding event sourcing semantics, configuration parsing subtleties, snapshot state management, and deterministic event ordering. Bugs cannot be identified from output alone — they require tracing data flow across stream loading, sequencing, projection, and reconciliation stages."
+solution_explanation = "Fix stream loader to strip whitespace from comma-split config values, fix reconciler to read from the correct config section for decimal precision, fix snapshot builder to record point-in-time balances instead of accumulating across checkpoints, and fix sequencer to include stream_id in sort key for deterministic cross-stream ordering."
+verification_explanation = "Tests validate stream loading completeness, event count, final account balances, snapshot checkpoint counts and value ranges, and reconciliation status. Tests use graduated difficulty with structural checks passing even with buggy code, while balance accuracy and reconciliation tests require all bugs to be fixed."
+expert_time_estimate_hours = 3.0
+
+[task]
+name = "event-replay-repair"
+description = "Debug a CQRS event replay engine with four interacting defects across stream loading, event sequencing, snapshot building, and audit reconciliation. Bugs involve configuration parsing, accumulation semantics, and sort ordering subtleties."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Requires understanding event sourcing replay semantics, configparser section naming, defaultdict accumulation patterns, and multi-key sorting for deterministic ordering. Defects interact — fixing one changes outputs that other modules depend on for correct behavior."
+
+[task.runtime]
+entrypoint = "python3 -m runtime.run_replay"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs the event replay engine then validates output via pytest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Patches all four defects and re-runs the system."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
