@@ -1,0 +1,36 @@
+author_name = "Lokesh Agarwal"
+author_email = "lokeshlucky0123456789@gmail.com"
+category = "Scientific Computing"
+difficulty = "hard"
+tags = ["signal-processing", "vector-clocks", "lattice-theory", "simulation", "debugging"]
+difficulty_explanation = "Requires understanding vector incomparability in partial orders, distinguishing equality from incomparability without helper functions, recognizing a deferred-computation decoy pattern, and identifying that wavefront velocity is not the correct priority metric."
+solution_explanation = "Fix 1: increment own depth component after RELAY merge (the finalize_propagation is a decoy). Fix 2: replace equality check with incomparability (not leq and not leq reversed). Fix 3: sort by total depth sum instead of wavefront velocity."
+verification_explanation = "14 tests in 4 tiers verify structural output, depth calculations, isolation classification, and full-system digest consistency."
+expert_time_estimate_hours = 3.0
+
+[task]
+name = "particle-collision-repair"
+description = "Debug a lattice signal propagation system that tracks depth vectors across 7 sensor nodes. The system processes signal events, computes isolation between propagation paths, and generates priority-ordered synthesis reports."
+
+[task.difficulty]
+level = "hard"
+reasoning = "Three interacting bugs span the propagation core and analysis modules. Bug 1 is masked by a convincing deferred-computation pattern. Bug 2 requires constructing incomparability logic from only leq/geq primitives. Bug 3 uses both available parameters in a plausible but incorrect metric."
+
+[task.runtime]
+entrypoint = "python3 /app/runtime/pipeline.py"
+language = "python"
+dependencies = "stdlib-only"
+
+[task.validator]
+command = "bash tests/test.sh"
+description = "Runs 14 pytest tests across 4 tiers verifying structure, depth values, isolation classification, and digest."
+
+[task.repair]
+command = "bash solution/solve.sh"
+description = "Applies fixes to propagation_core.py and lattice_analysis.py, then regenerates outputs."
+
+[task.resources]
+timeout = 300
+cpu = 2
+memory = "2GB"
+disk = "1GB"
